@@ -1,39 +1,39 @@
-# CSVMapper class
-The CSVMapper class is a subclass of QMainWindow and the main dialog class MAIN_DIALOG_CLASS. It contains methods for customizing the GUI, loading and transforming CSV data, checking consistency errors, and displaying dialog messages.
-
-## Methods
-- __init__(self)
-Sets up the class as a main window by calling the superclass constructor and setting up the GUI using setupUi method and custumize_gui method.
-
-- custumize_gui(self)
-Sets the central widget, status bar, and its style sheet for the window.
-
-- on_toolButton_load_pressed(self)
-Loads a data CSV file using QFileDialog.getOpenFileName, and reads it using pandas read_csv method. It creates a PandasModel object from the data and sets it in the data_table widget.
-
-- transform_data(self, input_file, output_file)
-Transforms the data by reading CSV file, finding specific columns in the header, editing them, and writing the result to another CSV file. It also checks consistency errors in the transformed data.
-
-- on_convert_data_pressed(self)
-Reads the transformed CSV file, generates the matrix, and converts it to GraphML format using dottoxml.
-
-- read_transformed_csv(self, filename)
-Reads the transformed CSV file, extracts information from specific columns, and returns them as a list and a dictionary of tuples.
-
-- check_consistency(self, data)
-Checks consistency errors in the CSV file by comparing anterior, contemporaneo, and posteriore relations and reporting errors.
-
-- show_errors_in_dock_widget(self)
-Shows the errors found by check_consistency method in a dock widget.
-
-- show_error(self, message)
-Displays an error dialog with the provided message.
-
-- show_info(self, message)
-Displays an information dialog with the provided message.
-
-# AddSequenceDialog
-Defines a dialog window for entering starting numbers used to add a sequence of numbers to the CSV file.
-
-# PandasModel class
-The PandasModel class is a subclass of QAbstractTableModel and used to create a table model from Pandas DataFrame. It overrides several methods to return data and set data in the view.
+# Installazione 
+Per installare EM2Graphml, eseguire lo script che installerà automaticamente i pacchetti necessari utilizzando PackageManagement. 
+ 
+Dopo l'installazione, lo script avvierà il programma principale che mostrerà uno splash screen. Una volta completato il caricamento, si potrà iniziare ad utilizzarlo. 
+ 
+# Funzioni principali 
+EM2Graphml offre diverse funzioni tra cui: 
+- Carica dati da un Google Sheet. 
+- Aggiorna rapporti. 
+- Visualizzatore 3D. 
+- Controllo errori. 
+ 
+# Funzioni di controllo errori 
+EM2Graphml offre diverse funzioni per controllare gli errori nelle relazioni tra i dati: 
+- Controllo duplicati. 
+- Controllo esistenza relazioni. 
+- Controllo esistenza relazioni inverse. 
+- Controllo tipo di relazione. 
+ 
+# Seleziona epoca storica 
+EM2Graphml offre anche una funzione che consente di selezionare un'epoca storica da un elenco a discesa. Questo elenco è popolato dai dati nel file CSV o nel foglio Google. 
+ 
+# Salvataggio dei dati 
+EM2Graphml consente di salvare i dati in un file CSV o in un foglio Google. I pulsanti "Salva CSV" e "Salva Google" sono collegati alle funzioni corrispondenti. 
+ 
+# Aggiornamento delle relazioni 
+EM2Graphml offre due funzioni per aggiornare le relazioni tra i dati: una per i file CSV e una per i fogli Google. 
+ 
+# Finestra Grafica 3D 
+La classe GraphWindow crea una finestra che visualizza un grafo 3D. Questa finestra include tre dockwidgets: "Node Info", "Nodi prossimi Info" e "File Multimediali". Ogni dockwidget contiene un QTextEdit o un QWidget che mostra informazioni sul nodo selezionato, sui nodi vicini o sui file multimediali associati al nodo selezionato. 
+ 
+# Classe pyarchinit_Interactive_Matrix 
+La classe  pyarchinit_Interactive_Matrix  gestisce la generazione di una matrice interattiva. 
+ 
+# Classe HarrisMatrix 
+La classe  HarrisMatrix  gestisce l'esportazione della matrice di Harris in diversi formati. 
+ 
+# Installazione di Graphviz 
+Graphviz è necessario per la conversione dei grafici. Si può verificare se Graphviz è installato tramite la funzione  is_graphviz_installed , verificare se la directory bin di Graphviz è nel PATH tramite la funzione  is_graphviz_in_path , installare Graphviz tramite la funzione  install_graphviz , e aggiungere la directory di Graphviz al PATH tramite la funzione  set_graphviz_path .
