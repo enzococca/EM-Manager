@@ -1,0 +1,178 @@
+digraph {
+	graph [bb="0,0,2106.2,1493",
+		compound=true,
+		dpi=300,
+		nodesep=1,
+		pad=0.5,
+		rankdir=TB,
+		ranksep=1.5,
+		splines=ortho
+	];
+	node [label="\N"];
+	subgraph main2 {
+		node [color=black,
+			fillcolor=white,
+			penwidth=.5,
+			shape=box,
+			style=filled
+		];
+		edge [arrowhead=normal,
+			arrowsize=.8,
+			penwidth=.5,
+			style=dashed
+		];
+		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_romana-1"	[height=0.5,
+			pos="1103.5,1026",
+			width=5.2535];
+		"property112.type_ionic_trabeation_romana-1"	[height=0.5,
+			pos="800.5,882",
+			width=3.7326];
+		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_romana-1" -> "property112.type_ionic_trabeation_romana-1"	[pos="e,924.62,900.09 924.62,1007.8 924.62,1007.8 924.62,908.09 924.62,908.09"];
+		"USV/s112_ricostruzione_della_trabeazione_romana-1"	[height=0.5,
+			pos="951.5,1458.5",
+			width=4.3993];
+		"property112.heigth_1.42_m_(1/5_the_height_of_the_column)_romana-1"	[height=0.5,
+			pos="210.5,1314",
+			width=5.8472];
+		"USV/s112_ricostruzione_della_trabeazione_romana-1" -> "property112.heigth_1.42_m_(1/5_the_height_of_the_column)_romana-1"	[pos="e,412.94,1332.2 822.12,1440.2 822.12,1418.7 822.12,1386 822.12,1386 822.12,1386 412.94,1386 412.94,1386 412.94,1386 412.94,1340.2 \
+412.94,1340.2"];
+		"property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_romana-1"	[height=0.5,
+			pos="1627.5,1314",
+			width=7.1493];
+		"USV/s112_ricostruzione_della_trabeazione_romana-1" -> "property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_romana-1"	[pos="e,1627.5,1332.3 1110,1452 1309.8,1452 1627.5,1452 1627.5,1452 1627.5,1452 1627.5,1340.3 1627.5,1340.3"];
+		"property112.ciao_nan_romana-1"	[height=0.5,
+			pos="592.5,1314",
+			width=2.7535];
+		"USV/s112_ricostruzione_della_trabeazione_romana-1" -> "property112.ciao_nan_romana-1"	[pos="e,692.12,1314 851.12,1440.2 851.12,1401.3 851.12,1314 851.12,1314 851.12,1314 700.12,1314 700.12,1314"];
+		"extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_romana-1"	[height=0.5,
+			pos="787.5,738",
+			width=6.3264];
+		"property112.type_ionic_trabeation_romana-1" -> "extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_romana-1"	[pos="e,800.5,756.09 800.5,863.76 800.5,863.76 800.5,764.09 800.5,764.09"];
+		"documentD.02.VA06_DosCo/test.pdf_romana-1"	[height=0.5,
+			pos="450.5,594",
+			width=4.0243];
+		"extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_romana-1" -> "documentD.02.VA06_DosCo/test.pdf_romana-1"	[pos="e,577.56,612.09 577.56,719.76 577.56,719.76 577.56,620.09 577.56,620.09"];
+		"extractorE.02.03_nan_romana-1"	[height=0.5,
+			pos="224.5,1170",
+			width=2.7118];
+		"property112.heigth_1.42_m_(1/5_the_height_of_the_column)_romana-1" -> "extractorE.02.03_nan_romana-1"	[pos="e,224.5,1188.1 224.5,1295.8 224.5,1295.8 224.5,1196.1 224.5,1196.1"];
+		"extractorE.03.01_nan_romana-1"	[height=0.5,
+			pos="1627.5,1170",
+			width=2.7118];
+		"property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_romana-1" -> "extractorE.03.01_nan_romana-1"	[pos="e,1627.5,1188.1 1627.5,1295.8 1627.5,1295.8 1627.5,1196.1 1627.5,1196.1"];
+		"extractorE.02.05_nan_romana-1"	[height=0.5,
+			pos="521.5,1170",
+			width=2.7118];
+		"property112.ciao_nan_romana-1" -> "extractorE.02.05_nan_romana-1"	[pos="e,556.25,1188.1 556.25,1295.8 556.25,1295.8 556.25,1196.1 556.25,1196.1"];
+		"extractorE.02.03_nan_romana-1" -> "documentD.02.VA06_DosCo/test.pdf_romana-1"	[pos="e,313.88,612.48 313.88,1151.8 313.88,1151.8 313.88,620.48 313.88,620.48"];
+		"documentD.03.VA06_DosCo/test.mp4_romana-1"	[height=0.5,
+			pos="1627.5,1026",
+			width=4.0972];
+		"extractorE.03.01_nan_romana-1" -> "documentD.03.VA06_DosCo/test.mp4_romana-1"	[pos="e,1627.5,1044.1 1627.5,1151.8 1627.5,1151.8 1627.5,1052.1 1627.5,1052.1"];
+		"extractorE.02.05_nan_romana-1" -> "documentD.02.VA06_DosCo/test.pdf_romana-1"	[pos="e,491.81,612.48 491.81,1151.8 491.81,1151.8 491.81,620.48 491.81,620.48"];
+	}
+	subgraph cluster0 {
+		graph [bb="396.5,1432,524.5,1485",
+			color=blue
+		];
+		node [fillcolor=white,
+			gradientangle=90,
+			label="Epoca: romana-1",
+			shape=record,
+			style=filled
+		];
+		"Epoca: romana-1"	[height=0.51389,
+			pos="460.5,1458.5",
+			rects="404.88,1440.5,516.12,1476.5",
+			width=1.5451];
+	}
+	subgraph main {
+		graph [rankdir=TB];
+		node [color=black,
+			fillcolor=white,
+			penwidth=.5,
+			shape=box,
+			style=filled
+		];
+		edge [arrowhead=normal,
+			arrowsize=.8,
+			penwidth=.5,
+			style=solid
+		];
+		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_romana-1";
+		"USM103_muro_romana-1"	[height=0.5,
+			pos="1138.5,882",
+			width=2.2639];
+		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_romana-1" -> "USM103_muro_romana-1"	[pos="e,1138.5,900.09 1138.5,1007.8 1138.5,1007.8 1138.5,908.09 1138.5,908.09"];
+		"US1_nan_medioevale-2"	[height=0.5,
+			pos="1161.5,738",
+			width=2.066];
+		"USM103_muro_romana-1" -> "US1_nan_medioevale-2"	[pos="e,1153.6,756.09 1153.6,863.76 1153.6,863.76 1153.6,764.09 1153.6,764.09"];
+		"USV/s112_ricostruzione_della_trabeazione_romana-1";
+		"VSF108_nan_romana-1"	[height=0.5,
+			pos="2031.5,1314",
+			width=2.0764];
+		"USV/s112_ricostruzione_della_trabeazione_romana-1" -> "VSF108_nan_romana-1"	[pos="e,2031.5,1332.4 1110.3,1464 1410.5,1464 2031.5,1464 2031.5,1464 2031.5,1464 2031.5,1340.4 2031.5,1340.4"];
+		"USV/c111_istanza_spaziale_dei_capitelli_delle_colonne_romana-1"	[height=0.5,
+			pos="1103.5,1314",
+			width=5.3993];
+		"USV/s112_ricostruzione_della_trabeazione_romana-1" -> "USV/c111_istanza_spaziale_dei_capitelli_delle_colonne_romana-1"	[pos="e,1009.5,1332.2 1009.5,1440.2 1009.5,1440.2 1009.5,1340.2 1009.5,1340.2"];
+		"SFF106_nan_romana-1"	[height=0.5,
+			pos="2031.5,1170",
+			width=2.0556];
+		"VSF108_nan_romana-1" -> "SFF106_nan_romana-1"	[pos="e,2031.5,1188.1 2031.5,1295.8 2031.5,1295.8 2031.5,1196.1 2031.5,1196.1"];
+		"USV/c110_istanza_spaziale_dei_fusti_delle_colonne_romana-1"	[height=0.5,
+			pos="1103.5,1170",
+			width=5.1493];
+		"USV/c111_istanza_spaziale_dei_capitelli_delle_colonne_romana-1" -> "USV/c110_istanza_spaziale_dei_fusti_delle_colonne_romana-1"	[pos="e,1103.5,1188.1 1103.5,1295.8 1103.5,1295.8 1103.5,1196.1 1103.5,1196.1"];
+		"US2_nan_medioevale-2"	[height=0.5,
+			pos="1161.5,594",
+			width=2.066];
+		"US1_nan_medioevale-2" -> "US2_nan_medioevale-2"	[pos="e,1161.5,612.09 1161.5,719.76 1161.5,719.76 1161.5,620.09 1161.5,620.09"];
+		"USV/c110_istanza_spaziale_dei_fusti_delle_colonne_romana-1" -> "USV/c109_istanza_spaziale_delle_basi_delle_colonna_romana-1"	[pos="e,1103.5,1044.1 1103.5,1151.8 1103.5,1151.8 1103.5,1052.1 1103.5,1052.1"];
+		"US3_nan_medioevale-2"	[height=0.5,
+			pos="1161.5,450",
+			width=2.066];
+		"US2_nan_medioevale-2" -> "US3_nan_medioevale-2"	[pos="e,1161.5,468.09 1161.5,575.76 1161.5,575.76 1161.5,476.09 1161.5,476.09"];
+		"US4_nan_medioevale-2"	[height=0.5,
+			pos="1161.5,306",
+			width=2.066];
+		"US3_nan_medioevale-2" -> "US4_nan_medioevale-2"	[pos="e,1161.5,324.09 1161.5,431.76 1161.5,431.76 1161.5,332.09 1161.5,332.09"];
+		"US5_nan_medioevale-2"	[height=0.5,
+			pos="1161.5,162",
+			width=2.066];
+		"US4_nan_medioevale-2" -> "US5_nan_medioevale-2"	[pos="e,1161.5,180.09 1161.5,287.76 1161.5,287.76 1161.5,188.09 1161.5,188.09"];
+		"US6_nan_medioevale-2"	[height=0.5,
+			pos="1161.5,18",
+			width=2.066];
+		"US5_nan_medioevale-2" -> "US6_nan_medioevale-2"	[pos="e,1161.5,36.09 1161.5,143.76 1161.5,143.76 1161.5,44.09 1161.5,44.09"];
+	}
+	subgraph cluster1 {
+		graph [bb="580.5,1432,728.5,1485",
+			color=blue
+		];
+		node [fillcolor=white,
+			gradientangle=90,
+			label="Epoca: medioevale-2",
+			shape=record,
+			style=filled
+		];
+		"Epoca: medioevale-2"	[height=0.51389,
+			pos="654.5,1458.5",
+			rects="588.38,1440.5,720.62,1476.5",
+			width=1.8368];
+	}
+	subgraph main1 {
+		node [color=black,
+			fillcolor=white,
+			penwidth=.5,
+			shape=box,
+			style=filled
+		];
+		edge [arrowhead=none,
+			arrowsize=.8,
+			penwidth=.5,
+			style=solid
+		];
+	}
+}

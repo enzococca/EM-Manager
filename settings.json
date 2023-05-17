@@ -1,0 +1,169 @@
+{
+ "version": "auto-py-to-exe-configuration_v1",
+ "pyinstallerOptions": [
+  {
+   "optionDest": "noconfirm",
+   "value": true
+  },
+  {
+   "optionDest": "filenames",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/EDMatrix2Graphml.py"
+  },
+  {
+   "optionDest": "onefile",
+   "value": false
+  },
+  {
+   "optionDest": "console",
+   "value": false
+  },
+  {
+   "optionDest": "icon_file",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/icon/H_check.ico"
+  },
+  {
+   "optionDest": "name",
+   "value": "ED2Graphml"
+  },
+  {
+   "optionDest": "ascii",
+   "value": false
+  },
+  {
+   "optionDest": "clean_build",
+   "value": false
+  },
+  {
+   "optionDest": "splash",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/icon/splash.jpg"
+  },
+  {
+   "optionDest": "strip",
+   "value": false
+  },
+  {
+   "optionDest": "noupx",
+   "value": false
+  },
+  {
+   "optionDest": "disable_windowed_traceback",
+   "value": false
+  },
+  {
+   "optionDest": "embed_manifest",
+   "value": true
+  },
+  {
+   "optionDest": "uac_admin",
+   "value": false
+  },
+  {
+   "optionDest": "uac_uiaccess",
+   "value": false
+  },
+  {
+   "optionDest": "win_private_assemblies",
+   "value": false
+  },
+  {
+   "optionDest": "win_no_prefer_redirects",
+   "value": false
+  },
+  {
+   "optionDest": "bootloader_ignore_signals",
+   "value": false
+  },
+  {
+   "optionDest": "argv_emulation",
+   "value": false
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/__init__.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/crea_epoche.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/d_graphml.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/interactive_matrix.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/matrix_exp.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/spash.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/ui;ui/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/test;test/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/icon;icon/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/bin;bin/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/3d_obj;3d_obj/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/ui/edm2grapml.ui;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/test/test_banca_dati.csv;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/bin/dot.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/bin/dottoxml.py;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/bin/EM_palette.graphml;."
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/bin/X11Colors.py;."
+  },
+  {
+   "optionDest": "collect_all",
+   "value": "graphviz"
+  },
+  {
+   "optionDest": "collect_all",
+   "value": "networkx"
+  },
+  {
+   "optionDest": "collect_all",
+   "value": "pyvista"
+  },
+  {
+   "optionDest": "collect_all",
+   "value": "pyvistaqt"
+  }
+ ],
+ "nonPyinstallerOptions": {
+  "increaseRecursionLimit": true,
+  "manualArguments": ""
+ }
+}
