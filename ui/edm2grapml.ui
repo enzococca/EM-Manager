@@ -166,6 +166,8 @@
     <property name="title">
      <string>File</string>
     </property>
+    <addaction name="actionCrea_progetto"/>
+    <addaction name="separator"/>
     <addaction name="Check_Error"/>
     <addaction name="separator"/>
     <addaction name="google_sheet_action"/>
@@ -260,6 +262,11 @@
     <string>Aggiorna rapporti Google</string>
    </property>
   </action>
+  <action name="actionCrea_progetto">
+   <property name="text">
+    <string>Crea progetto</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -327,6 +334,22 @@
     <hint type="sourcelabel">
      <x>421</x>
      <y>41</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>491</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCrea_progetto</sender>
+   <signal>triggered()</signal>
+   <receiver>save_button</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
     </hint>
     <hint type="destinationlabel">
      <x>185</x>

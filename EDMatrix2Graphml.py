@@ -212,7 +212,50 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.statusbar.setSizeGripEnabled(False)
 
         self.statusbar.setStyleSheet("QStatusBar{border-top: 1px solid grey;}")
+        self.actionCrea_progetto.triggered.connect(self.create_empty_csv)
 
+    def create_empty_csv(self):
+
+        path, _ = QFileDialog.getSaveFileName(None, "Salva Come", "", "CSV Files (*.csv)")
+        #creo un csv vuoto da importare nel mio tablewidget
+        column_names = [
+            'nome us', 'tipo', 'tipo di nodi', 'descrizione', 'epoca',
+            'epoca index', 'area', 'anteriore', 'posteriore', 'contemporaneo',
+            'properties_ant', 'properties_post'
+        ]
+
+        with open(path, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(column_names)
+
+        # Open the data CSV file
+        self.data_file = path
+
+        try:
+            self.transform_data(self.data_file, self.data_file)
+        except AssertionError:
+            pass
+        self.df = pd.read_csv(self.data_file, dtype=str)
+        self.data_fields = self.df.columns.tolist()
+
+        self.data_table.setDragEnabled(True)
+        # Impostare il numero di righe e colonne nel QTableWidget
+        self.data_table.setRowCount(len(self.df))
+        self.data_table.setColumnCount(len(self.df.columns))
+
+        # Impostare le etichette delle colonne orizzontali
+        self.data_table.setHorizontalHeaderLabels(self.df.columns)
+
+        # Inserire i dati nelle celle del QTableWidget
+        for row in range(len(self.df)):
+            for col in range(len(self.df.columns)):
+                item = QTableWidgetItem(str(self.df.iat[row, col]))
+                self.data_table.setItem(row, col, item)
+        for i in range(self.data_table.rowCount()):
+            self.data_table.setRowHeight(i, 50)
+
+        for i in range(self.data_table.columnCount()):
+            self.data_table.setColumnWidth(i, 250)
 
     def d_graph(self):
         #richaimo il visualizzatore 3D
@@ -707,7 +750,10 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             for col in range(self.data_table.columnCount()):
 
                 item = self.data_table.item(row, col)
-                value = item.text()
+                if item is not None:
+                    value = item.text()
+                else:
+                    value = 'nan'
                 row_data[self.df.columns[col]] = value
             new_df = new_df.append(row_data, ignore_index=True)
 

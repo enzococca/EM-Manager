@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\test\test_banca_dati.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\unita_tipo.csv">
           <value>
             <Attribute>
