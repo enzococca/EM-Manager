@@ -2,3 +2,4 @@
 /venv/
 /ENV/
 /.github/
+/__pycache__/
