@@ -9,34 +9,6 @@ digraph {
 		splines=ortho
 	];
 	node [label="\N"];
-	subgraph cluster0 {
-		graph [bb="396.5,1432,524.5,1485",
-			color=blue
-		];
-		node [fillcolor=white,
-			gradientangle=90,
-			label="Epoca: 1-romana",
-			shape=record,
-			style=filled
-		];
-		"Epoca: 1-romana"	[height=0.51389,
-			pos="460.5,1458.5",
-			rects="404.88,1440.5,516.12,1476.5",
-			width=1.5451];
-	}
-	subgraph main1 {
-		node [color=black,
-			fillcolor=white,
-			penwidth=.5,
-			shape=box,
-			style=filled
-		];
-		edge [arrowhead=none,
-			arrowsize=.8,
-			penwidth=.5,
-			style=solid
-		];
-	}
 	subgraph main2 {
 		node [color=black,
 			fillcolor=white,
@@ -99,6 +71,19 @@ digraph {
 			width=4.0972];
 		"extractorE.03.01_nan_1-romana" -> "documentD.03.VA06_DosCo/test.mp4_1-romana"	[pos="e,1627.5,1044.1 1627.5,1151.8 1627.5,1151.8 1627.5,1052.1 1627.5,1052.1"];
 		"extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_1-romana" -> "documentD.02.VA06_DosCo/test.pdf_1-romana"	[pos="e,577.56,612.09 577.56,719.76 577.56,719.76 577.56,620.09 577.56,620.09"];
+	}
+	subgraph main1 {
+		node [color=black,
+			fillcolor=white,
+			penwidth=.5,
+			shape=box,
+			style=filled
+		];
+		edge [arrowhead=none,
+			arrowsize=.8,
+			penwidth=.5,
+			style=solid
+		];
 	}
 	subgraph main {
 		graph [rankdir=TB];
@@ -175,5 +160,20 @@ digraph {
 			pos="654.5,1458.5",
 			rects="588.38,1440.5,720.62,1476.5",
 			width=1.8368];
+	}
+	subgraph cluster0 {
+		graph [bb="396.5,1432,524.5,1485",
+			color=blue
+		];
+		node [fillcolor=white,
+			gradientangle=90,
+			label="Epoca: 1-romana",
+			shape=record,
+			style=filled
+		];
+		"Epoca: 1-romana"	[height=0.51389,
+			pos="460.5,1458.5",
+			rects="404.88,1440.5,516.12,1476.5",
+			width=1.5451];
 	}
 }
