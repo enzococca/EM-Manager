@@ -283,7 +283,7 @@ class GraphWindow(QtWidgets.QMainWindow):
 
                     return output_path
 
-                # creo un dir temporanea
+                # creo una dir temporanea
                 tmpdirname = tempfile.mkdtemp()
 
                 # path assoluta
@@ -320,24 +320,24 @@ class GraphWindow(QtWidgets.QMainWindow):
                 self.file_info_player.play()
                 def handle_media_status_changed(status):
                     if status == QMediaPlayer.LoadedMedia:
-                        print("Video is loaded and ready to play")
+                        print("Video pronto per essere visualizzato")
                     elif status == QMediaPlayer.BufferingMedia:
-                        print("Video is still buffering")
+                        print("Video ancora in buffering")
                     elif status == QMediaPlayer.EndOfMedia:
-                        print("Video playback completed")
+                        print("Video playback completato")
                     elif status == QMediaPlayer.NoMedia:
                         print("No media")
                     elif status == QMediaPlayer.InvalidMedia:
-                        print("Invalid media")
+                        print("Media non supportato")
                     elif status == QMediaPlayer.UnknownMediaStatus:
-                        print("Unknown media status")
+                        print("Status non riconosciuto")
 
                 self.file_info_player.mediaStatusChanged.connect(handle_media_status_changed)
                 #richiamo la funzione per gestire il maouse
                 self.file_info_videowidget.installEventFilter(self)
                 self.dock3.setWidget(self.file_info_videowidget)
         else:
-            empty_widget = QtWidgets.QWidget()  # Create an empty widget
+            empty_widget = QtWidgets.QWidget()  # Creo un widget vuoto
             self.dock3.setWidget(empty_widget)
         # Recupero e visualizzo le informazioni sui nodi vicini
         neighbor_info_texts = []
