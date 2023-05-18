@@ -166,14 +166,17 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionCrea_progetto"/>
+    <addaction name="newProj"/>
+    <addaction name="openRecentProj"/>
     <addaction name="separator"/>
-    <addaction name="Check_Error"/>
+    <addaction name="actionCrea_progetto"/>
     <addaction name="separator"/>
     <addaction name="google_sheet_action"/>
     <addaction name="separator"/>
     <addaction name="update_relationships_button"/>
     <addaction name="actionAggiorna_rapporti_Google"/>
+    <addaction name="separator"/>
+    <addaction name="Check_Error"/>
     <addaction name="separator"/>
     <addaction name="actionVisualizzatore_3D"/>
    </widget>
@@ -264,7 +267,17 @@
   </action>
   <action name="actionCrea_progetto">
    <property name="text">
-    <string>Crea progetto</string>
+    <string>Crea csv vuoto</string>
+   </property>
+  </action>
+  <action name="newProj">
+   <property name="text">
+    <string>Nuovo progetto</string>
+   </property>
+  </action>
+  <action name="openRecentProj">
+   <property name="text">
+    <string>Apri progetto recente</string>
    </property>
   </action>
  </widget>

@@ -214,22 +214,65 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.statusbar.setStyleSheet("QStatusBar{border-top: 1px solid grey;}")
         self.actionCrea_progetto.triggered.connect(self.create_empty_csv)
 
+        self.newProj.triggered.connect(self.create_empty_csv)
+
+        self.openRecentProj.triggered.connect(self.open_recent_project)
+
+    def open_recent_project(self):
+        projects_file = 'projects.json'
+
+        if os.path.isfile(projects_file):
+            with open(projects_file, 'r') as file:
+                projects = json.load(file)
+
+            project, ok = QInputDialog.getItem(self, "Seleziona un progetto recente", "Progetti:", projects,
+                                                         0, False)
+            if ok and project:
+                # qui puoi implementare il codice per aprire il progetto selezionato
+                print(f"Apertura del progetto {project}")
+
+    def save_project_to_json(self, project_dir):
+        projects_file = 'projects.json'
+        projects = []
+
+        if os.path.isfile(projects_file):
+            with open(projects_file, 'r') as file:
+                projects = json.load(file)
+
+        projects.insert(0, project_dir)
+        projects = projects[:5]
+
+        with open(projects_file, 'w') as file:
+            json.dump(projects, file)
+
     def create_empty_csv(self):
+        fname, _ = QFileDialog.getSaveFileName(self, 'Seleziona la cartella e il nome del file', '',
+                                               'CSV Files (*.csv)')
 
-        path, _ = QFileDialog.getSaveFileName(None, "Salva Come", "", "CSV Files (*.csv)")
-        #creo un csv vuoto da importare nel mio tablewidget
-        column_names = [
-            'nome us', 'tipo', 'tipo di nodi', 'descrizione', 'epoca',
-            'epoca index', 'area', 'anteriore', 'posteriore', 'contemporaneo',
-            'properties_ant', 'properties_post'
-        ]
+        if fname:
+            # Crea le directory
+            dir_name = os.path.dirname(fname)
+            base_name = os.path.basename(fname)
+            base_name_no_ext = os.path.splitext(base_name)[0]  # Rimuovi l'estensione del file
 
-        with open(path, 'w', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(column_names)
+            dir_path = os.path.join(dir_name, base_name_no_ext)
+            os.makedirs(dir_path, exist_ok=True)
+            os.makedirs(os.path.join(dir_path, "DosCo"), exist_ok=True)
+            os.makedirs(os.path.join(dir_path, "3d_obj"), exist_ok=True)
+
+            # Crea il file CSV
+            csv_path = os.path.join(dir_path, base_name)
+            with open(csv_path, 'w',newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(['nome us', 'tipo', 'tipo di nodi', 'descrizione', 'epoca',
+                                 'epoca index', 'area', 'anteriore', 'posteriore', 'contemporaneo',
+                                 'properties_ant', 'properties_post'])
+
+            # Salva i dettagli del progetto
+            self.save_project_to_json(dir_path)
 
         # Open the data CSV file
-        self.data_file = path
+        self.data_file = csv_path
 
         try:
             self.transform_data(self.data_file, self.data_file)
