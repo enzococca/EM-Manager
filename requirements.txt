@@ -14,5 +14,6 @@ numpy
 Pillow
 python-docx
 openpyxl
+winreg
 
 
