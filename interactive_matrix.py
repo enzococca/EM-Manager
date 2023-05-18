@@ -81,22 +81,24 @@ class pyarchinit_Interactive_Matrix:
                     if sing_rapp[0] == 'anteriore':
                         if sing_rapp[1] != '':
                             harris_rapp1 = (
-                                ut+us + '_' + d_interpretativa + '_' + epoca+'-'+e_id,str(sing_rapp[2])+
-                                str(sing_rapp[1]) + '_' + d_interpretativa_sing_rapp + '_' + str(sing_rapp[4])+'-'+str(sing_rapp[5]))
+                                ut+us + '_' + d_interpretativa + '_' + e_id+'-'+epoca,str(sing_rapp[2])+
+                                str(sing_rapp[1]) + '_' + d_interpretativa_sing_rapp + '_' + str(sing_rapp[5])+'-'+str(sing_rapp[4]))
                             data.append(harris_rapp1)
 
                     if sing_rapp[0] == 'properties_ant':
                         if sing_rapp[1] != '':
                             harris_rapp3 = (
-                                ut+us + '_' + d_interpretativa + '_' + epoca+'-'+e_id,str(sing_rapp[2])+
-                                str(sing_rapp[1]) + '_' + d_interpretativa_sing_rapp + '_' + str(sing_rapp[4])+'-'+str(sing_rapp[5]))
+                                ut + us + '_' + d_interpretativa + '_' + e_id + '-' + epoca, str(sing_rapp[2]) +
+                                str(sing_rapp[1]) + '_' + d_interpretativa_sing_rapp + '_' + str(
+                                    sing_rapp[5]) + '-' + str(sing_rapp[4]))
                             properties_ant.append(harris_rapp3)
 
                     if sing_rapp[0] == 'contemporaneo':
                         if sing_rapp[1] != '':
                             harris_rapp2 = (
-                                ut+us + '_' + d_interpretativa + '_' + epoca+'-'+e_id,str(sing_rapp[2])+
-                                str(sing_rapp[1]) + '_' + d_interpretativa_sing_rapp + '_' + str(sing_rapp[4])+'-'+str(sing_rapp[5]))
+                                ut + us + '_' + d_interpretativa + '_' + e_id + '-' + epoca, str(sing_rapp[2]) +
+                                str(sing_rapp[1]) + '_' + d_interpretativa_sing_rapp + '_' + str(
+                                    sing_rapp[5]) + '-' + str(sing_rapp[4]))
                             contemporane.append(harris_rapp2)
 
             except Exception as e:
@@ -108,7 +110,7 @@ class pyarchinit_Interactive_Matrix:
             epochs = set()
             #print(f'questa è il data_list_:{data_list}')
             for record in data_list:
-                epoch = record[3]+'-'+record[4]  # L'epoca si trova all'indice 3 di ogni record
+                epoch = record[4]+'-'+record[3]  # L'epoca si trova all'indice 3 di ogni record
                 epochs.add(epoch)
 
             return epochs
@@ -141,7 +143,7 @@ class pyarchinit_Interactive_Matrix:
                 us, ut, d_interpretativa, epoca,e_id = replace_spaces_with_underscore(rec[0], rec[1], rec[2], rec[3],rec[4])
 
                 if epoca == epoch:
-                    sing_us.append(ut+str(us) + '_' + d_interpretativa + '_' + epoca + '-'+e_id)
+                    sing_us.append(ut+str(us) + '_' + d_interpretativa + '_' + e_id + '-'+epoca)
 
             sing_per.insert(0, sing_us)
             periodi_us_list.append(sing_per)

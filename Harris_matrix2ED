@@ -4,30 +4,30 @@ digraph {
 	compound=true
 	subgraph cluster0 {
 		color=blue
-		node [fillcolor=white gradientangle=90 label="Epoca: romana-1" shape=record style=filled]
-		"Epoca: romana-1"
+		node [fillcolor=white gradientangle=90 label="Epoca: 1-romana" shape=record style=filled]
+		"Epoca: 1-romana"
 	}
 	subgraph cluster1 {
 		color=blue
-		node [fillcolor=white gradientangle=90 label="Epoca: medioevale-2" shape=record style=filled]
-		"Epoca: medioevale-2"
+		node [fillcolor=white gradientangle=90 label="Epoca: 2-medioevale" shape=record style=filled]
+		"Epoca: 2-medioevale"
 	}
 	subgraph main2 {
 		node [color=black fillcolor=white penwidth=.5 shape=box style=filled]
 		edge [arrowhead=normal arrowsize=.8 penwidth=.5 style=dashed]
-		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_romana-1" -> "property112.type_ionic_trabeation_romana-1"
-		"USV/s112_ricostruzione_della_trabeazione_romana-1" -> "property112.type_ionic_trabeation_romana-1"
-		"USV/s112_ricostruzione_della_trabeazione_romana-1" -> "property112.heigth_1.42_m_(1/5_the_height_of_the_column)_romana-1"
-		"USV/s112_ricostruzione_della_trabeazione_romana-1" -> "property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_romana-1"
-		"USV/s112_ricostruzione_della_trabeazione_romana-1" -> "property112.ciao_nan_romana-1"
-		"property112.ciao_nan_romana-1" -> "extractorE.02.05_nan_romana-1"
-		"property112.heigth_1.42_m_(1/5_the_height_of_the_column)_romana-1" -> "extractorE.02.03_nan_romana-1"
-		"property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_romana-1" -> "extractorE.03.01_nan_romana-1"
-		"property112.type_ionic_trabeation_romana-1" -> "extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_romana-1"
-		"extractorE.02.03_nan_romana-1" -> "documentD.02.VA06_DosCo/test.pdf_romana-1"
-		"extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_romana-1" -> "documentD.02.VA06_DosCo/test.pdf_romana-1"
-		"extractorE.02.05_nan_romana-1" -> "documentD.02.VA06_DosCo/test.pdf_romana-1"
-		"extractorE.03.01_nan_romana-1" -> "documentD.03.VA06_DosCo/test.mp4_romana-1"
+		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_1-romana" -> "property112.type_ionic_trabeation_1-romana"
+		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "property112.type_ionic_trabeation_1-romana"
+		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "property112.heigth_1.42_m_(1/5_the_height_of_the_column)_1-romana"
+		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_1-romana"
+		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "property112.ciao_nan_1-romana"
+		"property112.ciao_nan_1-romana" -> "extractorE.02.05_nan_1-romana"
+		"property112.heigth_1.42_m_(1/5_the_height_of_the_column)_1-romana" -> "extractorE.02.03_nan_1-romana"
+		"property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_1-romana" -> "extractorE.03.01_nan_1-romana"
+		"property112.type_ionic_trabeation_1-romana" -> "extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_1-romana"
+		"extractorE.02.03_nan_1-romana" -> "documentD.02.VA06_DosCo/test.pdf_1-romana"
+		"extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_1-romana" -> "documentD.02.VA06_DosCo/test.pdf_1-romana"
+		"extractorE.02.05_nan_1-romana" -> "documentD.02.VA06_DosCo/test.pdf_1-romana"
+		"extractorE.03.01_nan_1-romana" -> "documentD.03.VA06_DosCo/test.mp4_1-romana"
 	}
 	subgraph main1 {
 		node [color=black fillcolor=white penwidth=.5 shape=box style=filled]
@@ -37,17 +37,17 @@ digraph {
 		node [color=black fillcolor=white penwidth=.5 shape=box style=filled]
 		edge [arrowhead=normal arrowsize=.8 penwidth=.5 style=solid]
 		rankdir=TB
-		"VSF108_nan_romana-1" -> "SFF106_nan_romana-1"
-		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_romana-1" -> "USM103_muro_romana-1"
-		"USV/c110_istanza_spaziale_dei_fusti_delle_colonne_romana-1" -> "USV/c109_istanza_spaziale_delle_basi_delle_colonna_romana-1"
-		"USV/c111_istanza_spaziale_dei_capitelli_delle_colonne_romana-1" -> "USV/c110_istanza_spaziale_dei_fusti_delle_colonne_romana-1"
-		"USV/s112_ricostruzione_della_trabeazione_romana-1" -> "USV/c111_istanza_spaziale_dei_capitelli_delle_colonne_romana-1"
-		"USV/s112_ricostruzione_della_trabeazione_romana-1" -> "VSF108_nan_romana-1"
-		"USM103_muro_romana-1" -> "US1_nan_medioevale-2"
-		"US1_nan_medioevale-2" -> "US2_nan_medioevale-2"
-		"US2_nan_medioevale-2" -> "US3_nan_medioevale-2"
-		"US3_nan_medioevale-2" -> "US4_nan_medioevale-2"
-		"US4_nan_medioevale-2" -> "US5_nan_medioevale-2"
-		"US5_nan_medioevale-2" -> "US6_nan_medioevale-2"
+		"VSF108_nan_1-romana" -> "SFF106_nan_1-romana"
+		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_1-romana" -> "USM103_muro_1-romana"
+		"USV/c110_istanza_spaziale_dei_fusti_delle_colonne_1-romana" -> "USV/c109_istanza_spaziale_delle_basi_delle_colonna_1-romana"
+		"USV/c111_istanza_spaziale_dei_capitelli_delle_colonne_1-romana" -> "USV/c110_istanza_spaziale_dei_fusti_delle_colonne_1-romana"
+		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "USV/c111_istanza_spaziale_dei_capitelli_delle_colonne_1-romana"
+		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "VSF108_nan_1-romana"
+		"USM103_muro_1-romana" -> "US1_nan_2-medioevale"
+		"US1_nan_2-medioevale" -> "US2_nan_2-medioevale"
+		"US2_nan_2-medioevale" -> "US3_nan_2-medioevale"
+		"US3_nan_2-medioevale" -> "US4_nan_2-medioevale"
+		"US4_nan_2-medioevale" -> "US5_nan_2-medioevale"
+		"US5_nan_2-medioevale" -> "US6_nan_2-medioevale"
 	}
 }
