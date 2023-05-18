@@ -1,4 +1,4 @@
-import os
+import os,sys
 import platform
 import subprocess
 from PyQt5.QtWidgets import QMessageBox
@@ -12,8 +12,12 @@ def is_graphviz_installed():
 def is_graphviz_in_path():
     path = os.getenv('PATH') or os.getenv('Path')
     for p in path.split(os.path.pathsep):
-        p = os.path.join(p, "bin")
-        if os.path.exists(p) and os.access(p, os.X_OK):
+        if sys.platform == 'win32':
+            bin_dir = os.path.join(p, "bin")
+        else:
+            bin_dir = p
+        dot_path = os.path.join(bin_dir, "dot")
+        if os.path.exists(dot_path) and os.access(dot_path, os.X_OK):
             return True
     return False
 
