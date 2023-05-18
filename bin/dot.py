@@ -438,7 +438,7 @@ class Node:
             label.appendChild(doc.createTextNode('{}'.format(a).replace('USV/n','USV').replace('USV/s','USV').replace('USV/c','USV').replace('extractor','').replace('combiner','').replace('property','').replace('document','').replace('SFF','SF')))
 
 
-        if 'USV/n' in a:
+        if 'USV/s' in a:
 
             fill.setAttribute('color','#000000')
             fill.setAttribute('transparent','false')
@@ -464,7 +464,7 @@ class Node:
             label.setAttribute('xml:space','preserve')
             label.setAttribute('y','5.6494140625')
         
-        elif 'USV/s' in a:
+        elif 'USV/n' in a:
             
             fill.setAttribute('color','#000000')
             fill.setAttribute('transparent','false')
@@ -870,10 +870,10 @@ class Node:
         
         
         
-        if 'USV/n' in a:
+        if 'USV/s' in a:
             shape.setAttribute('type','parallelogram')
             snode.appendChild(shape)
-        elif 'USV/s' in a:
+        elif 'USV/n' in a:
             
             shape.setAttribute('type','hexagon')
             snode.appendChild(shape)

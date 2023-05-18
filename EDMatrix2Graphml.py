@@ -81,7 +81,46 @@ class EpochDialog(QDialog):
             selected_epoch = self.combo_box.currentText()
             return selected_epoch
         return None
+class UnitDialog(QDialog):
+    def __init__(self, unit_df, parent=None):
+        super().__init__(parent)
 
+        self.setWindowTitle("Seleziona unità tipo")
+        self.setWindowModality(Qt.ApplicationModal)
+
+        # Create the epoch combobox
+        self.combo_box = QComboBox()
+        for _, row in unit_df.iterrows():
+            tipo = row["TIPO"]
+            simbolo= row["Simbolo"]
+            combo_item = f"{tipo} - {simbolo}"
+            self.combo_box.addItem(combo_item)
+
+        # Create the OK and Cancel buttons
+        self.ok_button = QPushButton("OK")
+        self.cancel_button = QPushButton("Annulla")
+        self.ok_button.clicked.connect(self.accept)
+        self.cancel_button.clicked.connect(self.reject)
+
+        # Add the combobox and buttons to the dialog layout
+        layout = QVBoxLayout()
+        layout.addWidget(self.combo_box)
+        button_layout = QHBoxLayout()
+        button_layout.addWidget(self.ok_button)
+        button_layout.addWidget(self.cancel_button)
+        layout.addLayout(button_layout)
+        self.setLayout(layout)
+        # Aggiungi questo nel tuo metodo __init__ o dove preferisci
+
+
+
+
+    def get_selected_unit(self):
+        if self.exec_() == QDialog.Accepted:
+            selected_units = self.combo_box.currentText()
+            selected_unit = selected_units.split('-')[0].strip()
+            return selected_unit
+        return None
 class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
     def __init__(self, parent=None,data_file=None, spreadsheet=None):
@@ -107,6 +146,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.data_table.setContextMenuPolicy(Qt.CustomContextMenu)
 
         self.data_table.customContextMenuRequested.connect(self.show_epoch_dialog)
+        self.data_table.customContextMenuRequested.connect(self.show_unit_dialog)
         self.save_google_button.setHidden(True)
         self.save_button.setHidden(True)
         self.statusbar.setSizeGripEnabled(False)
@@ -545,7 +585,25 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             if selected_epoch is not None:
 
                 self.data_table.item(row, col).setData(Qt.DisplayRole, QVariant(selected_epoch))
+    def show_unit_dialog(self, pos):
+        # Get the current cell
+        current_cell = self.data_table.itemAt(pos)
+        if current_cell is None:
+            return
+        row, col = current_cell.row(), current_cell.column()
+        print(row,col)
+        # If the clicked cell is in the "Epoca" column
+        if col == 1:
+            # Create an EpochDialog instance
+            self.unit_df = pd.read_csv("unita_tipo.csv")
 
+            # Create a dock widget with the epoch combobox
+            unit_dialog = UnitDialog(self.unit_df, self)
+            selected_unit = unit_dialog.get_selected_unit()
+            print(selected_unit)
+            if selected_unit is not None:
+
+                self.data_table.item(row, col).setData(Qt.DisplayRole, QVariant(selected_unit))
     def on_google_sheet_action_triggered(self):
         # Check if the spreadsheet ID already exists
         if hasattr(self, 'spreadsheet_id') and self.spreadsheet_id:
@@ -630,7 +688,9 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 if col == 5:  # Colonna Epoca
                     #combo_box = self.create_epoch_combobox()
                     self.data_table.cellDoubleClicked.connect(self.show_epoch_dialog)
-
+                if col == 2:  # Colonna tipo
+                    #combo_box = self.create_epoch_combobox()
+                    self.data_table.cellDoubleClicked.connect(self.show_unit_dialog)
 
                 else:
                     item = QTableWidgetItem(str(self.df.iat[row, col]))
