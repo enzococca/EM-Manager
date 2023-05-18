@@ -7,7 +7,7 @@ import sys
 app = QApplication(sys.argv)
 
 # Carica e ridimensiona l'immagine per lo splash screen
-splash_pix = QPixmap('icon/splash.jpg')
+splash_pix = QPixmap('icon/EM2graphml_splash.png')
 splash_pix = splash_pix.scaled(500, 500, Qt.KeepAspectRatio)  # Cambia le dimensioni qui
 
 splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
@@ -16,9 +16,9 @@ splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
 log_layout = QVBoxLayout()
 
 # Aggiungi un'etichetta per il titolo del log
-log_title = QLabel("Log:")
-log_title.setStyleSheet('font-size: 20px;')  # Cambia la dimensione del font qui
-log_layout.addWidget(log_title)
+# log_title = QLabel("Log:")
+# log_title.setStyleSheet('font-size: 20px;')  # Cambia la dimensione del font qui
+# log_layout.addWidget(log_title)
 
 # Aggiungi un'etichetta per le righe del log
 log_lines = QLabel()

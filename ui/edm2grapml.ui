@@ -17,11 +17,11 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>edm2grapml</string>
+   <string>ed2grapml</string>
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../icon/H_check.png</normaloff>../icon/H_check.png</iconset>
+    <normaloff>../icon/logo.jpg</normaloff>../icon/logo.jpg</iconset>
   </property>
   <property name="documentMode">
    <bool>true</bool>
