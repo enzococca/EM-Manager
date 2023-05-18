@@ -26,6 +26,11 @@ def install_graphviz():
         QMessageBox.warning(None,'Graphviz',"Graphviz non è installato.\n "
                                             "Se non installi Graphviz non puoi convertire.\n"
                                             "Puoi installarlo tramite Homebrew con il comando: 'brew install graphviz'")
+    elif platform.system() == 'Linux':
+        distro = platform.linux_distribution(full_distribution_name=False)
+        QMessageBox.warning(None,'Graphviz',"Graphviz non è installato.\n "
+                                            "Se non installi Graphviz non puoi convertire.\n"
+                                            f"Puoi installarlo sulla tua distribuzione {distro[0]} {distro[1]} tramite il gestore dei pacchetti della tua distribuzione (apt, dnf, pacman, etc.)")
     else:
         QMessageBox.warning(None,'Graphviz',"Graphviz non è installato.\n "
                                             "Se non installi Graphviz non puoi convertire.\n"
