@@ -1389,7 +1389,6 @@ class PandasModel(QAbstractTableModel):
 
 if __name__ == '__main__':
     app = QApplication([])
-
     mapper = CSVMapper()
     mapper.show()
     app.exec_()

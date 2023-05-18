@@ -10,20 +10,16 @@ def is_graphviz_installed():
         return False
 
 def is_graphviz_in_path():
-    path = os.getenv('Path')
-    #print(f"path: {path}")
+    path = os.getenv('Path', os.getenv('PATH'))
     for p in path.split(os.path.pathsep):
-        #p = os.path.join(p, "bin")
         if sys.platform == 'win32':
-            bin_dir = os.path.join(p,"bin")
-
+            dot_path = os.path.join(p, "dot.exe")
         else:
-            bin_dir=p
-        dot_path = os.path.join(bin_dir, "dot")
-
+            dot_path = os.path.join(p, "dot")
         if os.path.exists(dot_path) and os.access(dot_path, os.X_OK):
             return True
     return False
+
 
 def install_graphviz():
     if platform.system() == 'Darwin':  # macOS
@@ -76,10 +72,10 @@ def check_graphviz(message):
         install_graphviz()
         message.showMessage("Graphviz è installato")
         return
-    #if not is_graphviz_in_path():
-        #set_graphviz_path()
-        #message.showMessage("Graphviz non è nella  variabile d'ambinete")
+    if not is_graphviz_in_path():
+        set_graphviz_path()
+        message.showMessage("Graphviz non è nella  variabile d'ambinete")
 
         return
-    print(is_graphviz_in_path())
+
     message.showMessage("Graphviz è installato e pronto all'uso.")
