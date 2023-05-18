@@ -37,3 +37,17 @@ La classe  HarrisMatrix  gestisce l'esportazione della matrice di Harris in dive
  
 # Installazione di Graphviz 
 Graphviz è necessario per la conversione dei grafici. Si può verificare se Graphviz è installato tramite la funzione  is_graphviz_installed , verificare se la directory bin di Graphviz è nel PATH tramite la funzione  is_graphviz_in_path , installare Graphviz tramite la funzione  install_graphviz , e aggiungere la directory di Graphviz al PATH tramite la funzione  set_graphviz_path .
+
+# Roadmap di sviluppo
+
+## Funzioni da aggiungere a breve
+
+- Lettore GraphML (GraphML to csv) - EMAN
+- Create una release su GitHub degli eseguibili per windows, Mac e linux (file fino a 2GB https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases)
+
+## Funzioni utili da aggiungere in seconda battuta
+
+- Visualizza foglio elettronico “list of sources”
+- Collegamento con Blender via TCP/IP
+- Collegamento con Telegram app già in parte esistente
+- Collegamento con Google Spreadsheet
