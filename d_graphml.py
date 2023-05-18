@@ -19,21 +19,21 @@ import tempfile
 
 
 G = None  # Definisci G all'inizio del tuo codice
-class CustomQtInteractor(QtInteractor):
-
-    def closeEvent(self, event):
-        # Ignora l'evento di chiusura, impedendo che si propaghi al genitore
-        event.ignore()
+# class CustomQtInteractor(QtInteractor):
+#
+#     def closeEvent(self, event):
+#         # Ignora l'evento di chiusura, impedendo che si propaghi al genitore
+#         event.ignore()
 
 class GraphWindow(QtWidgets.QMainWindow):
 
     def __init__(self, parent=None, show=True):
         QtWidgets.QMainWindow.__init__(self, parent)
 
-        # Create layout
+        # Creo layout
         layout = QtWidgets.QHBoxLayout()
 
-        # Create three dockwidgets
+        # Creo three dockwidgets
         self.dock1 = QtWidgets.QDockWidget("Node Info")
         self.dock2 = QtWidgets.QDockWidget("Nodi prossimi Info")
         self.dock3 = QtWidgets.QDockWidget("File Multimediali")  # Added
@@ -41,16 +41,16 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.addDockWidget(QtCore.Qt.RightDockWidgetArea, self.dock2)
         self.addDockWidget(QtCore.Qt.BottomDockWidgetArea, self.dock3)  # Added
 
-        # Create three QTextEdits and set as widget for the dockwidgets
+        # Creo three QTextEdits e setto come widget per il dockwidgets
         self.node_info_textedit = QtWidgets.QTextEdit()
         self.neighbor_info_textedit = QtWidgets.QTextEdit()
         self.file_info_widget = QtWidgets.QWidget()  # Placeholder widget
         self.dock1.setWidget(self.node_info_textedit)
         self.dock2.setWidget(self.neighbor_info_textedit)
-        self.dock3.setWidget(self.file_info_widget)  # Added
+        self.dock3.setWidget(self.file_info_widget)
 
         # Crea il plotter PyVistaqt
-        self.plotter = CustomQtInteractor(self)#con questa classe di pyvistaqyt posso aggiungere il plotter tra le due dockwidget
+        self.plotter = QtInteractor(self)#con questa classe di pyvistaqyt posso aggiungere il plotter tra le due dockwidget
         layout.addWidget(self.plotter.interactor)
 
         # Imposta il layout centrale
