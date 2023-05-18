@@ -1,5 +1,7 @@
-import os,sys,winreg
+import os,sys
 import platform
+if platform.system() == "Windows":
+    import winreg
 import subprocess
 from PyQt5.QtWidgets import QMessageBox
 def is_graphviz_installed():
