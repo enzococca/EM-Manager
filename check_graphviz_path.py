@@ -1,4 +1,4 @@
-import os,sys
+import os,sys,winreg
 import platform
 import subprocess
 from PyQt5.QtWidgets import QMessageBox
@@ -10,13 +10,17 @@ def is_graphviz_installed():
         return False
 
 def is_graphviz_in_path():
-    path = os.getenv('PATH') or os.getenv('Path')
+    path = os.getenv('Path')
+    #print(f"path: {path}")
     for p in path.split(os.path.pathsep):
+        #p = os.path.join(p, "bin")
         if sys.platform == 'win32':
-            bin_dir = os.path.join(p, "bin")
+            bin_dir = os.path.join(p,"bin")
+
         else:
-            bin_dir = p
+            bin_dir=p
         dot_path = os.path.join(bin_dir, "dot")
+
         if os.path.exists(dot_path) and os.access(dot_path, os.X_OK):
             return True
     return False
@@ -38,14 +42,44 @@ def install_graphviz():
                                             "Se non installi Graphviz non puoi convertire.\n"
                                             "Puoi installarlo seguendo le istruzioni sul sito ufficiale: https://graphviz.org/download/")
 
+
+
 def set_graphviz_path():
-    QMessageBox.warning(None,'Variabile di ambiente',"Graphviz non è nel PATH.\n Aggiungi la directory di Graphviz al PATH del tuo sistema operativo.")
+    if platform.system() == 'win32':
+        # Aggiungi la directory di Graphviz al PATH sulla piattaforma Windows
+        graphviz_folder = "C:\\Program Files\\Graphviz\\bin"
+        with winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE) as reg:
+            with winreg.OpenKeyEx(reg, r'SYSTEM\CurrentControlSet\Control\Session Manager\Environment', access=winreg.KEY_WRITE) as key:
+                path, _ = winreg.QueryValueEx(key, "Path")
+                if not graphviz_folder in path:
+                    path += ";" + graphviz_folder
+                    winreg.SetValueEx(key, "Path", 0, winreg.REG_EXPAND_SZ, path)
+
+        # Verifica se Graphviz può essere trovato nel PATH aggiornato
+        if not is_graphviz_in_path():
+            QMessageBox.warning(None,'Variabile di ambiente',"Impossibile trovare Graphviz nella variabile PATH.\n Assicurati che il percorso di installazione di Graphviz sia stato aggiunto alla variabile d'ambiente PATH.")
+    elif platform.system() == 'Darwin':
+        # Aggiungi la directory di Graphviz al PATH sulla piattaforma macOS
+        graphviz_folder = "/usr/local/bin"
+        os.environ["PATH"] += os.pathsep + graphviz_folder
+    else:
+        # Aggiungi la directory di Graphviz al PATH sulla piattaforma Linux
+        graphviz_folder = "/usr/bin/dot"
+        os.environ["PATH"] += os.pathsep + graphviz_folder
+
+        # Verifica se Graphviz può essere trovato nel PATH aggiornato
+        if not is_graphviz_in_path():
+            QMessageBox.warning(None,'Variabile di ambiente',"Impossibile trovare Graphviz nella variabile PATH.\n Assicurati che il percorso di installazione di Graphviz sia stato aggiunto alla variabile d'ambiente PATH.")
 
 def check_graphviz(message):
     if not is_graphviz_installed():
         install_graphviz()
+        message.showMessage("Graphviz è installato")
         return
-    if not is_graphviz_in_path():
-        set_graphviz_path()
+    #if not is_graphviz_in_path():
+        #set_graphviz_path()
+        #message.showMessage("Graphviz non è nella  variabile d'ambinete")
+
         return
+    print(is_graphviz_in_path())
     message.showMessage("Graphviz è installato e pronto all'uso.")

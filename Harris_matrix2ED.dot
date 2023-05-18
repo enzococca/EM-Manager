@@ -9,68 +9,20 @@ digraph {
 		splines=ortho
 	];
 	node [label="\N"];
-	subgraph main2 {
-		node [color=black,
-			fillcolor=white,
-			penwidth=.5,
-			shape=box,
+	subgraph cluster1 {
+		graph [bb="580.5,1432,728.5,1485",
+			color=blue
+		];
+		node [fillcolor=white,
+			gradientangle=90,
+			label="Epoca: 2-medioevale",
+			shape=record,
 			style=filled
 		];
-		edge [arrowhead=normal,
-			arrowsize=.8,
-			penwidth=.5,
-			style=dashed
-		];
-		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_1-romana"	[height=0.5,
-			pos="1103.5,1026",
-			width=5.2535];
-		"property112.type_ionic_trabeation_1-romana"	[height=0.5,
-			pos="800.5,882",
-			width=3.7326];
-		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_1-romana" -> "property112.type_ionic_trabeation_1-romana"	[pos="e,924.62,900.09 924.62,1007.8 924.62,1007.8 924.62,908.09 924.62,908.09"];
-		"extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_1-romana"	[height=0.5,
-			pos="787.5,738",
-			width=6.3264];
-		"property112.type_ionic_trabeation_1-romana" -> "extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_1-romana"	[pos="e,800.5,756.09 800.5,863.76 800.5,863.76 800.5,764.09 800.5,764.09"];
-		"USV/n112_ricostruzione_della_trabeazione_1-romana"	[height=0.5,
-			pos="951.5,1458.5",
-			width=4.4097];
-		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "property112.type_ionic_trabeation_1-romana"	[pos="e,880.03,900.5 880.03,1440.3 880.03,1440.3 880.03,908.5 880.03,908.5"];
-		"property112.heigth_1.42_m_(1/5_the_height_of_the_column)_1-romana"	[height=0.5,
-			pos="210.5,1314",
-			width=5.8472];
-		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "property112.heigth_1.42_m_(1/5_the_height_of_the_column)_1-romana"	[pos="e,412.94,1332.2 821.84,1440.2 821.84,1418.7 821.84,1386 821.84,1386 821.84,1386 412.94,1386 412.94,1386 412.94,1386 412.94,1340.2 \
-412.94,1340.2"];
-		"property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_1-romana"	[height=0.5,
-			pos="1627.5,1314",
-			width=7.1493];
-		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_1-romana"	[pos="e,1627.5,1332.3 1110.4,1452 1310.2,1452 1627.5,1452 1627.5,1452 1627.5,1452 1627.5,1340.3 1627.5,1340.3"];
-		"property112.ciao_nan_1-romana"	[height=0.5,
-			pos="592.5,1314",
-			width=2.7535];
-		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "property112.ciao_nan_1-romana"	[pos="e,692.05,1314 850.94,1440.2 850.94,1401.3 850.94,1314 850.94,1314 850.94,1314 700.05,1314 700.05,1314"];
-		"extractorE.02.03_nan_1-romana"	[height=0.5,
-			pos="224.5,1170",
-			width=2.7118];
-		"property112.heigth_1.42_m_(1/5_the_height_of_the_column)_1-romana" -> "extractorE.02.03_nan_1-romana"	[pos="e,224.5,1188.1 224.5,1295.8 224.5,1295.8 224.5,1196.1 224.5,1196.1"];
-		"extractorE.03.01_nan_1-romana"	[height=0.5,
-			pos="1627.5,1170",
-			width=2.7118];
-		"property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_1-romana" -> "extractorE.03.01_nan_1-romana"	[pos="e,1627.5,1188.1 1627.5,1295.8 1627.5,1295.8 1627.5,1196.1 1627.5,1196.1"];
-		"extractorE.02.05_nan_1-romana"	[height=0.5,
-			pos="521.5,1170",
-			width=2.7118];
-		"property112.ciao_nan_1-romana" -> "extractorE.02.05_nan_1-romana"	[pos="e,556.25,1188.1 556.25,1295.8 556.25,1295.8 556.25,1196.1 556.25,1196.1"];
-		"documentD.02.VA06_DosCo/test.pdf_1-romana"	[height=0.5,
-			pos="450.5,594",
-			width=4.0243];
-		"extractorE.02.05_nan_1-romana" -> "documentD.02.VA06_DosCo/test.pdf_1-romana"	[pos="e,491.81,612.48 491.81,1151.8 491.81,1151.8 491.81,620.48 491.81,620.48"];
-		"extractorE.02.03_nan_1-romana" -> "documentD.02.VA06_DosCo/test.pdf_1-romana"	[pos="e,313.88,612.48 313.88,1151.8 313.88,1151.8 313.88,620.48 313.88,620.48"];
-		"documentD.03.VA06_DosCo/test.mp4_1-romana"	[height=0.5,
-			pos="1627.5,1026",
-			width=4.0972];
-		"extractorE.03.01_nan_1-romana" -> "documentD.03.VA06_DosCo/test.mp4_1-romana"	[pos="e,1627.5,1044.1 1627.5,1151.8 1627.5,1151.8 1627.5,1052.1 1627.5,1052.1"];
-		"extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_1-romana" -> "documentD.02.VA06_DosCo/test.pdf_1-romana"	[pos="e,577.56,612.09 577.56,719.76 577.56,719.76 577.56,620.09 577.56,620.09"];
+		"Epoca: 2-medioevale"	[height=0.51389,
+			pos="654.5,1458.5",
+			rects="588.38,1440.5,720.62,1476.5",
+			width=1.8368];
 	}
 	subgraph main1 {
 		node [color=black,
@@ -85,6 +37,21 @@ digraph {
 			style=solid
 		];
 	}
+	subgraph cluster0 {
+		graph [bb="396.5,1432,524.5,1485",
+			color=blue
+		];
+		node [fillcolor=white,
+			gradientangle=90,
+			label="Epoca: 1-romana",
+			shape=record,
+			style=filled
+		];
+		"Epoca: 1-romana"	[height=0.51389,
+			pos="460.5,1458.5",
+			rects="404.88,1440.5,516.12,1476.5",
+			width=1.5451];
+	}
 	subgraph main {
 		graph [rankdir=TB];
 		node [color=black,
@@ -98,12 +65,16 @@ digraph {
 			penwidth=.5,
 			style=solid
 		];
-		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_1-romana";
+		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_1-romana"	[height=0.5,
+			pos="1103.5,1026",
+			width=5.2535];
 		"USM103_muro_1-romana"	[height=0.5,
 			pos="1138.5,882",
 			width=2.2639];
 		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_1-romana" -> "USM103_muro_1-romana"	[pos="e,1138.5,900.09 1138.5,1007.8 1138.5,1007.8 1138.5,908.09 1138.5,908.09"];
-		"USV/n112_ricostruzione_della_trabeazione_1-romana";
+		"USV/n112_ricostruzione_della_trabeazione_1-romana"	[height=0.5,
+			pos="951.5,1458.5",
+			width=4.4097];
 		"VSF108_nan_1-romana"	[height=0.5,
 			pos="2031.5,1314",
 			width=2.0764];
@@ -146,34 +117,63 @@ digraph {
 			width=2.066];
 		"US5_nan_2-medioevale" -> "US6_nan_2-medioevale"	[pos="e,1161.5,36.09 1161.5,143.76 1161.5,143.76 1161.5,44.09 1161.5,44.09"];
 	}
-	subgraph cluster1 {
-		graph [bb="580.5,1432,728.5,1485",
-			color=blue
-		];
-		node [fillcolor=white,
-			gradientangle=90,
-			label="Epoca: 2-medioevale",
-			shape=record,
+	subgraph main2 {
+		node [color=black,
+			fillcolor=white,
+			penwidth=.5,
+			shape=box,
 			style=filled
 		];
-		"Epoca: 2-medioevale"	[height=0.51389,
-			pos="654.5,1458.5",
-			rects="588.38,1440.5,720.62,1476.5",
-			width=1.8368];
-	}
-	subgraph cluster0 {
-		graph [bb="396.5,1432,524.5,1485",
-			color=blue
+		edge [arrowhead=normal,
+			arrowsize=.8,
+			penwidth=.5,
+			style=dashed
 		];
-		node [fillcolor=white,
-			gradientangle=90,
-			label="Epoca: 1-romana",
-			shape=record,
-			style=filled
-		];
-		"Epoca: 1-romana"	[height=0.51389,
-			pos="460.5,1458.5",
-			rects="404.88,1440.5,516.12,1476.5",
-			width=1.5451];
+		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_1-romana";
+		"property112.type_ionic_trabeation_1-romana"	[height=0.5,
+			pos="800.5,882",
+			width=3.7326];
+		"USV/c109_istanza_spaziale_delle_basi_delle_colonna_1-romana" -> "property112.type_ionic_trabeation_1-romana"	[pos="e,924.62,900.09 924.62,1007.8 924.62,1007.8 924.62,908.09 924.62,908.09"];
+		"extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_1-romana"	[height=0.5,
+			pos="787.5,738",
+			width=6.3264];
+		"property112.type_ionic_trabeation_1-romana" -> "extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_1-romana"	[pos="e,800.5,756.09 800.5,863.76 800.5,863.76 800.5,764.09 800.5,764.09"];
+		"USV/n112_ricostruzione_della_trabeazione_1-romana";
+		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "property112.type_ionic_trabeation_1-romana"	[pos="e,880.03,900.5 880.03,1440.3 880.03,1440.3 880.03,908.5 880.03,908.5"];
+		"property112.heigth_1.42_m_(1/5_the_height_of_the_column)_1-romana"	[height=0.5,
+			pos="210.5,1314",
+			width=5.8472];
+		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "property112.heigth_1.42_m_(1/5_the_height_of_the_column)_1-romana"	[pos="e,412.94,1332.2 821.84,1440.2 821.84,1418.7 821.84,1386 821.84,1386 821.84,1386 412.94,1386 412.94,1386 412.94,1386 412.94,1340.2 \
+412.94,1340.2"];
+		"property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_1-romana"	[height=0.5,
+			pos="1627.5,1314",
+			width=7.1493];
+		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_1-romana"	[pos="e,1627.5,1332.3 1110.4,1452 1310.2,1452 1627.5,1452 1627.5,1452 1627.5,1452 1627.5,1340.3 1627.5,1340.3"];
+		"property112.ciao_nan_1-romana"	[height=0.5,
+			pos="592.5,1314",
+			width=2.7535];
+		"USV/n112_ricostruzione_della_trabeazione_1-romana" -> "property112.ciao_nan_1-romana"	[pos="e,692.05,1314 850.94,1440.2 850.94,1401.3 850.94,1314 850.94,1314 850.94,1314 700.05,1314 700.05,1314"];
+		"extractorE.02.03_nan_1-romana"	[height=0.5,
+			pos="224.5,1170",
+			width=2.7118];
+		"property112.heigth_1.42_m_(1/5_the_height_of_the_column)_1-romana" -> "extractorE.02.03_nan_1-romana"	[pos="e,224.5,1188.1 224.5,1295.8 224.5,1295.8 224.5,1196.1 224.5,1196.1"];
+		"extractorE.03.01_nan_1-romana"	[height=0.5,
+			pos="1627.5,1170",
+			width=2.7118];
+		"property112.proportion_proportion_of_the_elements_of_the_ionic_trabeation_1-romana" -> "extractorE.03.01_nan_1-romana"	[pos="e,1627.5,1188.1 1627.5,1295.8 1627.5,1295.8 1627.5,1196.1 1627.5,1196.1"];
+		"extractorE.02.05_nan_1-romana"	[height=0.5,
+			pos="521.5,1170",
+			width=2.7118];
+		"property112.ciao_nan_1-romana" -> "extractorE.02.05_nan_1-romana"	[pos="e,556.25,1188.1 556.25,1295.8 556.25,1295.8 556.25,1196.1 556.25,1196.1"];
+		"documentD.02.VA06_DosCo/test.pdf_1-romana"	[height=0.5,
+			pos="450.5,594",
+			width=4.0243];
+		"extractorE.02.05_nan_1-romana" -> "documentD.02.VA06_DosCo/test.pdf_1-romana"	[pos="e,491.81,612.48 491.81,1151.8 491.81,1151.8 491.81,620.48 491.81,620.48"];
+		"extractorE.02.03_nan_1-romana" -> "documentD.02.VA06_DosCo/test.pdf_1-romana"	[pos="e,313.88,612.48 313.88,1151.8 313.88,1151.8 313.88,620.48 313.88,620.48"];
+		"documentD.03.VA06_DosCo/test.mp4_1-romana"	[height=0.5,
+			pos="1627.5,1026",
+			width=4.0972];
+		"extractorE.03.01_nan_1-romana" -> "documentD.03.VA06_DosCo/test.mp4_1-romana"	[pos="e,1627.5,1044.1 1627.5,1151.8 1627.5,1151.8 1627.5,1052.1 1627.5,1052.1"];
+		"extractorE.02.04_cornice_modillions_and_coffering_(pp._141-142)_1-romana" -> "documentD.02.VA06_DosCo/test.pdf_1-romana"	[pos="e,577.56,612.09 577.56,719.76 577.56,719.76 577.56,620.09 577.56,620.09"];
 	}
 }
