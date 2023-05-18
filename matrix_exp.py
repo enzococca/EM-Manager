@@ -80,9 +80,9 @@ class HarrisMatrix:
 
         G.format = 'dot'
         dot_file = G.render(directory='', filename=filename)
-        #si = subprocess.STARTUPINFO()
-        #si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        #si.wShowWindow = subprocess.SW_HIDE
+        si = subprocess.STARTUPINFO()
+        si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        si.wShowWindow = subprocess.SW_HIDE
         with open(os.path.join('', filename + '_graphml.dot'), "w") as out:
             subprocess.Popen(['tred',dot_file],
                              #shell=True,

@@ -34,7 +34,7 @@ def check_graphviz(message):
     if not is_graphviz_installed():
         install_graphviz()
         return
-    #if not is_graphviz_in_path():
-        #set_graphviz_path()
-        #return
+    if not is_graphviz_in_path():
+        set_graphviz_path()
+        return
     message.showMessage("Graphviz è installato e pronto all'uso.")
