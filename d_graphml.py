@@ -7,7 +7,7 @@ from PyQt5.QtGui import QPixmap,QMouseEvent
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtWidgets import QLabel
+from PyQt5.QtWidgets import QLabel,QMessageBox
 from pyvistaqt import QtInteractor
 import os
 import numpy as np
@@ -76,121 +76,123 @@ class GraphWindow(QtWidgets.QMainWindow):
         global G  # Utilizza la parola chiave global per fare riferimento alla variabile G definita all'esterno
         # Colore per gli archi
         EDGE_COLOR = [0, 0, 0]  # black
+        if self.graphml_path:
+            # Lettura del file graphml
+            G = nx.read_graphml(self.graphml_path)
 
-        # Lettura del file graphml
-        G = nx.read_graphml(self.graphml_path)
+            # Recupero delle coordinate x, y per ogni nodo, dove l'ID del nodo è la chiave
+            self.x_coord = {node_id: float(node_data["x"]) for node_id, node_data in G.nodes(data=True) if "x" in node_data}
+            self.y_coord = {node_id: float(node_data["y"]) for node_id, node_data in G.nodes(data=True) if "y" in node_data}
+            # Poiché non sembra esserci una z nelL'output, assegno un valore di 0 a tutti i nodi per ora.
+            self.z_coord = {node_id: 0 for node_id in G.nodes()}
 
-        # Recupero delle coordinate x, y per ogni nodo, dove l'ID del nodo è la chiave
-        self.x_coord = {node_id: float(node_data["x"]) for node_id, node_data in G.nodes(data=True) if "x" in node_data}
-        self.y_coord = {node_id: float(node_data["y"]) for node_id, node_data in G.nodes(data=True) if "y" in node_data}
-        # Poiché non sembra esserci una z nelL'output, assegno un valore di 0 a tutti i nodi per ora.
-        self.z_coord = {node_id: 0 for node_id in G.nodes()}
+            # Creazione del plotter
+            #self.plotter = BackgroundPlotter(notebook=0) # con questo visualizzo la finetra di pyvista separata
+            self.plotter.background_color = [255, 255, 255]
+            # Abilito lo stile di interazione con il trackball
+            self.plotter.enable_trackball_style()
+            # Aggiungo gli archi e itero sul grafo G
+            # e verifico se i due nodi di ogni arco hanno coordinate x, y e z corrispondenti in tre dizionari separati (self.x_coord, self.y_coord, self.z_coord).
+            # Se lo hanno, viene creato un segmento di linea tra i due nodi utilizzando queste coordinate e quindi viene creato un tubo intorno al segmento di linea utilizzando
+            # il parametro radius=0.1.
+            # Infine, aggiungo questa forma di tubo come mesh a un plot 3D usando self.plotter.add_mesh() con un colore specificato (EDGE_COLOR).
+            for edge in G.edges():
+                node1, node2 = edge
+                if node1 in self.x_coord and node1 in self.y_coord and node2 in self.x_coord and node2 in self.y_coord:
+                    line = pv.Line(
+                        [self.x_coord[node1], self.y_coord[node1], self.z_coord[node1]],
+                        [self.x_coord[node2], self.y_coord[node2], self.z_coord[node2]],
+                    )
+                    tube = line.tube(radius=0.1)# tubo è lo stile 3d
+                    self.plotter.add_mesh(tube, color=EDGE_COLOR)#lo aggiugno alla mesh
 
-        # Creazione del plotter
-        #self.plotter = BackgroundPlotter(notebook=0) # con questo visualizzo la finetra di pyvista separata
-        self.plotter.background_color = [255, 255, 255]
-        # Abilito lo stile di interazione con il trackball
-        self.plotter.enable_trackball_style()
-        # Aggiungo gli archi e itero sul grafo G
-        # e verifico se i due nodi di ogni arco hanno coordinate x, y e z corrispondenti in tre dizionari separati (self.x_coord, self.y_coord, self.z_coord).
-        # Se lo hanno, viene creato un segmento di linea tra i due nodi utilizzando queste coordinate e quindi viene creato un tubo intorno al segmento di linea utilizzando
-        # il parametro radius=0.1.
-        # Infine, aggiungo questa forma di tubo come mesh a un plot 3D usando self.plotter.add_mesh() con un colore specificato (EDGE_COLOR).
-        for edge in G.edges():
-            node1, node2 = edge
-            if node1 in self.x_coord and node1 in self.y_coord and node2 in self.x_coord and node2 in self.y_coord:
-                line = pv.Line(
-                    [self.x_coord[node1], self.y_coord[node1], self.z_coord[node1]],
-                    [self.x_coord[node2], self.y_coord[node2], self.z_coord[node2]],
-                )
-                tube = line.tube(radius=0.1)# tubo è lo stile 3d
-                self.plotter.add_mesh(tube, color=EDGE_COLOR)#lo aggiugno alla mesh
+            meshes = []#creao una lista vuota dove inserire le mesh che devono essere visualizzate come oggetti 3D
 
-        meshes = []#creao una lista vuota dove inserire le mesh che devono essere visualizzate come oggetti 3D
+            # Directory dei modelli 3D
+            models_dir = "3d_obj"
 
-        # Directory dei modelli 3D
-        models_dir = "3d_obj"
-
-        # Lista dei modelli 3D esistenti
-        existing_models = [f[:-4] for f in os.listdir(models_dir) if f.endswith(".obj")]  # Rimuovi l'estensione .obj
-        # print(existing_models)
-        # Verifica quali modelli 3D corrispondono alle descrizioni dei nodi
-        for node_id, node_data in G.nodes(data=True):
-            # print(node_data)
-            if "label" in node_data and node_data["label"] in existing_models:
-                print(f"Modello 3D {node_data['label']}.obj esiste e corrisponde al nodo {node_id}.")
-            else:
-                print(f"Modello 3D per il nodo {node_id} non trovato.")
-            if node_id in self.x_coord and node_id in self.y_coord:
-                x = float(self.x_coord[node_id])
-                y = float(self.y_coord[node_id])
-                z = float(self.z_coord[node_id])
-
-                # Recupero del percorso del file del modello 3D corrispondente alla descrizione del nodo
-                try:
-                    model_path = f"3d_obj/{G.nodes[node_id]['label']}.obj"
-                    model_img = f"3d_obj/{G.nodes[node_id]['label']}.jpg"
-
-                    if "USV" in node_data["label"]:
-                        image_path = "3d_obj/USV.png"
-                    if "VSF" in node_data["label"]:
-                        image_path = "3d_obj/VSF.png"
-                    if "SF" in node_data["label"]:
-                        image_path = "3d_obj/SF.png"
-                    else:
-                        image_path = f"3d_obj/{G.nodes[node_id]['label']}.png"
-                except KeyError:
-
-                    print(KeyError)
-
+            # Lista dei modelli 3D esistenti
+            existing_models = [f[:-4] for f in os.listdir(models_dir) if f.endswith(".obj")]  # Rimuovi l'estensione .obj
+            # print(existing_models)
+            # Verifica quali modelli 3D corrispondono alle descrizioni dei nodi
+            for node_id, node_data in G.nodes(data=True):
+                # print(node_data)
+                if "label" in node_data and node_data["label"] in existing_models:
+                    print(f"Modello 3D {node_data['label']}.obj esiste e corrisponde al nodo {node_id}.")
                 else:
+                    print(f"Modello 3D per il nodo {node_id} non trovato.")
+                if node_id in self.x_coord and node_id in self.y_coord:
+                    x = float(self.x_coord[node_id])
+                    y = float(self.y_coord[node_id])
+                    z = float(self.z_coord[node_id])
 
-                    #se model path esiste carica il 3D, altrimenti carica l'immagine, se non trova l'immagine carica una sfera 3d
-                    if os.path.exists(model_path):
+                    # Recupero del percorso del file del modello 3D corrispondente alla descrizione del nodo
+                    try:
+                        model_path = f"3d_obj/{G.nodes[node_id]['label']}.obj"
+                        model_img = f"3d_obj/{G.nodes[node_id]['label']}.jpg"
 
-                        # Caricamento del modello 3D
-                        mesh = pv.read(model_path)
-                        # Creazione di una matrice di trasformazione per la rotazione di 180 gradi attorno all'asse x
-                        #Se no lo faccio il 3D non si sposta. la funzione translate() non funziona
-                        transform_matrix = np.array([[1, 0, 0, 0],
-                                                     [0, -1, 0, 0],
-                                                     [0, 0, -1, 0],
-                                                     [0, 0, 0, 1]])
+                        if "USV" in node_data["label"]:
+                            image_path = "3d_obj/USV.png"
+                        if "VSF" in node_data["label"]:
+                            image_path = "3d_obj/VSF.png"
+                        if "SF" in node_data["label"]:
+                            image_path = "3d_obj/SF.png"
+                        else:
+                            image_path = f"3d_obj/{G.nodes[node_id]['label']}.png"
+                    except KeyError:
 
-                        # Applicazione della trasformazione alla mesh
-                        mesh.transform(transform_matrix)
-                        # Calcola la traslazione
-                        translation = np.array([x, y, z])
-
-                        # Sposta la mesh di prova
-                        mesh.points = mesh.points - mesh.center + translation
-                        # print(f"Centro della mesh prima della traslazione: {mesh.center}")
-                        mesh.rotate_x(180)  # Per ruotare attorno all'asse y devoruotoare la mesh se no mi viene capovolta
-
-                        mesh.translate([x, y, z])
-                        # print(f"Centro della mesh dopo la traslazione: {mesh.center}")
-                        texture = pv.read_texture(model_img)#leggo la texture in png la tegture deve avere lo stesso nome della obj
-
-                        self.plotter.add_mesh(mesh, texture=texture)
-
+                        print(KeyError)
 
                     else:
-                        if os.path.exists(image_path):
-                            image = Image.open(image_path)
-                            image = image.rotate(180)
-                            image = np.array(image)  # Converti l'immagine PIL in un array NumPy per pyvista
 
-                            texture = pv.Texture(image)
-                            mesh = pv.Plane(center=(x, y, z), direction=(0, 0, 1), i_size=20, j_size=10)
-                            mesh.texture_map_to_plane(inplace=True)
+                        #se model path esiste carica il 3D, altrimenti carica l'immagine, se non trova l'immagine carica una sfera 3d
+                        if os.path.exists(model_path):
+
+                            # Caricamento del modello 3D
+                            mesh = pv.read(model_path)
+                            # Creazione di una matrice di trasformazione per la rotazione di 180 gradi attorno all'asse x
+                            #Se no lo faccio il 3D non si sposta. la funzione translate() non funziona
+                            transform_matrix = np.array([[1, 0, 0, 0],
+                                                         [0, -1, 0, 0],
+                                                         [0, 0, -1, 0],
+                                                         [0, 0, 0, 1]])
+
+                            # Applicazione della trasformazione alla mesh
+                            mesh.transform(transform_matrix)
+                            # Calcola la traslazione
+                            translation = np.array([x, y, z])
+
+                            # Sposta la mesh di prova
+                            mesh.points = mesh.points - mesh.center + translation
+                            # print(f"Centro della mesh prima della traslazione: {mesh.center}")
+                            mesh.rotate_x(180)  # Per ruotare attorno all'asse y devoruotoare la mesh se no mi viene capovolta
+
+                            mesh.translate([x, y, z])
+                            # print(f"Centro della mesh dopo la traslazione: {mesh.center}")
+                            texture = pv.read_texture(model_img)#leggo la texture in png la tegture deve avere lo stesso nome della obj
 
                             self.plotter.add_mesh(mesh, texture=texture)
+
+
                         else:
-                            mesh = pv.Sphere(center=(x, y, z), radius=10)
-                            self.plotter.add_mesh(mesh)
+                            if os.path.exists(image_path):
+                                image = Image.open(image_path)
+                                image = image.rotate(180)
+                                image = np.array(image)  # Converti l'immagine PIL in un array NumPy per pyvista
 
-                meshes.append(mesh)
+                                texture = pv.Texture(image)
+                                mesh = pv.Plane(center=(x, y, z), direction=(0, 0, 1), i_size=20, j_size=10)
+                                mesh.texture_map_to_plane(inplace=True)
 
+                                self.plotter.add_mesh(mesh, texture=texture)
+                            else:
+                                mesh = pv.Sphere(center=(x, y, z), radius=10)
+                                self.plotter.add_mesh(mesh)
+
+                    meshes.append(mesh)
+        else:
+            print('Grahml non trovato')
+            QMessageBox.warning(self, 'Attenzione', 'Devi caricare un progetto con Graphml valido')
     def euclidean_distance(self,point1, point2):
         #questa funzione serve per poter calcolare le coordinate del punto dove si clicca per mostrate le info
         return np.sqrt(np.sum((np.array(point1) - np.array(point2)) ** 2))
