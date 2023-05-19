@@ -220,11 +220,28 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.actionApri_progetto.triggered.connect(self.open_project)
 
     def open_project(self):
+        projects_file = 'projects.json'
+
         # Fornisci un dialogo di selezione del file
         project, _ = QFileDialog.getOpenFileName(self, "Seleziona un progetto", "", "CSV Files (*.csv)")
 
         if project:  # Se un file è stato selezionato
             print(f"Apertura del progetto {project}")
+
+            # Aggiungi il progetto alla lista dei progetti recenti
+            if os.path.isfile(projects_file):
+                with open(projects_file, 'r') as file:
+                    projects = json.load(file)
+            else:
+                projects = []
+
+            # Se il progetto non è già nella lista, aggiungilo
+            if project not in projects:
+                projects.append(project)
+
+                # Salva la lista aggiornata nel file JSON
+                with open(projects_file, 'w') as file:
+                    json.dump(projects, file)
 
             # Get the base name of the project
             base_name = os.path.basename(project)
