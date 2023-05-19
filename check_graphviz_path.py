@@ -1,6 +1,6 @@
 import os,sys
 import platform
-if platform.system() == "Windows":
+if platform.system() == "win32":
     import winreg
 import subprocess
 from PyQt5.QtWidgets import QMessageBox
