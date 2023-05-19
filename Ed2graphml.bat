@@ -17,7 +17,7 @@ if %errorlevel% neq 0 (
 )
 
 REM Avvia il programma principale con lo splash screen
-start "" /B python splash.py
+rem start "" /B python splash.py
 
 
 REM Crea un ambiente virtuale in Python se non esiste già

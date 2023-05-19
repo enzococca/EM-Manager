@@ -1,4 +1,4 @@
-
+import splash
 from PyQt5.QtCore import (QAbstractTableModel,QVariant,
                           Qt)
 from PyQt5.QtWidgets import (QDialog,
@@ -39,6 +39,7 @@ from check_graphviz_path import check_graphviz
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl
 from config import config
+
 MAIN_DIALOG_CLASS, _ = loadUiType(
     os.path.join(os.path.dirname(__file__),  'ui', 'edm2grapml.ui'))
 
