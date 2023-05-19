@@ -1,15 +1,17 @@
 import os,sys
 import subprocess
 from graphviz import Digraph,Source
+from config import  config
 class HarrisMatrix:
 
-    #HOME = os.environ['PYARCHINIT_HOME']
+
     def __init__(self, sequence,conteporene,property,periodi):
         self.sequence = sequence
         self.periodi=periodi
         self.property = property
         self.conteporene=conteporene
-
+        self.path=config.path
+        print(f"self.path: {self.path}")
 
     @property
     def export_matrix_2(self):
@@ -76,11 +78,12 @@ class HarrisMatrix:
                 b.edge_attr.update(arrowhead='none', arrowsize='.8')
 
         #matrix_path = '{}{}{}'.format(self.HOME, os.sep, "pyarchinit_Matrix_folder")
-        filename = ('%s') % ('Harris_matrix2ED')
+        filename = os.path.join(self.path, 'Harris_matrix2ED')
 
         G.format = 'dot'
-        dot_file = G.render(directory='', filename=filename)
-        with open(os.path.join('', filename + '_graphml.dot'), "w") as out:
+        #dot_file = G.render(directory=self.path, filename=filename)
+        dot_file = G.render(filename=filename, format='dot')
+        with open(os.path.join(self.path, filename + '_graphml.dot'), "w") as out:
             if sys.platform == 'win32':
                 si = subprocess.STARTUPINFO()
                 si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -90,7 +93,8 @@ class HarrisMatrix:
                 subprocess.Popen(['tred',dot_file], stdout=out)
 
 
-        tred_file = os.path.join('', filename + '_graphml.dot')
+        tred_file = dot_file
+        print(f"path da tred file: {tred_file}")
         f = Source.from_file(tred_file, format='png')
         f.render()
         g = Source.from_file(tred_file, format='jpg')

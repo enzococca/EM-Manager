@@ -38,7 +38,7 @@ from d_graphml import GraphWindow
 from check_graphviz_path import check_graphviz
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl
-
+from config import config
 MAIN_DIALOG_CLASS, _ = loadUiType(
     os.path.join(os.path.dirname(__file__),  'ui', 'edm2grapml.ui'))
 
@@ -122,7 +122,7 @@ class UnitDialog(QDialog):
             return selected_unit
         return None
 class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
-
+    GRAPHML_PATH = None
     def __init__(self, parent=None,data_file=None, spreadsheet=None):
 
         super(CSVMapper, self).__init__(parent=parent)
@@ -225,11 +225,49 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             with open(projects_file, 'r') as file:
                 projects = json.load(file)
 
-            project, ok = QInputDialog.getItem(self, "Seleziona un progetto recente", "Progetti:", projects,
-                                                         0, False)
+            project, ok = QInputDialog.getItem(self, "Seleziona un progetto recente", "Progetti:", projects, 0, False)
             if ok and project:
                 # qui puoi implementare il codice per aprire il progetto selezionato
                 print(f"Apertura del progetto {project}")
+
+                # Get the base name of the project
+                base_name = os.path.basename(project)
+                base_name_no_ext = os.path.splitext(base_name)[0]  # Rimuovi l'estensione del file
+
+                # Costruisci il percorso al file CSV
+                csv_path = os.path.join(project, f"{base_name_no_ext}.csv")
+
+                if os.path.isfile(csv_path):
+                    # Open the data CSV file
+                    self.data_file = csv_path
+
+                    try:
+                        self.transform_data(self.data_file, self.data_file)
+                    except AssertionError:
+                        pass
+                    self.df = pd.read_csv(self.data_file, dtype=str)
+                    self.data_fields = self.df.columns.tolist()
+
+                    self.data_table.setDragEnabled(True)
+                    # Impostare il numero di righe e colonne nel QTableWidget
+                    self.data_table.setRowCount(len(self.df))
+                    self.data_table.setColumnCount(len(self.df.columns))
+
+                    # Impostare le etichette delle colonne orizzontali
+                    self.data_table.setHorizontalHeaderLabels(self.df.columns)
+
+                    # Inserire i dati nelle celle del QTableWidget
+                    for row in range(len(self.df)):
+                        for col in range(len(self.df.columns)):
+                            item = QTableWidgetItem(str(self.df.iat[row, col]))
+                            self.data_table.setItem(row, col, item)
+                    for i in range(self.data_table.rowCount()):
+                        self.data_table.setRowHeight(i, 50)
+
+                    for i in range(self.data_table.columnCount()):
+                        self.data_table.setColumnWidth(i, 250)
+                else:
+                    print(f"Il file CSV {csv_path} non esiste")
 
     def save_project_to_json(self, project_dir):
         projects_file = 'projects.json'
@@ -302,7 +340,9 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
     def d_graph(self):
         #richaimo il visualizzatore 3D
-        GraphWindow()
+        #GraphWindow()
+        GraphWindow(CSVMapper.GRAPHML_PATH)
+
 
 
     #serie di funzioni per cercare gli errori nelle relazioni
@@ -1178,27 +1218,49 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         #self.check_consistency_google()
         #self.show_errors_in_dock_widget_google()
     def on_convert_data_pressed(self):
+        import time
         data_list, id_us_dict = self.read_transformed_csv(self.data_file)
+        CSVMapper.GRAPHML_PATH, _ = QFileDialog.getSaveFileName(self, 'Seleziona la cartella e il nome del file', '',
+                                                                'Grapgml Files (*.graphml)')
 
+        # Rimuovi l'estensione dal percorso del file originale
+        base_path, _ = os.path.splitext(CSVMapper.GRAPHML_PATH)
+
+        # Ottieni la directory del file originale
+        dir_path = os.path.dirname(base_path)
+        # config.path = dir_path
+        print(f"Config path settato in: {config.path}")
+        config.path = os.path.dirname(CSVMapper.GRAPHML_PATH)  # Imposta config.path
         dlg = pyarchinit_Interactive_Matrix(data_list, id_us_dict)
-        dlg.generate_matrix()
+        dlg.generate_matrix()  # Crea il file .dot
+
+        dot_file_path = os.path.join(config.path, "Harris_matrix2ED.dot")  # Percorso completo al file dot
+
+        # Attendi fino a quando il file .dot non esiste o fino a quando non sono passati 10 secondi
+        timeout = 10
+        start_time = time.time()
+
+        while not os.path.exists(dot_file_path):
+            if time.time() - start_time > timeout:
+                raise Exception("Timeout while waiting for .dot file to be created.")
+            time.sleep(1)  # Aspetta per un secondo
+
+
         dottoxml = '{}{}{}'.format('bin', os.sep, 'dottoxml.py')
         try:
-            #input_file = self.lineEdit_input.text()
-            #output_file = self.lineEdit_output.text()
 
-            python_path = sys.exec_prefix
-            python_version = sys.version[:3]
 
-            if platform.system() == 'Windows':
-                cmd = '{}\python'.format(python_path)
-            elif platform.system() == 'Darwin':
-                cmd = '{}/bin/python{}'.format(python_path, python_version)
+
+
+
+            # Crea il percorso al nuovo file dot
+            dot_file = os.path.join(dir_path, "Harris_matrix2ED.dot")
+            if sys.platform =='win32':
+
+                subprocess.call(['python', dottoxml, '-f', 'Graphml', dot_file, CSVMapper.GRAPHML_PATH], shell=True)
             else:
-                cmd = '{}/bin/python{}'.format(python_path, python_version)
-            subprocess.call(['python', dottoxml, '-f', 'Graphml', 'Harris_matrix2ED_graphml.dot', 'Harris_matrix2ED.graphml'], shell=True)
-
-            with open('Harris_matrix2ED.graphml', 'r') as file:
+                subprocess.call(['python3', dottoxml, '-f', 'Graphml', dot_file, CSVMapper.GRAPHML_PATH], shell=True)
+            with open(CSVMapper.GRAPHML_PATH, 'r') as file:
                 filedata = file.read()
 
                 # Replace the target string
@@ -1206,12 +1268,14 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 filedata = filedata.replace("graphml>'", 'graphml>')
                 # Write the file out again
 
-            with open('Harris_matrix2ED.graphml', 'w') as file:
+            with open(CSVMapper.GRAPHML_PATH, 'w') as file:
 
                 file.write(filedata)
         except KeyError as e:
             QMessageBox.warning(self, "Error", str(e),
                                 QMessageBox.Ok)
+
+        #self.d_graph(self.graphml_path)
     def read_transformed_csv(self, file_path):
         data_list = []
         id_us_dict = {}

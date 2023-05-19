@@ -19,6 +19,7 @@ import tempfile
 
 
 G = None  # Definisci G all'inizio del tuo codice
+graphml_path=None
 # class CustomQtInteractor(QtInteractor):
 #
 #     def closeEvent(self, event):
@@ -27,12 +28,13 @@ G = None  # Definisci G all'inizio del tuo codice
 
 class GraphWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, parent=None, show=True):
+    def __init__(self, graphml_path, parent=None, show=True):
+
         QtWidgets.QMainWindow.__init__(self, parent)
 
         # Creo layout
         layout = QtWidgets.QHBoxLayout()
-
+        self.graphml_path = graphml_path
         # Creo three dockwidgets
         self.dock1 = QtWidgets.QDockWidget("Node Info")
         self.dock2 = QtWidgets.QDockWidget("Nodi prossimi Info")
@@ -70,12 +72,13 @@ class GraphWindow(QtWidgets.QMainWindow):
 
         self.statusbar = None
     def d_graph(self):
+        print(f"path da d_graph: {self.graphml_path}")
         global G  # Utilizza la parola chiave global per fare riferimento alla variabile G definita all'esterno
         # Colore per gli archi
         EDGE_COLOR = [0, 0, 0]  # black
 
         # Lettura del file graphml
-        G = nx.read_graphml("Harris_matrix2ED.graphml")
+        G = nx.read_graphml(self.graphml_path)
 
         # Recupero delle coordinate x, y per ogni nodo, dove l'ID del nodo è la chiave
         self.x_coord = {node_id: float(node_data["x"]) for node_id, node_data in G.nodes(data=True) if "x" in node_data}

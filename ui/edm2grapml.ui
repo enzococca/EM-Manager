@@ -370,5 +370,21 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>newProj</sender>
+   <signal>triggered()</signal>
+   <receiver>save_button</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>491</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>

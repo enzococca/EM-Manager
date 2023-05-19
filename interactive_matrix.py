@@ -38,6 +38,9 @@ class pyarchinit_Interactive_Matrix:
         return s
 
     def generate_matrix(self):
+
+
+
         #funzione per rimuovere gli underscore nella liste di liste
         def replace_spaces_with_underscore(us, ut,d_interpretativa, epoca,e_id):
             us = str(us).replace(' ', '_')
