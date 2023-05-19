@@ -3,3 +3,5 @@
 /ENV/
 /.github/
 /__pycache__/
+log.txt
+temp.log
