@@ -280,7 +280,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 for i in range(self.data_table.columnCount()):
                     self.data_table.setColumnWidth(i, 250)
             else:
-                print(f"Il file CSV {csv_path} non esiste")
+                QMessageBox.warning(self,'Attenzione',f"Il file CSV {csv_path} non esiste")
 
     def open_recent_project(self):
         projects_file = 'projects.json'
@@ -331,7 +331,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     for i in range(self.data_table.columnCount()):
                         self.data_table.setColumnWidth(i, 250)
                 else:
-                    print(f"Il file CSV {csv_path} non esiste")
+                    QMessageBox.warning(self,'Attenzione',f"Il file CSV {csv_path} non esiste")
+
 
     def save_project_to_json(self, project_dir):
         projects_file = 'projects.json'
@@ -590,7 +591,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             # Apri il foglio di calcolo
             spreadsheet = client.open_by_key(self.spreadsheet_id)
         except Exception as e:
-            print(f"Errore nell'apertura del foglio di calcolo: {e}")
+            QMessageBox.warning(self, 'Attenzione',f"Errore nell'apertura del foglio di calcolo: {e}")
             return
 
         try:
@@ -605,6 +606,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         except Exception as e:
             print(f"Errore nella lettura del foglio di calcolo: {e}")
+            returnQMessageBox.warning(self, 'Attenzione',f"Errore nell'apertura del foglio di calcolo: {e}")
             return
 
         # La prima riga è l'intestazione
@@ -699,7 +701,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 for j, item in enumerate(row):
                     self.data_table.setItem(i, j, QTableWidgetItem(item))
         except Exception as e:
-            print(f"Errore nell'aggiornamento della tabella: {e}")
+            QMessageBox.warning(self,'Attenzione',f"Errore nell'aggiornamento della tabella: {e}")
             return
     def update_relationships(self):
         # Leggere i dati dalla QTableWidget e aggiungerli al nuovo DataFrame
@@ -804,7 +806,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             except FileNotFoundError:
                 creds = self.get_google_sheets_credentials()
             except Exception as e:
-                print(f"An error occurred: {e}")
+                QMessageBox.warning(self, 'Attenzione', f"Errore: {e}")
+                return
                 return  # Exit the function if an error occurred
 
             # Costruisci il servizio Drive
