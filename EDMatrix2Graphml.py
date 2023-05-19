@@ -906,7 +906,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 else:
                     value = 'nan'
                 row_data[self.df.columns[col]] = value
-            new_df = new_df.append(row_data, ignore_index=True)
+            print(type(new_df))
+            new_df = new_df._append(row_data, ignore_index=True)
 
         # Salvare il nuovo DataFrame nel file CSV
         new_df.to_csv(self.data_file, index=False)
