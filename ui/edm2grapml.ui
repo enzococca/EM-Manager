@@ -167,6 +167,7 @@
      <string>File</string>
     </property>
     <addaction name="newProj"/>
+    <addaction name="actionApri_progetto"/>
     <addaction name="openRecentProj"/>
     <addaction name="separator"/>
     <addaction name="actionCrea_progetto"/>
@@ -280,6 +281,11 @@
     <string>Apri progetto recente</string>
    </property>
   </action>
+  <action name="actionApri_progetto">
+   <property name="text">
+    <string>Apri progetto</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -372,6 +378,38 @@
   </connection>
   <connection>
    <sender>newProj</sender>
+   <signal>triggered()</signal>
+   <receiver>save_button</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>491</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionApri_progetto</sender>
+   <signal>triggered()</signal>
+   <receiver>save_button</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>185</x>
+     <y>491</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>openRecentProj</sender>
    <signal>triggered()</signal>
    <receiver>save_button</receiver>
    <slot>show()</slot>

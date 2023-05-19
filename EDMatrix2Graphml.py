@@ -217,6 +217,53 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.newProj.triggered.connect(self.create_empty_csv)
 
         self.openRecentProj.triggered.connect(self.open_recent_project)
+        self.actionApri_progetto.triggered.connect(self.open_project)
+
+    def open_project(self):
+        # Fornisci un dialogo di selezione del file
+        project, _ = QFileDialog.getOpenFileName(self, "Seleziona un progetto", "", "CSV Files (*.csv)")
+
+        if project:  # Se un file è stato selezionato
+            print(f"Apertura del progetto {project}")
+
+            # Get the base name of the project
+            base_name = os.path.basename(project)
+            base_name_no_ext = os.path.splitext(base_name)[0]  # Rimuovi l'estensione del file
+
+            # Costruisci il percorso al file CSV
+            csv_path = os.path.join(os.path.dirname(project), f"{base_name_no_ext}.csv")
+
+            if os.path.isfile(csv_path):
+                # Open the data CSV file
+                self.data_file = csv_path
+
+                try:
+                    self.transform_data(self.data_file, self.data_file)
+                except AssertionError:
+                    pass
+                self.df = pd.read_csv(self.data_file, dtype=str)
+                self.data_fields = self.df.columns.tolist()
+
+                self.data_table.setDragEnabled(True)
+                # Impostare il numero di righe e colonne nel QTableWidget
+                self.data_table.setRowCount(len(self.df))
+                self.data_table.setColumnCount(len(self.df.columns))
+
+                # Impostare le etichette delle colonne orizzontali
+                self.data_table.setHorizontalHeaderLabels(self.df.columns)
+
+                # Inserire i dati nelle celle del QTableWidget
+                for row in range(len(self.df)):
+                    for col in range(len(self.df.columns)):
+                        item = QTableWidgetItem(str(self.df.iat[row, col]))
+                        self.data_table.setItem(row, col, item)
+                for i in range(self.data_table.rowCount()):
+                    self.data_table.setRowHeight(i, 50)
+
+                for i in range(self.data_table.columnCount()):
+                    self.data_table.setColumnWidth(i, 250)
+            else:
+                print(f"Il file CSV {csv_path} non esiste")
 
     def open_recent_project(self):
         projects_file = 'projects.json'
