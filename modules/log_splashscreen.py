@@ -12,7 +12,7 @@ class LogDialog(QtWidgets.QDialog):
         self.log_edit.setReadOnly(True)
         self.layout.addWidget(self.log_edit)
         self.resize(640, 480)
-with open("temp.log", "r") as f:
+with open("../log/temp.log", "r") as f:
     log_content = f.read()
 log_dialog.log_edit.setPlainText(log_content)
 app = QtWidgets.QApplication(sys.argv)

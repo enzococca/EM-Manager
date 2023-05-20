@@ -60,7 +60,7 @@ data = [
 ]
 
 
-with open("epoche_storiche.csv", "w", newline="", encoding="utf-8") as csvfile:
+with open("../epoche_storiche.csv", "w", newline="", encoding="utf-8") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(["Indice", "Periodo", "Evento/Governante", "Anno/Secolo"])
     writer.writerows(data)

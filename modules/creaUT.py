@@ -20,7 +20,7 @@ data = [
    ]
 
 
-with open("unita_tipo.csv", "w", newline="", encoding="utf-8") as csvfile:
+with open("../unita_tipo.csv", "w", newline="", encoding="utf-8") as csvfile:
     writer = csv.writer(csvfile)
     writer.writerow(["Indice", "TIPO", "Descrizione", "Simbolo"])
     writer.writerows(data)

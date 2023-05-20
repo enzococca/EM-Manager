@@ -1,4 +1,4 @@
-import splash
+import modules.splash
 from PyQt5.QtCore import (QAbstractTableModel,QVariant,
                           Qt)
 from PyQt5.QtWidgets import (QDialog,
@@ -21,24 +21,21 @@ import os
 current_directory = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_directory)
 
-from interactive_matrix import *
+from modules.interactive_matrix import *
 import json
-import platform
 import csv
 import pandas as pd
 import gspread
 from gspread_dataframe import set_with_dataframe
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from google_auth_oauthlib.flow import InstalledAppFlow
-from google.oauth2 import service_account
 import io
-from d_graphml import GraphWindow
-from check_graphviz_path import check_graphviz
+from modules.d_graphml import GraphWindow
+from modules.check_graphviz_path import check_graphviz
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl
-from config import config
+from modules.config import config
 
 MAIN_DIALOG_CLASS, _ = loadUiType(
     os.path.join(os.path.dirname(__file__),  'ui', 'edm2grapml.ui'))
@@ -162,7 +159,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.help_view.setWindowTitle('Help')
 
         # Carica il file HTML
-        self.help_view.load(QUrl.fromLocalFile(os.path.abspath('build/html/help.html')))
+        self.help_view.load(QUrl.fromLocalFile(os.path.abspath('help/html/help.html')))
 
         # Crea l'azione Help
         self.help_action = QAction('Help', self)
@@ -769,7 +766,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         # If the clicked cell is in the "Epoca" column
         if col == 4:
             # Create an EpochDialog instance
-            self.epochs_df = pd.read_csv("epoche_storiche.csv")
+            self.epochs_df = pd.read_csv("template/epoche_storiche.csv")
 
             # Create a dock widget with the epoch combobox
             epoch_dialog = EpochDialog(self.epochs_df, self)
@@ -788,7 +785,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         # If the clicked cell is in the "Epoca" column
         if col == 1:
             # Create an EpochDialog instance
-            self.unit_df = pd.read_csv("unita_tipo.csv")
+            self.unit_df = pd.read_csv("temaplate/unita_tipo.csv")
 
             # Create a dock widget with the epoch combobox
             unit_dialog = UnitDialog(self.unit_df, self)
@@ -1215,8 +1212,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 writer.writerow(row[:-1] + [' '.join([str(e) for e in row[-1]])])
 
 
-        self.check_consistency(output,'log.txt')
-        self.show_errors_in_dock_widget('log.txt')
+        self.check_consistency(output,'log/log.txt')
+        self.show_errors_in_dock_widget('log/log.txt')
     def transform_data_google(self,file_buffer, output_buffer):
         # Read the lines from the StringIO buffer
         lines = file_buffer.readlines()
@@ -1315,7 +1312,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             time.sleep(1)  # Aspetta per un secondo
 
 
-        dottoxml = '{}{}{}'.format('bin', os.sep, 'dottoxml.py')
+        dottoxml = '{}{}{}'.format('parser', os.sep, 'dottoxml.py')
         try:
 
 

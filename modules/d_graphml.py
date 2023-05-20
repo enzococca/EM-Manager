@@ -109,7 +109,7 @@ class GraphWindow(QtWidgets.QMainWindow):
             meshes = []#creao una lista vuota dove inserire le mesh che devono essere visualizzate come oggetti 3D
 
             # Directory dei modelli 3D
-            models_dir = "3d_obj"
+            models_dir = "../3d_obj"
 
             # Lista dei modelli 3D esistenti
             existing_models = [f[:-4] for f in os.listdir(models_dir) if f.endswith(".obj")]  # Rimuovi l'estensione .obj
@@ -132,11 +132,11 @@ class GraphWindow(QtWidgets.QMainWindow):
                         model_img = f"3d_obj/{G.nodes[node_id]['label']}.jpg"
 
                         if "USV" in node_data["label"]:
-                            image_path = "3d_obj/USV.png"
+                            image_path = "../3d_obj/USV.png"
                         if "VSF" in node_data["label"]:
-                            image_path = "3d_obj/VSF.png"
+                            image_path = "../3d_obj/VSF.png"
                         if "SF" in node_data["label"]:
-                            image_path = "3d_obj/SF.png"
+                            image_path = "../3d_obj/SF.png"
                         else:
                             image_path = f"3d_obj/{G.nodes[node_id]['label']}.png"
                     except KeyError:

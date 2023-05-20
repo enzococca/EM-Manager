@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>HELP &#8212; help V.01 documentazione</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/translations.js"></script>
+    <link rel="index" title="Indice" href="genindex.html" />
+    <link rel="search" title="Cerca" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="help">
+<h1>HELP<a class="headerlink" href="#help" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+<section id="aiuto-per-l-uso-del-csvmapper">
+<h1>Aiuto per l’uso del CSVMapper<a class="headerlink" href="#aiuto-per-l-uso-del-csvmapper" title="Permalink to this heading">¶</a></h1>
+<p>CSVMapper è un’applicazione che consente di mappare e verificare le relazioni tra i dati in un file CSV o un foglio Google.</p>
+<section id="avvio-del-programma">
+<h2>Avvio del programma<a class="headerlink" href="#avvio-del-programma" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Scarica il file batch fornito e posizionalo nella cartella desiderata sul tuo computer.</p></li>
+<li><p>Fai doppio clic sul file batch per avviarlo.</p></li>
+<li><p>Lo script del file batch si occuperà di controllare se Python e PyQt5 sono installati.</p></li>
+<li><p>Se Python o PyQt5 non sono installati, lo script utilizzerà PackageManagement per installarli automaticamente.</p></li>
+<li><p>Dopo l’installazione, lo script avvierà il programma principale con uno splash screen.</p></li>
+<li><p>Lo splash screen mostrerà il progresso del caricamento del programma.</p></li>
+<li><p>Una volta completato il caricamento, il programma principale verrà avviato e potrai iniziare ad utilizzarlo.</p></li>
+</ol>
+</section>
+<section id="funzioni-principali">
+<h2>Funzioni principali<a class="headerlink" href="#funzioni-principali" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Carica dati da un Google Sheet:</strong> Questa funzione consente di caricare i dati direttamente da un foglio Google.</p></li>
+<li><p><strong>Aggiorna rapporti:</strong> Questa funzione consente di aggiornare le relazioni tra i dati.</p></li>
+<li><p><strong>Visualizzatore 3D:</strong> Questa funzione consente di visualizzare i dati in un formato 3D.</p></li>
+<li><p><strong>Controllo errori:</strong> Questa funzione consente di controllare gli errori nelle relazioni tra i dati.</p></li>
+</ul>
+</section>
+<section id="funzioni-di-controllo-errori">
+<h2>Funzioni di controllo errori<a class="headerlink" href="#funzioni-di-controllo-errori" title="Permalink to this heading">¶</a></h2>
+<p>CSVMapper offre diverse funzioni per controllare gli errori nelle relazioni tra i dati:</p>
+<ul class="simple">
+<li><p><strong>Controllo duplicati:</strong> Questa funzione controlla se ci sono duplicati nella stessa riga.</p></li>
+<li><p><strong>Controllo esistenza relazioni:</strong> Questa funzione controlla se le relazioni esistono.</p></li>
+<li><p><strong>Controllo esistenza relazioni inverse:</strong> Questa funzione controlla se le relazioni inverse esistono.</p></li>
+<li><p><strong>Controllo tipo di relazione:</strong> Questa funzione controlla se il tipo di relazione è corretto.</p></li>
+</ul>
+</section>
+<section id="seleziona-epoca-storica">
+<h2>Seleziona epoca storica<a class="headerlink" href="#seleziona-epoca-storica" title="Permalink to this heading">¶</a></h2>
+<p>CSVMapper offre anche una funzione che consente di selezionare un’epoca storica da un elenco a discesa. Questo elenco è popolato dai dati nel file CSV o nel foglio Google.</p>
+</section>
+<section id="salvataggio-dei-dati">
+<h2>Salvataggio dei dati<a class="headerlink" href="#salvataggio-dei-dati" title="Permalink to this heading">¶</a></h2>
+<p>CSVMapper consente di salvare i dati in un file CSV o in un foglio Google. I pulsanti «Salva CSV» e «Salva Google» sono collegati alle funzioni corrispondenti.</p>
+</section>
+<section id="aggiornamento-delle-relazioni">
+<h2>Aggiornamento delle relazioni<a class="headerlink" href="#aggiornamento-delle-relazioni" title="Permalink to this heading">¶</a></h2>
+<p>CSVMapper offre due funzioni per aggiornare le relazioni tra i dati: una per i file CSV e una per i fogli Google.</p>
+</section>
+<section id="aggiornamento-delle-relazioni-per-i-file-csv">
+<h2>Aggiornamento delle relazioni per i file CSV<a class="headerlink" href="#aggiornamento-delle-relazioni-per-i-file-csv" title="Permalink to this heading">¶</a></h2>
+<p>Questa funzione apre il file CSV, legge tutte le righe e crea un dizionario per memorizzare le righe per nome. Poi, per ogni riga, controlla il tipo di unità stratigrafica e aggiorna le relazioni corrispondenti. Infine, aggiorna la tabella con i dati aggiornati.</p>
+</section>
+<section id="aggiornamento-delle-relazioni-per-i-fogli-google">
+<h2>Aggiornamento delle relazioni per i fogli Google<a class="headerlink" href="#aggiornamento-delle-relazioni-per-i-fogli-google" title="Permalink to this heading">¶</a></h2>
+<p>Questa funzione funziona in modo simile alla funzione per i file CSV, ma invece di aprire un file CSV, apre un foglio Google. Dopo aver letto tutte le righe dal foglio Google, crea un dizionario per memorizzare le righe per nome. Poi, per ogni riga, controlla il tipo di unità stratigrafica e aggiorna le relazioni corrispondenti. Infine, aggiorna la tabella con i dati aggiornati.</p>
+</section>
+<section id="nota">
+<h2>Nota:<a class="headerlink" href="#nota" title="Permalink to this heading">¶</a></h2>
+<p>Per entrambe le funzioni, se l’unità stratigrafica è di tipo “property”, “document”, “combiner” o “extractor”, vengono aggiornate le relazioni “properties_ant” e “properties_post”. Se l’unità stratigrafica è di tipo “contemporaneo”, viene aggiornata la relazione “contemporaneo”. In tutti gli altri casi, vengono aggiornate le relazioni “anteriore” e “posteriore”.</p>
+</section>
+<section id="aggiornamento-delle-relazioni-nel-dataframe">
+<h2>Aggiornamento delle relazioni nel DataFrame<a class="headerlink" href="#aggiornamento-delle-relazioni-nel-dataframe" title="Permalink to this heading">¶</a></h2>
+<p>CSVMapper offre una funzione per aggiornare le relazioni nel DataFrame. Questa funzione legge i dati dalla QTableWidget, aggiorna i rapporti nel DataFrame e mostra eventuali errori nel dock widget.</p>
+</section>
+<section id="visualizzazione-delle-modifiche">
+<h2>Visualizzazione delle modifiche<a class="headerlink" href="#visualizzazione-delle-modifiche" title="Permalink to this heading">¶</a></h2>
+<p>CSVMapper offre una funzione per mostrare le differenze tra le vecchie e le nuove righe. Questa funzione può essere utilizzata per verificare le modifiche apportate ai dati.</p>
+</section>
+<section id="salvataggio-delle-modifiche">
+<h2>Salvataggio delle modifiche<a class="headerlink" href="#salvataggio-delle-modifiche" title="Permalink to this heading">¶</a></h2>
+<p>CSVMapper offre una funzione per chiedere all’utente se vuole salvare le modifiche. Se l’utente decide di salvare le modifiche, queste verranno salvate nel file CSV e il file verrà ricaricato.</p>
+</section>
+<section id="visualizzazione-del-dialogo-dell-epoca">
+<h2>Visualizzazione del dialogo dell’epoca<a class="headerlink" href="#visualizzazione-del-dialogo-dell-epoca" title="Permalink to this heading">¶</a></h2>
+<p>CSVMapper offre una funzione per mostrare un dialogo dell’epoca quando viene fatto doppio clic su una cella nella colonna «Epoca». Questa funzione crea un’istanza di EpochDialog e mostra il dialogo all’utente.</p>
+</section>
+<section id="salvataggio-dei-dati-in-un-file-csv-o-in-un-foglio-google">
+<h2>Salvataggio dei dati in un file CSV o in un foglio Google<a class="headerlink" href="#salvataggio-dei-dati-in-un-file-csv-o-in-un-foglio-google" title="Permalink to this heading">¶</a></h2>
+<p>CSVMapper offre due funzioni per salvare i dati: una per i file CSV e una per i fogli Google. Queste funzioni leggono i dati dalla QTableWidget, creano un nuovo DataFrame con questi dati e salvano il DataFrame nel file CSV o nel foglio Google.</p>
+</section>
+<section id="aggiornamento-e-ripristino-dei-dati-csv">
+<h2>Aggiornamento e ripristino dei dati CSV<a class="headerlink" href="#aggiornamento-e-ripristino-dei-dati-csv" title="Permalink to this heading">¶</a></h2>
+<p>CSVMapper offre due funzioni per aggiornare e ripristinare i dati CSV. La funzione di aggiornamento aggiorna il DataFrame originale con i dati della QTableWidget. La funzione di ripristino ripristina i dati della QTableWidget al DataFrame originale.</p>
+</section>
+<section id="ottenere-il-dataframe-corrente">
+<h2>Ottenere il DataFrame corrente<a class="headerlink" href="#ottenere-il-dataframe-corrente" title="Permalink to this heading">¶</a></h2>
+<p>CSVMapper offre una funzione per ottenere il DataFrame corrente dalla QTableWidget. Questa funzione può essere utilizzata per ottenere i dati attualmente visualizzati nella QTableWidget.</p>
+<section id="aggiorna-relazioni">
+<h3>Aggiorna Relazioni<a class="headerlink" href="#aggiorna-relazioni" title="Permalink to this heading">¶</a></h3>
+<p>Questa funzione legge i dati dal QTableWidget e li aggiunge a un nuovo DataFrame. Successivamente aggiorna le relazioni nel DataFrame. Se ci sono delle modifiche, chiederà all’utente se desidera salvare le modifiche e, se necessario, salverà il file CSV.</p>
+</section>
+<section id="aggiorna-relazioni-nel-dataframe">
+<h3>Aggiorna Relazioni nel DataFrame<a class="headerlink" href="#aggiorna-relazioni-nel-dataframe" title="Permalink to this heading">¶</a></h3>
+<p>Questa funzione prende un DataFrame come input, aggiorna le relazioni nel DataFrame e restituisce il DataFrame aggiornato insieme al nuovo header.</p>
+</section>
+<section id="mostra-cambiamenti">
+<h3>Mostra Cambiamenti<a class="headerlink" href="#mostra-cambiamenti" title="Permalink to this heading">¶</a></h3>
+<p>Questa funzione stampa le differenze tra le righe vecchie e nuove. Se una riga è cambiata, verrà stampata la vecchia riga e la nuova riga.</p>
+</section>
+</section>
+<section id="chiedi-di-salvare-le-modifiche">
+<h2>Chiedi di Salvare le Modifiche<a class="headerlink" href="#chiedi-di-salvare-le-modifiche" title="Permalink to this heading">¶</a></h2>
+<p>Questa funzione chiede all’utente se desidera salvare le modifiche. Se l’utente sceglie di salvare le modifiche, le modifiche verranno salvate nel file CSV di output.</p>
+<section id="finestra-grafica-3d">
+<h3>Finestra Grafica 3D<a class="headerlink" href="#finestra-grafica-3d" title="Permalink to this heading">¶</a></h3>
+<p>La classe GraphWindow crea una finestra che visualizza un grafo 3D. Questa finestra include tre dockwidgets: «Node Info», «Nodi prossimi Info» e «File Multimediali». Ogni dockwidget contiene un QTextEdit o un QWidget che mostra informazioni sul nodo selezionato, sui nodi vicini o sui file multimediali associati al nodo selezionato.</p>
+<p>La funzione d_graph legge un file graphml, recupera le coordinate x, y per ogni nodo e crea un plot 3D del grafo. Se esistono modelli 3D che corrispondono alle descrizioni dei nodi, questi vengono caricati e visualizzati come oggetti 3D nel plot. In caso contrario, viene visualizzata un’immagine o una sfera 3D.</p>
+<p>La funzione callback viene eseguita quando si clicca su un punto nel plot 3D. Calcola la distanza tra il punto selezionato e ogni nodo nel grafo, trova il nodo più vicino e mostra le informazioni di questo nodo nel QTextEdit. Se il nodo ha un file multimediale associato, questo viene visualizzato nel QWidget.</p>
+<p>La funzione eventFilter gestisce gli eventi del mouse per avviare, mettere in pausa e interrompere la riproduzione di un video quando si clicca con il mouse sul QWidget che mostra il video.</p>
+</section>
+<section id="classe-pyarchinit-interactive-matrix">
+<h3>Classe pyarchinit_Interactive_Matrix<a class="headerlink" href="#classe-pyarchinit-interactive-matrix" title="Permalink to this heading">¶</a></h3>
+<p>La classe <cite>pyarchinit_Interactive_Matrix</cite> gestisce la generazione di una matrice interattiva.</p>
+<p>Il metodo <cite>__init__</cite> inizializza la classe e imposta le variabili <cite>DATA_LIST</cite> e <cite>ID_US_DICT</cite>.</p>
+<p>Il metodo <cite>csv_connect</cite> si occupa di connettersi al file CSV.</p>
+<p>Il metodo <cite>urlify</cite> converte una stringa in un formato URL-friendly, sostituendo gli spazi con underscore.</p>
+<p>Il metodo <cite>generate_matrix</cite> genera la matrice a partire dai dati forniti. Vengono utilizzate diverse funzioni per elaborare e organizzare i dati.</p>
+</section>
+<section id="classe-harrismatrix">
+<h3>Classe HarrisMatrix<a class="headerlink" href="#classe-harrismatrix" title="Permalink to this heading">¶</a></h3>
+<p>La classe <cite>HarrisMatrix</cite> gestisce l’esportazione della matrice di Harris in diversi formati.</p>
+<p>Il metodo <cite>__init__</cite> inizializza la classe e imposta le variabili <cite>sequence</cite>, <cite>conteporene</cite>, <cite>property</cite> e <cite>periodi</cite>.</p>
+<p>Il metodo <cite>export_matrix_2</cite> genera la matrice di Harris utilizzando la libreria Graphviz. Vengono creati diversi sottografi per rappresentare le relazioni tra i dati.</p>
+</section>
+<section id="installazione-di-graphviz">
+<h3>Installazione di Graphviz<a class="headerlink" href="#installazione-di-graphviz" title="Permalink to this heading">¶</a></h3>
+<p>Il programma verifica se Graphviz è installato e se è nel PATH del sistema operativo. Graphviz è necessario per la conversione dei grafici.</p>
+<p>La funzione <cite>is_graphviz_installed</cite> esegue il comando «dot -V» per verificare se Graphviz è installato. Se il comando viene eseguito con successo, la funzione restituisce True, altrimenti restituisce False.</p>
+<p>La funzione <cite>is_graphviz_in_path</cite> verifica se la directory bin di Graphviz è nel PATH del sistema operativo. Se lo è, la funzione restituisce True, altrimenti restituisce False.</p>
+<p>La funzione <cite>install_graphviz</cite> mostra un messaggio di avviso se Graphviz non è installato. Il messaggio suggerisce come installare Graphviz a seconda del sistema operativo.</p>
+<p>La funzione <cite>set_graphviz_path</cite> mostra un messaggio di avviso se Graphviz non è nel PATH del sistema operativo. Il messaggio suggerisce di aggiungere la directory di Graphviz al PATH.</p>
+<p>La funzione <cite>check_graphviz</cite> chiama le funzioni <cite>is_graphviz_installed</cite> e <cite>is_graphviz_in_path</cite>, e mostra un messaggio appropriato a seconda dei risultati. Se Graphviz è installato e nel PATH, mostra un messaggio che dice «Graphviz è installato e pronto all’uso».</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">help</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigazione</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Ricerca veloce</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Vai" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Enzo Cocca.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/help.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

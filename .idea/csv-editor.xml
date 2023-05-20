@@ -3,7 +3,14 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="\epoche_storiche.csv">
+        <entry key="\test\mio_test.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\test\test_banca_dati - Copia.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -11,13 +18,6 @@
           </value>
         </entry>
         <entry key="\test\test_banca_dati.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\unita_tipo.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
