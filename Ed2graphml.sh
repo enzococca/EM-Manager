@@ -9,7 +9,7 @@ source ENV/bin/activate
 # Installa le dipendenze necessarie usando pip
 pip install --upgrade pip
 pip install -r requirements.txt
-python splash.py
+
 # Avvia il programma
 python EDMatrix2Graphml.py
 
