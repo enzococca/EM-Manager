@@ -8,3 +8,5 @@ log/temp.log
 /build/
 /source/
 settings.json
+Makefile
+make.bat
