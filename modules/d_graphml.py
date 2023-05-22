@@ -109,8 +109,10 @@ class GraphWindow(QtWidgets.QMainWindow):
             meshes = []#creao una lista vuota dove inserire le mesh che devono essere visualizzate come oggetti 3D
 
             # Directory dei modelli 3D
-            models_dir = "../3d_obj"
+            dir = os.path.dirname(self.graphml_path)
 
+
+            models_dir=os.path.join(dir,"3d_obj")
             # Lista dei modelli 3D esistenti
             existing_models = [f[:-4] for f in os.listdir(models_dir) if f.endswith(".obj")]  # Rimuovi l'estensione .obj
             # print(existing_models)
@@ -128,17 +130,17 @@ class GraphWindow(QtWidgets.QMainWindow):
 
                     # Recupero del percorso del file del modello 3D corrispondente alla descrizione del nodo
                     try:
-                        model_path = f"3d_obj/{G.nodes[node_id]['label']}.obj"
-                        model_img = f"3d_obj/{G.nodes[node_id]['label']}.jpg"
+                        model_path = f"{models_dir}/{G.nodes[node_id]['label']}.obj"
+                        model_img = f"{models_dir}/{G.nodes[node_id]['label']}.jpg"
 
                         if "USV" in node_data["label"]:
-                            image_path = "../3d_obj/USV.png"
+                            image_path = f"{models_dir}/USV.png"
                         if "VSF" in node_data["label"]:
-                            image_path = "../3d_obj/VSF.png"
+                            image_path = f"{models_dir}/VSF.png"
                         if "SF" in node_data["label"]:
-                            image_path = "../3d_obj/SF.png"
+                            image_path = f"{models_dir}/SF.png"
                         else:
-                            image_path = f"3d_obj/{G.nodes[node_id]['label']}.png"
+                            image_path = f"{models_dir}/{G.nodes[node_id]['label']}.png"
                     except KeyError:
 
                         print(KeyError)
@@ -201,7 +203,7 @@ class GraphWindow(QtWidgets.QMainWindow):
         #funzione che restituisce l'info quando si clicca
         global G  # Mi assicuro che G sia accessibile
 
-        # Ottiengo le coordinate del punto selezionato
+        # Ottengo le coordinate del punto selezionato
         picked_point = pick_result  # Non c'è bisogno di '.position'
 
         # Calcolo la distanza tra il punto selezionato e ogni nodo nel grafo
@@ -219,13 +221,22 @@ class GraphWindow(QtWidgets.QMainWindow):
         self.node_info_textedit.setText(node_info_text)
         # Assuming that the file path is stored in the 'file_path' attribute of the node
         file_path = closest_node_info.get('url')
+        dir = os.path.dirname(self.graphml_path)
+        try: # questo try va ottimizzato per il momento è una toppa
+            file_path_abs_ = os.path.join(dir, file_path)
+            file_path_abs = os.path.abspath(file_path_abs_)
+            print(os.path.exists(file_path))
+        except:
+            pass
+        if file_path is not None and os.path.exists(file_path_abs):
 
-        if file_path is not None and os.path.exists(file_path):
-            print(file_path)
             extension = os.path.splitext(file_path)[-1].lower()
 
             if extension in ('.pdf'):
-                file_path_pdf = os.path.abspath(file_path)
+
+                file_path_pdf_ = os.path.join(dir,file_path)
+                file_path_pdf = os.path.abspath(file_path_pdf_)
+                print(file_path_pdf)
                 self.file_info_widget = QWebEngineView()
                 self.file_info_widget.settings().setAttribute(QtWebEngineWidgets.QWebEngineSettings.PluginsEnabled, True)
                 self.file_info_widget.settings().setAttribute(QtWebEngineWidgets.QWebEngineSettings.PdfViewerEnabled, True)
@@ -253,7 +264,8 @@ class GraphWindow(QtWidgets.QMainWindow):
                 tmpdirname = tempfile.mkdtemp()
 
                 # path assoluta
-                file_path_dc = os.path.abspath(file_path)
+                file_path_dc = os.path.join(dir,file_path)
+                file_path_dc = os.path.abspath(file_path_dc)
                 #converto in html
                 html_path = docx_to_html(file_path_dc, tmpdirname)
 
@@ -292,7 +304,8 @@ class GraphWindow(QtWidgets.QMainWindow):
                 tmpdirname = tempfile.mkdtemp()
 
                 # path assoluta
-                file_path_dc = os.path.abspath(file_path)
+                file_path_dc = os.path.join(dir,file_path)
+                file_path_dc = os.path.abspath(file_path_dc)
                 # converto in html
                 html_path = xlsx_to_html(file_path_dc, tmpdirname)
                 self.file_info_web = QWebEngineView()
@@ -307,7 +320,9 @@ class GraphWindow(QtWidgets.QMainWindow):
 
             elif extension in ('.mp4', '.avi', '.wmv', '.mov'):
                 # path assoluta
-                file_path_video = os.path.abspath(file_path)
+                file_path_video = os.path.join(dir,file_path)
+                file_path_video = os.path.abspath(file_path_video)
+
 
                 self.file_info_videowidget = QVideoWidget()
                 self.file_info_player = QMediaPlayer()
