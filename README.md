@@ -2,7 +2,14 @@
 Per installare EM2Graphml, eseguire lo script che installerà automaticamente i pacchetti necessari utilizzando PackageManagement. 
  
 Dopo l'installazione, lo script avvierà il programma principale che mostrerà uno splash screen. Una volta completato il caricamento, si potrà iniziare ad utilizzarlo. 
- 
+
+# Creazione di standalone per mac windows e linux
+- installare  via pip pyinstaller
+- installare tutte le dipendenze da requirements.txt
+- avviare il comando da dentro la root di EM-Manager:
+
+pyinstaller --onefile --noconsole --add-data 'ui:ui' --add-data 'test:test' --add-data 'parser:parser' --add-data 'templates:templates' --add-data 'modules:modules' --add-data 'log:log' --add-data 'help:help' --add-data 'icon:icon'  --collect-all "graphviz" --collect-all "networkx" --collect-all "pyvista" --collect-all "pyvistaqt" EDMAtrix2Graphml.py
+
 # Funzioni principali 
 EM2Graphml offre diverse funzioni tra cui: 
 - Carica dati da un Google Sheet. 
@@ -51,3 +58,4 @@ Graphviz è necessario per la conversione dei grafici. Si può verificare se Gra
 - Collegamento con Blender via TCP/IP
 - Collegamento con Telegram app già in parte esistente
 - Collegamento con Google Spreadsheet
+
