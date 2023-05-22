@@ -8,7 +8,7 @@ source ENV/bin/activate
 
 # Installa le dipendenze necessarie usando pip
 pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r requirements.txt --platform darwin
 
 # Avvia il programma
 python EDMatrix2Graphml.py
