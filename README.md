@@ -8,7 +8,7 @@ Dopo l'installazione, lo script avvierà il programma principale che mostrerà u
 - installare tutte le dipendenze da requirements.txt
 - avviare il comando da dentro la root di EM-Manager:
 
-pyinstaller --onefile --noconsole --add-data 'ui:ui' --add-data 'test:test' --add-data 'parser:parser' --add-data 'templates:templates' --add-data 'modules:modules' --add-data 'log:log' --add-data 'help:help' --add-data 'icon:icon'  --collect-all "graphviz" --collect-all "networkx" --collect-all "pyvista" --collect-all "pyvistaqt" EDMAtrix2Graphml.py
+pyinstaller --onefile --noconsole --add-data 'ui:ui' --add-data 'test:test' --add-data 'parser:parser' --add-data 'template:template' --add-data 'modules:modules' --add-data 'log:log' --add-data 'help:help' --add-data 'icon:icon'  --collect-all "graphviz" --collect-all "networkx" --collect-all "pyvista" --collect-all "pyvistaqt" EDMAtrix2Graphml.py
 
 # Funzioni principali 
 EM2Graphml offre diverse funzioni tra cui: 
