@@ -11,8 +11,8 @@ Dopo l'installazione, lo script avvierà il programma principale che mostrerà u
 pyinstaller --onefile --noconsole --add-data 'ui:ui' --add-data 'test:test' --add-data 'parser:parser' --add-data 'template:template' --add-data 'modules:modules' --add-data 'log:log' --add-data 'help:help' --add-data 'icon:icon'  --collect-all "graphviz" --collect-all "networkx" --collect-all "pyvista" --collect-all "pyvistaqt" EDMAtrix2Graphml.py
 
 # Creazione di standalone per mac e linux
-- installare  via pip pyinstaller
-- installare tutte le dipendenze da requirements.txt
+- installare via pip pyinstaller
+- installare tutte le dipendenze da requirements.txt con "pip install -r requirements.txt"
 - avviare il comando da dentro la root di EM-Manager:
 
 pyinstaller --onefile --windowed --noconsole --add-data 'ui:ui' --add-data 'test:test' --add-data 'parser:parser' --add-data 'template:template' --add-data 'modules:modules' --add-data 'log:log' --add-data 'help:help' --add-data 'icon:icon'  --collect-all "graphviz" --collect-all "networkx" --collect-all "pyvista" --collect-all "pyvistaqt" --collect-all "pyqtwebengine" EDMAtrix2Graphml.py
@@ -65,4 +65,3 @@ Graphviz è necessario per la conversione dei grafici. Si può verificare se Gra
 - Collegamento con Blender via TCP/IP
 - Collegamento con Telegram app già in parte esistente
 - Collegamento con Google Spreadsheet
-
