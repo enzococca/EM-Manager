@@ -25,7 +25,7 @@ jobs:
 
     - name: Build App
       run: |
-        pyinstaller --noconfirm --onedir --windowed --icon "./icon/H_check.ico" --name "EM-Manager" --add-data "./ui;ui/" --add-data "./test;test/" --add-data "./icon;icon/" --collect-all "graphviz" --collect-all "networkx" --collect-all "pyvista" --collect-all "pyvistaqt" --add-data "./parser;parser/" --add-data "./modules;modules/" --add-data "./template;template/" --add-data "./help;help/"  "./EDMatrix2Graphml.py"
+        pyinstaller --noconfirm --onedir --windowed --icon "./icon/H_check.ico" --name "EM-Manager" --add-data "./ui:ui/" --add-data "./test:test/" --add-data "./icon:icon/" --collect-all "graphviz" --collect-all "networkx" --collect-all "pyvista" --collect-all "pyvistaqt" --add-data "./parser:parser/" --add-data "./modules:modules/" --add-data "./template:template/" --add-data "./help:help/"  "./EDMatrix2Graphml.py"
 
     - name: Create DMG
       run: |
