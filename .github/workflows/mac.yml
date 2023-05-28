@@ -1,0 +1,27 @@
+name: PyDMG Action
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Build DMG
+      run: |
+        pip install pydmg
+        pydmg create --source EM-Manager.app --output EM-Manager.dmg --volname "EDMAtrix2Graphml" --icon "icon.icns" --background "EM2graphml_splash.png" --overwrite
