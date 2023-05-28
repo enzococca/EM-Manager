@@ -1,4 +1,5 @@
-name: PyDMG Action
+name: PyInstaller and DMG Action
+
 on:
   push:
     branches: [master]
@@ -19,9 +20,18 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; else echo "No requirements.txt file"; fi
+        pip install pyinstaller
 
-    - name: Build DMG
+    - name: Build App
       run: |
-        pip install pydmg
-        pydmg create --source EM-Manager.app --output EM-Manager.dmg --volname "EDMAtrix2Graphml" --icon "icon.icns" --background "EM2graphml_splash.png" --overwrite
+        pyinstaller --noconfirm --onedir --windowed --icon "./icon/H_check.ico" --name "EM-Manager" --add-data "./ui;ui/" --add-data "./test;test/" --add-data "./icon;icon/" --collect-all "graphviz" --collect-all "networkx" --collect-all "pyvista" --collect-all "pyvistaqt" --add-data "./parser;parser/" --add-data "./modules;modules/" --add-data "./template;template/" --add-data "./help;help/"  "./EDMatrix2Graphml.py"
+
+    - name: Create DMG
+      run: |
+        if [ -d "dist/EM-Manager.app" ]; then
+          hdiutil create EM-Manager.dmg -volname "EDMatrix2Graphml" -srcfolder dist/EM-Manager.app
+        else 
+          echo "EM-Manager.app directory not found"; 
+          exit 1
+        fi
