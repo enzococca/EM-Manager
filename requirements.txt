@@ -15,5 +15,6 @@ Pillow
 python-docx
 openpyxl
 winregistry
+pyinstaller
 
 
