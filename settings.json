@@ -11,7 +11,7 @@
   },
   {
    "optionDest": "onefile",
-   "value": false
+   "value": true
   },
   {
    "optionDest": "console",
@@ -23,7 +23,7 @@
   },
   {
    "optionDest": "name",
-   "value": "ED2Graphml"
+   "value": "EM-Manager"
   },
   {
    "optionDest": "ascii",
@@ -32,10 +32,6 @@
   {
    "optionDest": "clean_build",
    "value": false
-  },
-  {
-   "optionDest": "splash",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/icon/splash.jpg"
   },
   {
    "optionDest": "strip",
@@ -79,30 +75,6 @@
   },
   {
    "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/__init__.py;."
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/crea_epoche.py;."
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/d_graphml.py;."
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/interactive_matrix.py;."
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/matrix_exp.py;."
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/spash.py;."
-  },
-  {
-   "optionDest": "datas",
    "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/ui;ui/"
   },
   {
@@ -112,38 +84,6 @@
   {
    "optionDest": "datas",
    "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/icon;icon/"
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/bin;bin/"
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/3d_obj;3d_obj/"
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/ui/edm2grapml.ui;."
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/test/test_banca_dati.csv;."
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/bin/dot.py;."
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/bin/dottoxml.py;."
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/bin/EM_palette.graphml;."
-  },
-  {
-   "optionDest": "datas",
-   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/bin/X11Colors.py;."
   },
   {
    "optionDest": "collect_all",
@@ -160,6 +100,18 @@
   {
    "optionDest": "collect_all",
    "value": "pyvistaqt"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/parser;parser/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/modules;modules/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/template;template/"
   }
  ],
  "nonPyinstallerOptions": {
