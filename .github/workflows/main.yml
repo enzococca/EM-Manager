@@ -13,14 +13,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-      with:
-        ref: v2
 
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-        node-version: '16.x'
 
     - name: Install dependencies
       run: |
@@ -41,3 +38,5 @@ jobs:
         name: EM-Manager
         path: |
           mac/*
+
+
