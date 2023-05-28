@@ -4,7 +4,7 @@ Per installare EM2Graphml, eseguire lo script che installerà automaticamente i 
 Dopo l'installazione, lo script avvierà il programma principale che mostrerà uno splash screen. Una volta completato il caricamento, si potrà iniziare ad utilizzarlo. 
 
 # Creazione di standalone per windows
-- installare  via pip pyinstaller
+- installare  via pip pyinstaller 
 - installare tutte le dipendenze da requirements.txt
 - avviare il comando da dentro la root di EM-Manager:
 
