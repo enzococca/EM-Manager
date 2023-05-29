@@ -1,7 +1,8 @@
 import os,sys
 import subprocess
-from graphviz import Digraph,Source
-from config import  config
+from graphviz import Digraph, Source
+from .config import config
+
 class HarrisMatrix:
 
 
@@ -11,7 +12,9 @@ class HarrisMatrix:
         self.property = property
         self.conteporene=conteporene
         self.path=config.path
-        print(f"self.path: {self.path}")
+
+
+
 
     @property
     def export_matrix_2(self):
@@ -78,25 +81,29 @@ class HarrisMatrix:
                 b.edge_attr.update(arrowhead='none', arrowsize='.8')
 
         #matrix_path = '{}{}{}'.format(self.HOME, os.sep, "pyarchinit_Matrix_folder")
-        filename = os.path.join(self.path, 'Harris_matrix2ED')
+        if self.path:
+            filename = os.path.join(self.path, "Harris_matrix2ED")  # Percorso completo al file dot
 
-        G.format = 'dot'
-        #dot_file = G.render(directory=self.path, filename=filename)
-        dot_file = G.render(filename=filename, format='dot')
-        with open(os.path.join(self.path, filename + '_graphml.dot'), "w") as out:
-            if sys.platform == 'win32':
-                si = subprocess.STARTUPINFO()
-                si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-                si.wShowWindow = subprocess.SW_HIDE
-                subprocess.Popen(['tred',dot_file], stdout=out, startupinfo=si)
-            else:
-                subprocess.Popen(['tred',dot_file], stdout=out)
+            print(f"self.path: {filename}")
+            G.format = 'dot'
+            #dot_file = G.render(directory=self.path, filename=filename)
+            dot_file = G.render(filename=filename, format='dot')
+            with open(os.path.join(filename + '_graphml.dot'), "w") as out:
+                if sys.platform == 'Windows':
+                    si = subprocess.STARTUPINFO()
+                    si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+                    si.wShowWindow = subprocess.SW_HIDE
+                    subprocess.Popen(['tred',dot_file], stdout=out, startupinfo=si)
+                else:
+                    subprocess.Popen(['tred',dot_file], stdout=out)
 
 
-        tred_file = dot_file
-        print(f"path da tred file: {tred_file}")
-        f = Source.from_file(tred_file, format='png')
-        f.render()
-        g = Source.from_file(tred_file, format='jpg')
-        g.render()
-        return g, f
+            tred_file = dot_file
+            print(f"path da tred file: {tred_file}")
+            f = Source.from_file(tred_file, format='png')
+            f.render()
+            g = Source.from_file(tred_file, format='jpg')
+            g.render()
+            return g, f
+        else:
+            print('la path dove deve essere salvato il file dot non è valido')

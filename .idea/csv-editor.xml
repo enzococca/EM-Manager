@@ -17,20 +17,6 @@
             </Attribute>
           </value>
         </entry>
-        <entry key="\test\mio_test.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
-        <entry key="\test\test_banca_dati - Copia.csv">
-          <value>
-            <Attribute>
-              <option name="separator" value="," />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\test\test_banca_dati.csv">
           <value>
             <Attribute>

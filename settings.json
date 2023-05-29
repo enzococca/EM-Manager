@@ -11,7 +11,7 @@
   },
   {
    "optionDest": "onefile",
-   "value": true
+   "value": false
   },
   {
    "optionDest": "console",
@@ -112,6 +112,10 @@
   {
    "optionDest": "datas",
    "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/template;template/"
+  },
+  {
+   "optionDest": "datas",
+   "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/help;help/"
   }
  ],
  "nonPyinstallerOptions": {

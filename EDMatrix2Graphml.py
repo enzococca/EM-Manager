@@ -1295,12 +1295,14 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         # Ottieni la directory del file originale
         dir_path = os.path.dirname(base_path)
         # config.path = dir_path
-        print(f"Config path settato in: {config.path}")
+
         config.path = os.path.dirname(CSVMapper.GRAPHML_PATH)  # Imposta config.path
+        print(f"Config path settato in: {config.path}")
         dlg = pyarchinit_Interactive_Matrix(data_list, id_us_dict)
         dlg.generate_matrix()  # Crea il file .dot
 
         dot_file_path = os.path.join(config.path, "Harris_matrix2ED.dot")  # Percorso completo al file dot
+
 
         # Attendi fino a quando il file .dot non esiste o fino a quando non sono passati 10 secondi
         timeout = 10
@@ -1547,7 +1549,10 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
             # Rimuovi la riga corrispondente
             self.data_table.removeRow(row_index)
-
+def get_csv_mapper():
+    return CSVMapper
+def get_graph_mapper():
+    return GraphWindow
 class PandasModel(QAbstractTableModel):
     def __init__(self, data):
         QAbstractTableModel.__init__(self)

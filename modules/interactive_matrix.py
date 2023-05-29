@@ -1,13 +1,9 @@
 from builtins import str
 from PyQt5.QtWidgets import QMessageBox
-import sys
-import os
-
-current_directory = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(current_directory)
-from matrix_exp import *
+from .matrix_exp import *
 import re
 import ast
+
 class pyarchinit_Interactive_Matrix:
     DATA_LIST = ""
     ID_US_DICT = {}
