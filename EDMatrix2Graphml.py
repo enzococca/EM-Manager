@@ -401,13 +401,51 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         for i in range(self.data_table.columnCount()):
             self.data_table.setColumnWidth(i, 250)
 
+
+
     def d_graph(self):
-        #richaimo il visualizzatore 3D
-        #GraphWindow()
-        GraphWindow(CSVMapper.GRAPHML_PATH)
+        graphml_path = CSVMapper.GRAPHML_PATH
 
+        # Verifica se il percorso CSVMapper.GRAPHML_PATH è stato definito
+        if graphml_path is None:
+            QMessageBox.critical(None, "Errore",
+                                 "la path non è stata definita correttamente.\n"
+                                 "Dovrai caricare un csv valido e convertire prima di utilizzare il visualizzatore 3D")
+            return
+            #continue
 
+        # Verifica se il file GraphML esiste nel percorso specificato
+        if graphml_path and not os.path.isfile(graphml_path):
+            msg_box = QMessageBox()
+            msg_box.setIcon(QMessageBox.Warning)
+            msg_box.setText("Il file GraphML non esiste nel percorso specificato.")
+            msg_box.setInformativeText("Scegliere un percorso alternativo per caricare il file.")
+            msg_box.setWindowTitle("File non trovato")
+            msg_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+            msg_box.setDefaultButton(QMessageBox.Ok)
 
+            # Mostra la finestra di dialogo
+            result = msg_box.exec()
+
+            if result == QMessageBox.Ok:
+                # Mostra la finestra di dialogo per l'inserimento del percorso alternativo
+                alternate_path, ok_pressed = QInputDialog.getText(None, "Percorso alternativo",
+                                                                  "Inserisci il percorso del file GraphML:")
+                if ok_pressed and os.path.isfile(alternate_path):
+                    graphml_path = alternate_path
+                else:
+                    QMessageBox.warning(None, "Errore",
+                                        "Il percorso fornito non esiste o non è un file valido. Caricamento del file GraphML non riuscito.")
+                    return
+            else:
+                return
+
+        try:# Carica il visualizzatore 3D
+            GraphWindow(graphml_path)
+        except:
+            QMessageBox.critical(self,'Attenzione','Il graphml non è stato aperto con yed e lanciato\n'
+                                                   'lo swimlane.\n'
+                                                   'Ricordati di salvare in yed il graphml prima di usare il visualizzatore')
     #serie di funzioni per cercare gli errori nelle relazioni
     # cerca duplicati nella stessa riga
     # cerca se le relazioni esistono
