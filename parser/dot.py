@@ -18,7 +18,6 @@
  ***************************************************************************/
 """
 import re
-import random
 import X11Colors
 
 r_label = re.compile(r'label\s*=\s*"\s*\{[^\}]*\}\s*"\s*')

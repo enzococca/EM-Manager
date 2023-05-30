@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-import os
+
 
 
 def graphml_parse(self, context, graphml_file):

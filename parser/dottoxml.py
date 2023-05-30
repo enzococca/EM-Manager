@@ -23,8 +23,6 @@ import locale
 import optparse
 import dot
 import xml.dom.minidom as F
-import copy
-from xml.dom.minidom import *
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QInputDialog, QApplication
 # Usage message

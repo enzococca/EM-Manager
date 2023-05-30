@@ -1,31 +1,27 @@
 import modules.splash
-from PyQt5.QtCore import (QAbstractTableModel,QVariant,
+from PyQt5.QtCore import (QAbstractTableModel, QVariant,
                           Qt)
 from PyQt5.QtWidgets import (QDialog,
                              QFileDialog,
                              QAction,
                              QTableWidgetItem,
-
                              QMainWindow,
                              QApplication,
-
                              QPushButton,
                              QHBoxLayout,
                              QVBoxLayout,
                              QInputDialog,
-                             QComboBox)
+                             QComboBox,
+                             QMessageBox)
 from PyQt5.uic import loadUiType
-import sys
-import os
-
-current_directory = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(current_directory)
-
-from modules.interactive_matrix import *
+from modules.interactive_matrix import pyarchinit_Interactive_Matrix
 import json
 import csv
 import pandas as pd
 import gspread
+import os
+import sys
+import subprocess
 from gspread_dataframe import set_with_dataframe
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
@@ -124,6 +120,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
     def __init__(self, parent=None,data_file=None, spreadsheet=None):
 
         super(CSVMapper, self).__init__(parent=parent)
+        self.df = None
+        self.data_fields = None
         self.setupUi(self)
         self.custumize_gui()
 
@@ -216,6 +214,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         self.openRecentProj.triggered.connect(self.open_recent_project)
         self.actionApri_progetto.triggered.connect(self.open_project)
+       
 
     def open_project(self):
         projects_file = 'projects.json'
@@ -226,12 +225,16 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         if project:  # Se un file è stato selezionato
             print(f"Apertura del progetto {project}")
 
-            # Aggiungo il progetto alla lista dei progetti recenti
-            if os.path.isfile(projects_file):
-                with open(projects_file, 'r') as file:
-                    projects = json.load(file)
-            else:
-                projects = []
+            # Let's add try-except block to handle exceptions while opening JSON
+            try:
+                if os.path.isfile(projects_file):
+                    with open(projects_file, 'r') as file:
+                        projects = json.load(file)
+                else:
+                    projects = []
+            except Exception as e:
+                QMessageBox.critical(self,'Attenzione',f"Si è verificato un errore durante la lettura del file dei progetti: {str(e)}")
+                return  # Termina la funzione
 
             # Se il progetto non è già nella lista, aggiungilo
             if project not in projects:
@@ -249,14 +252,17 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             csv_path = os.path.join(os.path.dirname(project), f"{base_name_no_ext}.csv")
 
             if os.path.isfile(csv_path):
-                #Apro il file csv
                 self.data_file = csv_path
 
                 try:
+                    # Handle exceptions while transforming data and reading CSV
                     self.transform_data(self.data_file, self.data_file)
-                except AssertionError:
-                    pass
-                self.df = pd.read_csv(self.data_file, dtype=str)
+                    self.df = pd.read_csv(self.data_file, dtype=str)
+                except Exception as e:
+                    QMessageBox.critical(self,'Attenzione',f"Si è verificato un errore durante la trasformazione dei dati o la lettura di CSV: {str(e)}")
+                    return  # Termina la funzione
+
+                
                 self.data_fields = self.df.columns.tolist()
 
                 self.data_table.setDragEnabled(True)
@@ -346,62 +352,71 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         with open(projects_file, 'w') as file:
             json.dump(projects, file)
 
+
     def create_empty_csv(self):
+        # Seleziona la cartella e il nome del file
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
         fname, _ = QFileDialog.getSaveFileName(self, 'Seleziona la cartella e il nome del file', '',
-                                               'CSV Files (*.csv)')
+                                               'CSV Files (*.csv)', options=options)
 
         if fname:
-            # Crea le directory
-            dir_name = os.path.dirname(fname)
+            # Crea le directory in modo sicuro
+            dir_path = os.path.dirname(fname)
             base_name = os.path.basename(fname)
             base_name_no_ext = os.path.splitext(base_name)[0]  # Rimuovi l'estensione del file
 
-            dir_path = os.path.join(dir_name, base_name_no_ext)
-            os.makedirs(dir_path, exist_ok=True)
-            os.makedirs(os.path.join(dir_path, "DosCo"), exist_ok=True)
-            os.makedirs(os.path.join(dir_path, "3d_obj"), exist_ok=True)
+            try:
+                os.makedirs(dir_path, exist_ok=True)
+                os.makedirs(os.path.join(dir_path, "DosCo"), exist_ok=True)
+                os.makedirs(os.path.join(dir_path, "3d_obj"), exist_ok=True)
+            except OSError as e:
+                QMessageBox.critical(None, "Errore", f"Errore durante la creazione delle directory: {e}")
+                return
 
-            # Crea il file CSV
+            # Crea il file CSV in modo sicuro
             csv_path = os.path.join(dir_path, base_name)
-            with open(csv_path, 'w',newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow(['nome us', 'tipo', 'tipo di nodi', 'descrizione', 'epoca',
-                                 'epoca index', 'area', 'anteriore', 'posteriore', 'contemporaneo',
-                                 'properties_ant', 'properties_post'])
+            try:
+                with open(csv_path, 'w', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerow(['nome us', 'tipo', 'tipo di nodi', 'descrizione', 'epoca',
+                                     'epoca index', 'area', 'anteriore', 'posteriore', 'contemporaneo',
+                                     'properties_ant', 'properties_post'])
+            except OSError as e:
+                QMessageBox.critical(None, "Errore", f"Errore durante la creazione del file CSV: {e}")
+                return
 
             # Salva i dettagli del progetto
             self.save_project_to_json(dir_path)
 
-        # Open the data CSV file
-        self.data_file = csv_path
+            # Open the data CSV file
+            self.data_file = csv_path
 
-        try:
-            self.transform_data(self.data_file, self.data_file)
-        except AssertionError:
-            pass
-        self.df = pd.read_csv(self.data_file, dtype=str)
-        self.data_fields = self.df.columns.tolist()
+            try:
+                self.transform_data(self.data_file, self.data_file)
+            except AssertionError:
+                pass
+            self.df = pd.read_csv(self.data_file, dtype=str)
+            self.data_fields = self.df.columns.tolist()
 
-        self.data_table.setDragEnabled(True)
-        # Impostare il numero di righe e colonne nel QTableWidget
-        self.data_table.setRowCount(len(self.df))
-        self.data_table.setColumnCount(len(self.df.columns))
+            self.data_table.setDragEnabled(True)
+            # Impostare il numero di righe e colonne nel QTableWidget
+            self.data_table.setRowCount(len(self.df))
+            self.data_table.setColumnCount(len(self.df.columns))
 
-        # Impostare le etichette delle colonne orizzontali
-        self.data_table.setHorizontalHeaderLabels(self.df.columns)
+            # Impostare le etichette delle colonne orizzontali
+            self.data_table.setHorizontalHeaderLabels(self.df.columns)
 
-        # Inserire i dati nelle celle del QTableWidget
-        for row in range(len(self.df)):
-            for col in range(len(self.df.columns)):
-                item = QTableWidgetItem(str(self.df.iat[row, col]))
-                self.data_table.setItem(row, col, item)
-        for i in range(self.data_table.rowCount()):
-            self.data_table.setRowHeight(i, 50)
+            # Inserire i dati nelle celle del QTableWidget
+            for row in range(len(self.df)):
+                for col in range(len(self.df.columns)):
+                    item = QTableWidgetItem(str(self.df.iat[row, col]))
+                    self.data_table.setItem(row, col, item)
+            for i in range(self.data_table.rowCount()):
+                self.data_table.setRowHeight(i, 50)
 
-        for i in range(self.data_table.columnCount()):
-            self.data_table.setColumnWidth(i, 250)
-
-
+            for i in range(self.data_table.columnCount()):
+                self.data_table.setColumnWidth(i, 250)
 
     def d_graph(self):
         graphml_path = CSVMapper.GRAPHML_PATH
@@ -460,7 +475,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     if related_us_names != 'nan':
                         related_us_names = related_us_names.split(',')
                         if len(related_us_names) != len(set(related_us_names)):
-                            errors.append((related_us_names), f"{related_us_names} is dupliacted")
+                            errors.append((related_us_names), f"{related_us_names} è duplicato")
         return errors
     def check_relation_exists(self,rows, header):
         errors = []
@@ -473,7 +488,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                         related_us_name = related_us_name.strip()
                         if not any(related_us_name in related_row for related_row in rows):
                             errors.append((us_name, related_us_name,
-                                           f"{us_name} has a relation to {related_us_name} but {related_us_name} does not exist."))
+                                           f"{us_name} è relazionato a {related_us_name} ma {related_us_name} non esiste."))
         return errors
     def check_inverse_relation_exists(self,rows, header):
         errors = []
@@ -490,7 +505,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                                 us_name in related_row[header.index(inverse_relation_type)].split(',') for related_row
                                 in rows if related_row[0] == related_us_name):
                             errors.append((us_name, related_us_name,
-                                           f"{us_name} has a {relation_type} relation to {related_us_name} but {related_us_name} does not have a {inverse_relation_type} relation to {us_name}."))
+                                           f"{us_name} ha una {relation_type} relazione a {related_us_name} but {related_us_name} non ha un  {inverse_relation_type} relazione a {us_name}."))
         return errors
     def check_relation_type(self,rows, header):
         errors = []
@@ -642,7 +657,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         except Exception as e:
             print(f"Errore nella lettura del foglio di calcolo: {e}")
-            returnQMessageBox.warning(self, 'Attenzione',f"Errore nell'apertura del foglio di calcolo: {e}")
+            QMessageBox.warning(self, 'Attenzione',f"Errore nell'apertura del foglio di calcolo: {e}")
             return
 
         # La prima riga è l'intestazione
@@ -793,45 +808,63 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         else:
             print("Modifiche non salvate.")
 
-
     def show_epoch_dialog(self, pos):
-        # Get the current cell
+        # Verifica se la posizione è valida
+        if not self.data_table.indexAt(pos).isValid():
+            return
+
+        # Ottieni la cella corrente
         current_cell = self.data_table.itemAt(pos)
         if current_cell is None:
             return
+
         row, col = current_cell.row(), current_cell.column()
-        print(row,col)
-        # If the clicked cell is in the "Epoca" column
+
+        # Se la cella cliccata è nella colonna "Epoca"
         if col == 4:
-            # Create an EpochDialog instance
+            # Crea un'istanza di EpochDialog
             self.epochs_df = pd.read_csv("template/epoche_storiche.csv")
 
-            # Create a dock widget with the epoch combobox
+            # Crea un dock widget con la combobox delle epoche
             epoch_dialog = EpochDialog(self.epochs_df, self)
             selected_epoch = epoch_dialog.get_selected_epoch()
             print(selected_epoch)
             if selected_epoch is not None:
+                # Imposta il valore selezionato nella cella
+                item = QTableWidgetItem(str(selected_epoch))
+                item.setData(Qt.DisplayRole, QVariant(selected_epoch))
+                self.data_table.setItem(row, col, item)
 
-                self.data_table.item(row, col).setData(Qt.DisplayRole, QVariant(selected_epoch))
     def show_unit_dialog(self, pos):
-        # Get the current cell
+        # Verifica se la posizione è valida
+        if not self.data_table.indexAt(pos).isValid():
+            return
+
+        # Ottieni la cella corrente
         current_cell = self.data_table.itemAt(pos)
         if current_cell is None:
             return
-        row, col = current_cell.row(), current_cell.column()
-        print(row,col)
-        # If the clicked cell is in the "Epoca" column
-        if col == 1:
-            # Create an EpochDialog instance
-            self.unit_df = pd.read_csv("temaplate/unita_tipo.csv")
 
-            # Create a dock widget with the epoch combobox
+        row, col = current_cell.row(), current_cell.column()
+
+        # Se la cella cliccata è nella colonna "Unità"
+        if col == 1:
+            # Crea un'istanza di UnitDialog
+            try:
+                self.unit_df = pd.read_csv("template/unita_tipo.csv")
+            except FileNotFoundError:
+                QMessageBox.critical(None, "Errore", "File unita_tipo.csv non trovato.")
+                return
+
+            # Crea un dock widget con la combobox delle unità
             unit_dialog = UnitDialog(self.unit_df, self)
             selected_unit = unit_dialog.get_selected_unit()
             print(selected_unit)
             if selected_unit is not None:
-
-                self.data_table.item(row, col).setData(Qt.DisplayRole, QVariant(selected_unit))
+                # Imposta il valore selezionato nella cella
+                item = QTableWidgetItem(str(selected_unit))
+                item.setData(Qt.DisplayRole, QVariant(selected_unit))
+                self.data_table.setItem(row, col, item)
     def on_google_sheet_action_triggered(self):
         # Check if the spreadsheet ID already exists
         if hasattr(self, 'spreadsheet_id') and self.spreadsheet_id:

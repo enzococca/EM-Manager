@@ -20,11 +20,6 @@ import tempfile
 
 G = None  # Definisci G all'inizio del tuo codice
 graphml_path=None
-# class CustomQtInteractor(QtInteractor):
-#
-#     def closeEvent(self, event):
-#         # Ignora l'evento di chiusura, impedendo che si propaghi al genitore
-#         event.ignore()
 
 class GraphWindow(QtWidgets.QMainWindow):
 

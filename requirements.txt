@@ -4,6 +4,7 @@ pandas
 gspread
 gspread_dataframe
 google-api-python-client
+google-auth
 google-auth-oauthlib
 google-auth-httplib2
 graphviz
@@ -16,5 +17,3 @@ python-docx
 openpyxl
 winregistry
 pyinstaller
-
-

@@ -1,7 +1,6 @@
 from PyQt5.QtWidgets import QSplashScreen, QApplication, QHBoxLayout, QVBoxLayout, QLabel
-from PyQt5.QtGui import QPixmap, QColor, QFont
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5 import QtWebEngineWidgets
 from EDMatrix2Graphml import CSVMapper
 import sys
 app = QApplication(sys.argv)
