@@ -22,6 +22,7 @@ import gspread
 import os
 import sys
 import subprocess
+import time
 from gspread_dataframe import set_with_dataframe
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
@@ -478,6 +479,34 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                             errors.append((related_us_names), f"{related_us_names} è duplicato")
         return errors
     def check_relation_exists(self,rows, header):
+        '''
+        La funzione prende 3 argomenti: l'oggetto stesso, `rows`, e `header`.
+        L'oggetto stesso rappresenta l'istanza della classe, mentre `rows` è una lista di righe di dati e `header`
+        è una lista di intestazioni di colonna.
+
+        Questa funzione serve a controllare se le relazioni nel file esistono realmente. Analizza ogni riga nella lista
+        `rows` e controlla se una relazione è presente per ogni tipo di relazione specificato in una lista. Se una
+        relazione è presente, viene controllato se l'altro elemento della relazione esiste nelle righe di dati.
+        Se non esiste, viene aggiunto un errore alla lista `errors`.
+
+        Il codice utilizza un ciclo `for` per attraversare ogni riga nella lista `rows`. Per ogni riga,
+        viene preso il nome dell'elemento `us_name` dalla colonna 0. Successivamente, viene attraversata una lista di
+        tipi di relazione e per ogni tipo di relazione, viene preso il nome degli elementi correlati dalla colonna
+        corrispondente nell'elenco `header`.
+
+        Se i nomi degli elementi correlati non sono 'nan', vengono divisi in una lista di nomi singoli e controllati
+        se esistono nelle righe di dati. Se un nome correlato non viene trovato, viene aggiunto un errore alla lista `errors`.
+
+        Infine, viene restituita la lista di errori
+                Parameters
+                ----------
+                rows
+                header
+
+                Returns
+                -------
+
+                '''
         errors = []
         for row in rows:
             us_name = row[0]
@@ -1183,63 +1212,104 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         df = pd.DataFrame(data[1:], columns=data[0])
 
         return df
-    def on_toolButton_load_pressed(self):
 
+    def on_toolButton_load_pressed(self):
         # Open the data CSV file
         self.data_file, _ = QFileDialog.getOpenFileName(self, 'Open Data CSV', '', 'CSV files (*.csv)')
-        self.original_df = pd.read_csv(self.data_file)
+
+        # Verify if file exists and is not empty
         if not self.data_file:
             self.show_error('Nessun file selezionato.')
             return
+
+        # Read data and handle possible errors
         try:
-            self.transform_data(self.data_file,self.data_file)
-        except AssertionError:
-            pass
-        self.df = pd.read_csv(self.data_file, dtype = str)
+            self.original_df = pd.read_csv(self.data_file)
+        except Exception as e:
+            self.show_error(f"Errore durante la lettura del file: {e}")
+            return
+
+        # Verify if the data is empty
+        if self.original_df.empty:
+            self.show_error('Il file selezionato è vuoto.')
+            return
+
+        # Transform data and handle possible errors
+        try:
+            self.transform_data(self.data_file, self.data_file)
+        except Exception as e:
+            self.show_error(f"Errore durante la trasformazione dei dati: {e}")
+            return
+
+        # Read data again with dtype=str and handle possible errors
+        try:
+            self.df = pd.read_csv(self.data_file, dtype=str)
+        except Exception as e:
+            self.show_error(f"Errore durante la lettura del file: {e}")
+            return
+
         self.data_fields = self.df.columns.tolist()
 
         self.data_table.setDragEnabled(True)
-        # Impostare il numero di righe e colonne nel QTableWidget
+        # Set the number of rows and columns in the QTableWidget
         self.data_table.setRowCount(len(self.df))
         self.data_table.setColumnCount(len(self.df.columns))
 
-        # Impostare le etichette delle colonne orizzontali
+        # Set the labels of the horizontal columns
         self.data_table.setHorizontalHeaderLabels(self.df.columns)
 
-        # Inserire i dati nelle celle del QTableWidget
+        # Insert data into the cells of the QTableWidget
         for row in range(len(self.df)):
             for col in range(len(self.df.columns)):
-                    item = QTableWidgetItem(str(self.df.iat[row, col]))
-                    self.data_table.setItem(row, col, item)
+                item = QTableWidgetItem(str(self.df.iat[row, col]))
+                self.data_table.setItem(row, col, item)
         for i in range(self.data_table.rowCount()):
             self.data_table.setRowHeight(i, 50)
 
         for i in range(self.data_table.columnCount()):
             self.data_table.setColumnWidth(i, 250)
-    def transform_data(self,file_path, output):
-        with open(file_path, 'r') as f:
-            reader = csv.reader(f)
-            header = next(reader)
-            col1_idx = header.index('anteriore')
-            col2_idx = header.index('posteriore')
-            col3_idx = header.index('contemporaneo')
-            col4_idx = header.index('properties_ant')
-            col5_idx = header.index('properties_post')
-            rapporti_idx = header.index('rapporti') if 'rapporti' in header else None
-            new_header = [col for col in header if col != 'rapporti'] + ['rapporti']
-            all_rows = list(reader)
 
-        rows = []
-        for row in all_rows:
-            if rapporti_idx is not None:
-                del row[rapporti_idx]
+    def transform_data(self, file_path, output):
+        try:
+            # Open and read the file
+            with open(file_path, 'r') as f:
+                reader = csv.reader(f)
+                header = next(reader)
 
-            col1_values = row[col1_idx].split(',')
-            col2_values = row[col2_idx].split(',')
-            col3_values = row[col3_idx].split(',')
-            col4_values = row[col4_idx].split(',')
-            col5_values = row[col5_idx].split(',')
+                # Check if required columns are present in the file
+                required_columns = ['anteriore', 'posteriore', 'contemporaneo', 'properties_ant', 'properties_post']
+                for column in required_columns:
+                    if column not in header:
+                        raise ValueError(f"Colonna {column} non presente nel file.")
 
+                # Get column indices
+                col1_idx = header.index('anteriore')
+                col2_idx = header.index('posteriore')
+                col3_idx = header.index('contemporaneo')
+                col4_idx = header.index('properties_ant')
+                col5_idx = header.index('properties_post')
+                rapporti_idx = header.index('rapporti') if 'rapporti' in header else None
+
+                new_header = [col for col in header if col != 'rapporti'] + ['rapporti']
+                all_rows = list(reader)
+
+            rows = []
+            for row in all_rows:
+                if rapporti_idx is not None:
+                    del row[rapporti_idx]
+                col1_values = row[col1_idx].split(',')
+                col2_values = row[col2_idx].split(',')
+                col3_values = row[col3_idx].split(',')
+                col4_values = row[col4_idx].split(',')
+                col5_values = row[col5_idx].split(',')
+
+
+
+                # If a required value is not present, raise an exception
+                required_values = [col1_values, col2_values, col3_values, col4_values, col5_values]
+                for val in required_values:
+                    if not val:
+                        raise ValueError("Valore richiesto non presente.")
 
             new_col = []
             for val1 in col1_values:
@@ -1276,15 +1346,22 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             row += [new_col]
             rows.append(row)
 
-        with open(output, 'w', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow(new_header)
-            for row in rows:
-                writer.writerow(row[:-1] + [' '.join([str(e) for e in row[-1]])])
+            # Open and write to the output file
+            with open(output, 'w', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow(new_header)
+                for row in rows:
+                    writer.writerow(row[:-1] + [' '.join([str(e) for e in row[-1]])])
 
+            self.check_consistency(output, 'log/log.txt')
+            self.show_errors_in_dock_widget('log/log.txt')
 
-        self.check_consistency(output,'log/log.txt')
-        self.show_errors_in_dock_widget('log/log.txt')
+        except IOError:
+            self.show_error('Errore durante la lettura o la scrittura del file.')
+        except ValueError as ve:
+            self.show_error(str(ve))
+        except Exception as e:
+            self.show_error(f"Errore sconosciuto: {e}")
     def transform_data_google(self,file_buffer, output_buffer):
         # Read the lines from the StringIO buffer
         lines = file_buffer.readlines()
@@ -1354,98 +1431,114 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         #self.check_consistency_google()
         #self.show_errors_in_dock_widget_google()
+
     def on_convert_data_pressed(self):
-        import time
-        data_list, id_us_dict = self.read_transformed_csv(self.data_file)
-        CSVMapper.GRAPHML_PATH, _ = QFileDialog.getSaveFileName(self, 'Seleziona la cartella e il nome del file', '',
-                                                                'Grapgml Files (*.graphml)')
-
-        # Rimuovi l'estensione dal percorso del file originale
-        base_path, _ = os.path.splitext(CSVMapper.GRAPHML_PATH)
-
-        # Ottieni la directory del file originale
-        dir_path = os.path.dirname(base_path)
-        # config.path = dir_path
-
-        config.path = os.path.dirname(CSVMapper.GRAPHML_PATH)  # Imposta config.path
-        print(f"Config path settato in: {config.path}")
-        dlg = pyarchinit_Interactive_Matrix(data_list, id_us_dict)
-        dlg.generate_matrix()  # Crea il file .dot
-
-        dot_file_path = os.path.join(config.path, "Harris_matrix2ED.dot")  # Percorso completo al file dot
-
-
-        # Attendi fino a quando il file .dot non esiste o fino a quando non sono passati 10 secondi
-        timeout = 10
-        start_time = time.time()
-
-        while not os.path.exists(dot_file_path):
-            if time.time() - start_time > timeout:
-                raise Exception("Timeout while waiting for .dot file to be created.")
-            time.sleep(1)  # Aspetta per un secondo
-
-
-        dottoxml = '{}{}{}'.format('parser', os.sep, 'dottoxml.py')
         try:
+            data_list, id_us_dict = self.read_transformed_csv(self.data_file)
+            CSVMapper.GRAPHML_PATH, _ = QFileDialog.getSaveFileName(self, 'Seleziona la cartella e il nome del file',
+                                                                    '', 'Graphml Files (*.graphml)')
 
+            if not CSVMapper.GRAPHML_PATH:
+                self.show_error('Nessun file selezionato.')
+                return
 
+            # Get directory and base path
+            base_path, _ = os.path.splitext(CSVMapper.GRAPHML_PATH)
+            dir_path = os.path.dirname(base_path)
 
+            config.path = dir_path  # Set config.path
+            print(f"Config path settato in: {config.path}")
 
+            dlg = pyarchinit_Interactive_Matrix(data_list, id_us_dict)
+            dlg.generate_matrix()  # Crea il file .dot
 
-            # Crea il percorso al nuovo file dot
+            dot_file_path = os.path.join(config.path, "Harris_matrix2ED.dot")  # Percorso completo al file dot
+
+            # Wait for the .dot file to be created, with a timeout
+            timeout = 10
+            start_time = time.time()
+
+            while not os.path.exists(dot_file_path):
+                if time.time() - start_time > timeout:
+                    raise Exception("Timeout while waiting for .dot file to be created.")
+                time.sleep(1)  # Wait for one second
+
+            dottoxml = os.path.join('parser', 'dottoxml.py')
+
+            # Create the path to the new dot file
             dot_file = os.path.join(dir_path, "Harris_matrix2ED.dot")
-            if sys.platform =='win32':
 
-                subprocess.call(['python', dottoxml, '-f', 'Graphml', dot_file, CSVMapper.GRAPHML_PATH], shell=True)
-            else:
-                subprocess.call(['python3', dottoxml, '-f', 'Graphml', dot_file, CSVMapper.GRAPHML_PATH], shell=True)
+            python_command = 'python3' if sys.platform != 'win32' else 'python'
+
+            # Handle subprocess error
+            try:
+                subprocess.check_call([python_command, dottoxml, '-f', 'Graphml', dot_file, CSVMapper.GRAPHML_PATH],
+                                      shell=True)
+            except subprocess.CalledProcessError as e:
+                raise Exception("Error during subprocess call: " + str(e))
+
             with open(CSVMapper.GRAPHML_PATH, 'r') as file:
                 filedata = file.read()
 
-                # Replace the target string
-                filedata = filedata.replace("b'", '')
-                filedata = filedata.replace("graphml>'", 'graphml>')
-                # Write the file out again
+            # Replace the target string
+            filedata = filedata.replace("b'", '')
+            filedata = filedata.replace("graphml>'", 'graphml>')
 
+            # Write the file out again
             with open(CSVMapper.GRAPHML_PATH, 'w') as file:
-
                 file.write(filedata)
+        except IOError:
+            self.show_error('Errore durante la lettura o la scrittura del file.')
         except KeyError as e:
-            QMessageBox.warning(self, "Error", str(e),
-                                QMessageBox.Ok)
+            self.show_error('Errore: ' + str(e))
+        except Exception as e:
+            self.show_error('Errore sconosciuto: ' + str(e))
 
         #self.d_graph(self.graphml_path)
+
     def read_transformed_csv(self, file_path):
         data_list = []
         id_us_dict = {}
 
-        with open(file_path, "r") as f:
-            reader = csv.reader(f)
-            header = next(reader)
+        try:
+            with open(file_path, "r") as f:
+                reader = csv.reader(f)
+                header = next(reader)
 
-            # Trova gli indici delle colonne desiderate
-            us_idx = header.index("nome us")
-            unita_tipo_idx = header.index("tipo")
-            descrizione_idx = header.index("descrizione")
-            epoca_idx = header.index("epoca")
-            e_idx = header.index("epoca index")
-            #gruppo_idx = header.index("area")
-            rapporti_idx = header.index("rapporti")
+                # Check if required columns are present in the file
+                required_columns = ["nome us", "tipo", "descrizione", "epoca", "epoca index", "rapporti"]
+                for column in required_columns:
+                    if column not in header:
+                        raise ValueError(f"Colonna {column} non presente nel file.")
 
-            # Leggi e analizza ogni riga
-            for row in reader:
-                # Estrai i valori dalle colonne desiderate
-                us = row[us_idx]
-                unita_tipo = row[unita_tipo_idx]
-                descrizione = row[descrizione_idx]
-                epoca = row[epoca_idx]
-                e_id = row[e_idx]
-                #gruppo = row[gruppo_idx]
-                rapporti_stratigrafici = row[rapporti_idx]
+                # Find the indices of the desired columns
+                us_idx = header.index("nome us")
+                unita_tipo_idx = header.index("tipo")
+                descrizione_idx = header.index("descrizione")
+                epoca_idx = header.index("epoca")
+                e_idx = header.index("epoca index")
+                rapporti_idx = header.index("rapporti")
 
-                # Aggiungi i valori a data_list e id_us_dict
-                data_list.append([us, unita_tipo, descrizione, epoca,e_id, rapporti_stratigrafici])
-                id_us_dict[us] = {"nome_us": us}
+                # Read and parse each row
+                for row in reader:
+                    # Extract the values from the desired columns
+                    us = row[us_idx]
+                    unita_tipo = row[unita_tipo_idx]
+                    descrizione = row[descrizione_idx]
+                    epoca = row[epoca_idx]
+                    e_id = row[e_idx]
+                    rapporti_stratigrafici = row[rapporti_idx]
+
+                    # Add the values to data_list and id_us_dict
+                    data_list.append([us, unita_tipo, descrizione, epoca, e_id, rapporti_stratigrafici])
+                    id_us_dict[us] = {"nome_us": us}
+
+        except IOError:
+            self.show_error('Errore durante la lettura del file.')
+        except ValueError as ve:
+            self.show_error(str(ve))
+        except Exception as e:
+            self.show_error(f"Errore sconosciuto: {e}")
 
         return data_list, id_us_dict
 
@@ -1620,10 +1713,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
             # Rimuovi la riga corrispondente
             self.data_table.removeRow(row_index)
-def get_csv_mapper():
-    return CSVMapper
-def get_graph_mapper():
-    return GraphWindow
+
 class PandasModel(QAbstractTableModel):
     def __init__(self, data):
         QAbstractTableModel.__init__(self)

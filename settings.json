@@ -116,10 +116,54 @@
   {
    "optionDest": "datas",
    "value": "C:/Users/Utente/OneDrive/ED2Graphml_2/help;help/"
+  },
+  {
+   "optionDest": "excludes",
+   "value": "babel"
+  },
+  {
+   "optionDest": "excludes",
+   "value": "pygraphviz"
+  },
+  {
+   "optionDest": "excludes",
+   "value": "sphinx"
+  },
+  {
+   "optionDest": "excludes",
+   "value": "IPython"
+  },
+  {
+   "optionDest": "excludes",
+   "value": "jedi"
+  },
+  {
+   "optionDest": "excludes",
+   "value": "psycopg2"
+  },
+  {
+   "optionDest": "excludes",
+   "value": "scipy"
+  },
+  {
+   "optionDest": "excludes",
+   "value": "tk"
+  },
+  {
+   "optionDest": "excludes",
+   "value": "sqlalchemy"
+  },
+  {
+   "optionDest": "excludes",
+   "value": "tornado"
+  },
+  {
+   "optionDest": "excludes",
+   "value": "opencv-python"
   }
  ],
  "nonPyinstallerOptions": {
-  "increaseRecursionLimit": true,
+  "increaseRecursionLimit": false,
   "manualArguments": ""
  }
 }
