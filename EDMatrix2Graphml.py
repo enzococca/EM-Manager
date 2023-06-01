@@ -1311,40 +1311,40 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     if not val:
                         raise ValueError("Valore richiesto non presente.")
 
-            new_col = []
-            for val1 in col1_values:
-                if val1:
-                    for r in all_rows:
-                        if r[0] == val1:
-                            new_col.append(['anteriore', val1, r[1], r[3], r[4], r[5], r[6]])
+                new_col = []
+                for val1 in col1_values:
+                    if val1:
+                        for r in all_rows:
+                            if r[0] == val1:
+                                new_col.append(['anteriore', val1, r[1], r[3], r[4], r[5], r[6]])
 
-            for val2 in col2_values:
-                if val2:
-                    for r in all_rows:
-                        if r[0] == val2:
-                            new_col.append(['posteriore', val2, r[1], r[3], r[4], r[5], r[6]])
+                for val2 in col2_values:
+                    if val2:
+                        for r in all_rows:
+                            if r[0] == val2:
+                                new_col.append(['posteriore', val2, r[1], r[3], r[4], r[5], r[6]])
 
-            for val3 in col3_values:
-                if val3:
-                    for r in all_rows:
-                        if r[0] == val3:
-                            new_col.append(['contemporaneo', val3, r[1], r[3], r[4], r[5], r[6]])
+                for val3 in col3_values:
+                    if val3:
+                        for r in all_rows:
+                            if r[0] == val3:
+                                new_col.append(['contemporaneo', val3, r[1], r[3], r[4], r[5], r[6]])
 
-            for val4 in col4_values:
-                if val4:
-                    for r in all_rows:
-                        if r[0] == val4:
-                            new_col.append(['properties_ant', val4, r[1], r[3], r[4], r[5], r[6]])
+                for val4 in col4_values:
+                    if val4:
+                        for r in all_rows:
+                            if r[0] == val4:
+                                new_col.append(['properties_ant', val4, r[1], r[3], r[4], r[5], r[6]])
 
-            for val5 in col5_values:
-                if val5:
-                    for r in all_rows:
-                        if r[0] == val5:
-                            new_col.append(['properties_post', val5, r[1], r[3], r[4], r[5], r[6]])
+                for val5 in col5_values:
+                    if val5:
+                        for r in all_rows:
+                            if r[0] == val5:
+                                new_col.append(['properties_post', val5, r[1], r[3], r[4], r[5], r[6]])
 
 
-            row += [new_col]
-            rows.append(row)
+                row += [new_col]
+                rows.append(row)
 
             # Open and write to the output file
             with open(output, 'w', newline='') as f:
