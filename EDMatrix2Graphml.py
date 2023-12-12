@@ -66,12 +66,14 @@ class EpochDialog(QDialog):
         button_layout.addWidget(self.cancel_button)
         layout.addLayout(button_layout)
         self.setLayout(layout)
-        # Aggiungi questo nel tuo metodo __init__ o dove preferisci
-
-
-
 
     def get_selected_epoch(self):
+        """
+        Returns the selected epoch from the combo box.
+
+        Returns:
+            str: The selected epoch if the dialog is accepted, None otherwise.
+        """
         if self.exec_() == QDialog.Accepted:
             selected_epoch = self.combo_box.currentText()
             return selected_epoch
@@ -111,6 +113,20 @@ class UnitDialog(QDialog):
 
 
     def get_selected_unit(self):
+        """
+        Returns the selected unit from the combo box.
+
+        Returns:
+            str: The selected unit.
+
+        Raises:
+            None
+
+        Example:
+            >>> dialog = Dialog()
+            >>> dialog.get_selected_unit()
+            'Meter'
+        """
         if self.exec_() == QDialog.Accepted:
             selected_units = self.combo_box.currentText()
             selected_unit = selected_units.split('-')[0].strip()
@@ -185,6 +201,16 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.actionVisualizzatore_3D.triggered.connect(self.d_graph)
 
         def handle_check_relations_action():
+            """
+            This function handles the action of checking relations in a data table and printing any errors to a QTextEdit.
+
+            Returns:
+                None
+
+            Signature:
+                handle_check_relations_action()
+
+            """
             # Converti i dati della tabella in una lista di righe
             rows = []
             for i in range(self.data_table.rowCount()):
@@ -288,6 +314,40 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 QMessageBox.warning(self,'Attenzione',f"Il file CSV {csv_path} non esiste")
 
     def open_recent_project(self):
+        """
+        Opens a recent project selected by the user.
+
+        Parameters:
+        - self: the current instance of the class.
+
+        Returns:
+        None
+
+        Raises:
+        None
+
+        Description:
+        - Reads the 'projects.json' file to get a list of recent projects.
+        - Displays a dialog box to allow the user to select a project.
+        - If a project is selected, opens the project and performs the following steps:
+            - Prints a message indicating the project being opened.
+            - Extracts the base name of the project file.
+            - Constructs the path to the corresponding CSV file.
+            - If the CSV file exists, performs the following actions:
+                - Sets the data file attribute of the class to the CSV file path.
+                - Transforms the data in the CSV file.
+                - Reads the CSV file into a pandas DataFrame.
+                - Sets the data fields attribute of the class to the columns of the DataFrame.
+                - Sets the number of rows and columns in the data table widget.
+                - Sets the horizontal header labels of the data table widget.
+                - Populates the data table widget with the data from the DataFrame.
+                - Sets the row height and column width of the data table widget.
+            - If the CSV file does not exist, displays a warning message.
+
+        Note:
+        - This function assumes the existence of the 'projects.json' file in the current directory.
+        - This function relies on the availability of the QInputDialog, QMessageBox, and QTableWidgetItem classes.
+        """
         projects_file = 'projects.json'
 
         if os.path.isfile(projects_file):
@@ -340,6 +400,32 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
 
     def save_project_to_json(self, project_dir):
+        """
+        Saves the given project directory to a JSON file.
+
+        Args:
+            self: The current instance of the class.
+            project_dir (str): The directory of the project to be saved.
+
+        Returns:
+            None
+
+        Raises:
+            None
+
+        Example:
+            save_project_to_json(self, '/path/to/project')
+
+        This function loads the existing projects from a JSON file, inserts the given project directory at the beginning of the list,
+        and then saves the updated list back to the JSON file. If the JSON file does not exist, it creates a new one.
+
+        The maximum number of projects that can be stored in the JSON file is 5. If the list exceeds this limit, the oldest projects
+        are removed from the list before saving.
+
+        Note:
+            - The JSON file should be named 'projects.json' and should be located in the same directory as the script.
+            - The projects are stored as a list of strings representing the project directories.
+        """
         projects_file = 'projects.json'
         projects = []
 
@@ -420,6 +506,23 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 self.data_table.setColumnWidth(i, 250)
 
     def d_graph(self):
+        """
+        Opens a 3D graph viewer using the GraphML file specified in CSVMapper.GRAPHML_PATH.
+
+        If CSVMapper.GRAPHML_PATH is not defined, an error message is displayed and the function returns.
+
+        If the GraphML file does not exist in the specified path, a warning message is displayed and the user is prompted
+        to choose an alternate path. If a valid alternate path is provided, the GraphML file is loaded using the alternate path.
+        If the alternate path is invalid or not provided, an error message is displayed and the function returns.
+
+        If the GraphML file is successfully loaded, the 3D graph viewer is launched using the loaded file.
+
+        Raises:
+            None
+
+        Returns:
+            None
+        """
         graphml_path = CSVMapper.GRAPHML_PATH
 
         # Verifica se il percorso CSVMapper.GRAPHML_PATH è stato definito
@@ -462,12 +565,34 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             QMessageBox.critical(self,'Attenzione','Il graphml non è stato aperto con yed e lanciato\n'
                                                    'lo swimlane.\n'
                                                    'Ricordati di salvare in yed il graphml prima di usare il visualizzatore')
+
+
+
     #serie di funzioni per cercare gli errori nelle relazioni
     # cerca duplicati nella stessa riga
     # cerca se le relazioni esistono
     # se le relazioni inverse esistono
     # il tipo di relazione se è corretto
     def check_duplicates(self, rows, header):
+        """
+        Check for duplicates in the given rows based on the specified header.
+
+        Args:
+            self: The object instance.
+            rows (List[List[str]]): The rows containing the data to be checked.
+            header (List[str]): The header specifying the columns to be checked.
+
+        Returns:
+            List[Tuple[List[str], str]]: A list of tuples containing the duplicate values and an error message.
+
+        Example:
+            rows = [['John', 'Doe', 'anteriore', 'anteriore', 'properties_ant'],
+                    ['Jane', 'Smith', 'posteriore', 'properties_post', 'properties_post']]
+            header = ['First Name', 'Last Name', 'Relation Type 1', 'Relation Type 2', 'Relation Type 3']
+            check_duplicates(rows, header)
+            # Output: [(['anteriore', 'anteriore'], "['anteriore', 'anteriore'] è duplicato"),
+            #          (['properties_post', 'properties_post'], "['properties_post', 'properties_post'] è duplicato")]
+        """
         errors = []
         for row in rows:
             for relation_type in ['anteriore', 'posteriore', 'properties_ant', 'properties_post']:
