@@ -1587,20 +1587,48 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 if time.time() - start_time > timeout:
                     raise Exception("Timeout while waiting for .dot file to be created.")
                 time.sleep(1)  # Wait for one second
-
+            '''
             dottoxml = os.path.join('parser', 'dottoxml.py')
-
+            print(dottoxml)
             # Create the path to the new dot file
             dot_file = os.path.join(dir_path, "Harris_matrix2ED.dot")
+            print(dot_file)
 
             python_command = 'python3' if sys.platform != 'win32' else 'python'
+            print(python_command)
 
             # Handle subprocess error
             try:
+                print()
                 subprocess.check_call([python_command, dottoxml, '-f', 'Graphml', dot_file, CSVMapper.GRAPHML_PATH],
                                       shell=True)
             except subprocess.CalledProcessError as e:
                 raise Exception("Error during subprocess call: " + str(e))
+            '''
+            dottoxml = os.path.join('parser', 'dottoxml.py')
+            print(dottoxml)
+
+            dot_file = os.path.join(dir_path, "Harris_matrix2ED.dot")
+            print(dot_file)
+
+            python_command = 'python3' if sys.platform != 'win32' else 'python'
+            print(python_command)
+
+            # Assicurati che i file esistano
+            if not os.path.exists(dottoxml) or not os.path.exists(dot_file):
+                raise Exception("File non trovato")
+
+            # Esecuzione del comando
+            try:
+                command = [python_command, dottoxml, '-f', 'Graphml', dot_file, CSVMapper.GRAPHML_PATH]
+                print("Esecuzione del comando:", " ".join(command))
+                
+                # Utilizza 'shell=False' e passa il comando come lista
+                subprocess.check_call(command, shell=False)
+            except subprocess.CalledProcessError as e:
+                print("Errore durante l'esecuzione del subprocesso:")
+                print("Codice di ritorno:", e.returncode)
+                raise            
 
             with open(CSVMapper.GRAPHML_PATH, 'r') as file:
                 filedata = file.read()
