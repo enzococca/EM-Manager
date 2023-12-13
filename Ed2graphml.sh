@@ -13,7 +13,7 @@ pip install -r requirements.txt
 
 
 # Avvia il programma
-python EDMatrix2Graphml.py
+python3 EDMatrix2Graphml.py
 
 # Disattiva l'ambiente virtuale
 deactivate
