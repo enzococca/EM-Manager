@@ -1,173 +1,171 @@
-
-
 HELP
-================================
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+=================================
+    .. toctree::
+       :maxdepth: 2
+       :caption: Contents:
 
-Aiuto per l'uso del EM2Graphml
-=============================
+Help for using EM2Graphml
+==============================
 
-ED2Graphml è un'applicazione che consente di convertire  e verificare le relazioni tra i dati in un file CSV o un foglio Google e trasformarli in Graphml per EM Tools.
+ED2Graphml is an application that allows you to convert and verify relationships between data in a CSV file or Google Sheet and transform it into Graphml for EM Tools.
 
-Avvio del programma
+Starting the program
+---------------------
+
+1. Download the provided batch file and place it in the desired folder on your computer.
+2. Double-click the batch file to launch it.
+3. The batch file script will take care of checking whether Python and PyQt5 are installed.
+4. If Python or PyQt5 are not installed, the script will use PackageManagement to install them automatically.
+5. After installation, the script will launch the main program with a splash screen.
+6. The splash screen will show the progress of the program loading.
+7. Once loading is complete, the main program will launch and you can start using it.
+
+Main functions
 -------------------
 
-1. Scarica il file batch fornito e posizionalo nella cartella desiderata sul tuo computer.
-2. Fai doppio clic sul file batch per avviarlo.
-3. Lo script del file batch si occuperà di controllare se Python e PyQt5 sono installati.
-4. Se Python o PyQt5 non sono installati, lo script utilizzerà PackageManagement per installarli automaticamente.
-5. Dopo l'installazione, lo script avvierà il programma principale con uno splash screen.
-6. Lo splash screen mostrerà il progresso del caricamento del programma.
-7. Una volta completato il caricamento, il programma principale verrà avviato e potrai iniziare ad utilizzarlo.
+- Load data from a Google Sheet: This feature allows you to load data directly from a Google Sheet.
+- Update Reports: This function allows you to update relationships between data.
+- 3D Viewer: This feature allows you to view data in a 3D format.
+- Error checking: This function allows you to check for errors in data relationships.
 
-Funzioni principali
--------------------
-
-- **Carica dati da un Google Sheet:** Questa funzione consente di caricare i dati direttamente da un foglio Google.
-- **Aggiorna rapporti:** Questa funzione consente di aggiornare le relazioni tra i dati.
-- **Visualizzatore 3D:** Questa funzione consente di visualizzare i dati in un formato 3D.
-- **Controllo errori:** Questa funzione consente di controllare gli errori nelle relazioni tra i dati.
-
-Funzioni di controllo errori
+Error checking functions
 ----------------------------
 
-EM2Graphml offre diverse funzioni per controllare gli errori nelle relazioni tra i dati:
+EM2Graphml offers several functions to check data relationships for errors:
 
-- **Controllo duplicati:** Questa funzione controlla se ci sono duplicati nella stessa riga.
-- **Controllo esistenza relazioni:** Questa funzione controlla se le relazioni esistono.
-- **Controllo esistenza relazioni inverse:** Questa funzione controlla se le relazioni inverse esistono.
-- **Controllo tipo di relazione:** Questa funzione controlla se il tipo di relazione è corretto.
+- Duplicate Check: This function checks if there are duplicates in the same row.
+- Relationship existence check: This function checks whether relationships exist.
+- Check existence of inverse relations: This function checks whether inverse relations exist.
+- Relationship type check: This function checks whether the relationship type is correct.
 
-Seleziona epoca storica
+Select historical era
 -----------------------
 
-EM2Graphml offre anche una funzione che consente di selezionare un'epoca storica da un elenco a discesa. Questo elenco è popolato dai dati nel file CSV o nel foglio Google.
+EM2Graphml also offers a feature that allows you to select a historical era from a drop-down list. This list is populated by the data in your CSV file or Google Sheet.
 
-Salvataggio dei dati
+Saving data
 --------------------
 
-EM2Graphml consente di salvare i dati in un file CSV o in un foglio Google. I pulsanti "Salva CSV" e "Salva Google" sono collegati alle funzioni corrispondenti.
+EM2Graphml allows you to save data to a CSV file or Google Sheet. The "Save CSV" and "Save Google" buttons are linked to the corresponding functions.
 
-Aggiornamento delle relazioni
+Update of reports
 -----------------------------
 
-EM2Graphml offre due funzioni per aggiornare le relazioni tra i dati: una per i file CSV e una per i fogli Google.
+EM2Graphml offers two functions for updating data relationships: one for CSV files and one for Google Sheets.
 
-Aggiornamento delle relazioni per i file CSV
+Updating relationships for CSV files
 --------------------------------------------
 
-Questa funzione apre il file CSV, legge tutte le righe e crea un dizionario per memorizzare le righe per nome. Poi, per ogni riga, controlla il tipo di unità stratigrafica e aggiorna le relazioni corrispondenti. Infine, aggiorna la tabella con i dati aggiornati.
+This function opens the CSV file, reads all the rows, and creates a dictionary to store the rows by name. Then, for each row, check the type of stratigraphic unit and update the corresponding relations. Finally, update the table with the updated data.
 
-Aggiornamento delle relazioni per i fogli Google
+Updated reports for Google Sheets
 -------------------------------------------------
 
-Questa funzione funziona in modo simile alla funzione per i file CSV, ma invece di aprire un file CSV, apre un foglio Google. Dopo aver letto tutte le righe dal foglio Google, crea un dizionario per memorizzare le righe per nome. Poi, per ogni riga, controlla il tipo di unità stratigrafica e aggiorna le relazioni corrispondenti. Infine, aggiorna la tabella con i dati aggiornati.
+This feature works similarly to the feature for CSV files, but instead of opening a CSV file, it opens a Google Sheet. After reading all the rows from the Google Sheet, create a dictionary to store the rows by name. Then, for each row, check the type of stratigraphic unit and update the corresponding relations. Finally, update the table with the updated data.
 
-Nota:
+Note:
 -----
-Per entrambe le funzioni, se l'unità stratigrafica è di tipo 'property', 'document', 'combiner' o 'extractor', vengono aggiornate le relazioni 'properties_ant' e 'properties_post'. Se l'unità stratigrafica è di tipo 'contemporaneo', viene aggiornata la relazione 'contemporaneo'. In tutti gli altri casi, vengono aggiornate le relazioni 'anteriore' e 'posteriore'.
+For both functions, if the stratigraphic unit is of type 'property', 'document', 'combiner' or 'extractor', the 'properties_ant' and 'properties_post' relations are updated. If the stratigraphic unit is of the 'contemporary' type, the 'contemporary' relationship is updated. In all other cases, the 'front' and 'back' relationships are updated.
 
-Aggiornamento delle relazioni nel DataFrame
+Updating relationships in the DataFrame
 -------------------------------------------
 
-EM2Graphml offre una funzione per aggiornare le relazioni nel DataFrame. Questa funzione legge i dati dalla QTableWidget, aggiorna i rapporti nel DataFrame e mostra eventuali errori nel dock widget.
+EM2Graphml provides a function to update relations in the DataFrame. This function reads data from the QTableWidget, updates reports in the DataFrame, and displays any errors in the widget dock.
 
-Visualizzazione delle modifiche
+Viewing changes
 --------------------------------
 
-EM2Graphml offre una funzione per mostrare le differenze tra le vecchie e le nuove righe. Questa funzione può essere utilizzata per verificare le modifiche apportate ai dati.
+EM2Graphml offers a function to show the differences between old and new rows. This feature can be used to verify changes made to data.
 
-Salvataggio delle modifiche
+Saving changes
 ---------------------------
 
-EM2Graphml offre una funzione per chiedere all'utente se vuole salvare le modifiche. Se l'utente decide di salvare le modifiche, queste verranno salvate nel file CSV e il file verrà ricaricato.
+EM2Graphml offers a function to ask the user if he wants to save the changes. If the user decides to save the changes, they will be saved to the CSV file and the file will be reloaded.
 
-Visualizzazione del dialogo dell'epoca
+Viewing dialogue from the era
 --------------------------------------
 
-EM2Graphml offre una funzione per mostrare un dialogo dell'epoca quando viene fatto doppio clic su una cella nella colonna "Epoca". Questa funzione crea un'istanza di EpochDialog e mostra il dialogo all'utente.
+EM2Graphml offers a feature to show an epoch dialog when a cell in the "Epoch" column is double-clicked. This function creates an instance of EpochDialog and displays the dialogue to the user.
 
-Salvataggio dei dati in un file CSV o in un foglio Google
-----------------------------------------------------------
+Saving data to a CSV file or Google Sheet
+-------------------------------------------------- --------
 
-EM2Graphml offre due funzioni per salvare i dati: una per i file CSV e una per i fogli Google. Queste funzioni leggono i dati dalla QTableWidget, creano un nuovo DataFrame con questi dati e salvano il DataFrame nel file CSV o nel foglio Google.
+EM2Graphml offers two functions for saving data: one for CSV files and one for Google Sheets. These functions read data from the QTableWidget, create a new DataFrame with this data, and save the DataFrame to the CSV file or Google Sheet.
 
-Aggiornamento e ripristino dei dati CSV
+Updating and restoring CSV data
 ---------------------------------------
 
-EM2Graphml offre due funzioni per aggiornare e ripristinare i dati CSV. La funzione di aggiornamento aggiorna il DataFrame originale con i dati della QTableWidget. La funzione di ripristino ripristina i dati della QTableWidget al DataFrame originale.
+EM2Graphml offers two functions to update and restore CSV data. The update function updates the original DataFrame with the data from the QTableWidget. The restore function restores the QTableWidget's data to the original DataFrame.
 
-Ottenere il DataFrame corrente
+Get the current DataFrame
 ------------------------------
 
-EM2Graphml offre una funzione per ottenere il DataFrame corrente dalla QTableWidget. Questa funzione può essere utilizzata per ottenere i dati attualmente visualizzati nella QTableWidget.
+EM2Graphml provides a function to get the current DataFrame from the QTableWidget. This function can be used to get the data currently displayed in the QTableWidget.
 
-Aggiorna Relazioni
-~~~~~~~~~~~~~~~~~~
-
-Questa funzione legge i dati dal QTableWidget e li aggiunge a un nuovo DataFrame. Successivamente aggiorna le relazioni nel DataFrame. Se ci sono delle modifiche, chiederà all'utente se desidera salvare le modifiche e, se necessario, salverà il file CSV.
-
-Aggiorna Relazioni nel DataFrame
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Questa funzione prende un DataFrame come input, aggiorna le relazioni nel DataFrame e restituisce il DataFrame aggiornato insieme al nuovo header.
-
-Mostra Cambiamenti
-~~~~~~~~~~~~~~~~~~
-
-Questa funzione stampa le differenze tra le righe vecchie e nuove. Se una riga è cambiata, verrà stampata la vecchia riga e la nuova riga.
-
-Chiedi di Salvare le Modifiche
--------------------------------
-
-Questa funzione chiede all'utente se desidera salvare le modifiche. Se l'utente sceglie di salvare le modifiche, le modifiche verranno salvate nel file CSV di output.
-
-Finestra Grafica 3D
-~~~~~~~~~~~~~~~~~~~
-
-La classe GraphWindow crea una finestra che visualizza un grafo 3D. Questa finestra include tre dockwidgets: "Node Info", "Nodi prossimi Info" e "File Multimediali". Ogni dockwidget contiene un QTextEdit o un QWidget che mostra informazioni sul nodo selezionato, sui nodi vicini o sui file multimediali associati al nodo selezionato.
-
-La funzione d_graph legge un file graphml, recupera le coordinate x, y per ogni nodo e crea un plot 3D del grafo. Se esistono modelli 3D che corrispondono alle descrizioni dei nodi, questi vengono caricati e visualizzati come oggetti 3D nel plot. In caso contrario, viene visualizzata un'immagine o una sfera 3D.
-
-La funzione callback viene eseguita quando si clicca su un punto nel plot 3D. Calcola la distanza tra il punto selezionato e ogni nodo nel grafo, trova il nodo più vicino e mostra le informazioni di questo nodo nel QTextEdit. Se il nodo ha un file multimediale associato, questo viene visualizzato nel QWidget.
-
-La funzione eventFilter gestisce gli eventi del mouse per avviare, mettere in pausa e interrompere la riproduzione di un video quando si clicca con il mouse sul QWidget che mostra il video.
-
-Classe pyarchinit_Interactive_Matrix
+Update Relationships
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-La classe `pyarchinit_Interactive_Matrix` gestisce la generazione di una matrice interattiva.
+This function reads data from the QTableWidget and adds it to a new DataFrame. It then updates the relationships in the DataFrame. If there are any changes, it will ask the user if they want to save the changes and will save the CSV file if necessary.
 
-Il metodo `__init__` inizializza la classe e imposta le variabili `DATA_LIST` e `ID_US_DICT`.
+Update Relationships in the DataFrame
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Il metodo `csv_connect` si occupa di connettersi al file CSV.
+This function takes a DataFrame as input, updates the relations in the DataFrame, and returns the updated DataFrame along with the new header.
 
-Il metodo `urlify` converte una stringa in un formato URL-friendly, sostituendo gli spazi con underscore.
+Show Changes
+~~~~~~~~~~~~~~~~~~
 
-Il metodo `generate_matrix` genera la matrice a partire dai dati forniti. Vengono utilizzate diverse funzioni per elaborare e organizzare i dati.
+This function prints the differences between the old and new lines. If a line has changed, the old line and the new line will be printed.
 
-Classe HarrisMatrix
+Ask to Save Changes
+-------------------------------
+
+This feature asks the user if they want to save the changes. If the user chooses to save changes, the changes will be saved to the output CSV file.
+
+3D Graphics Window
+~~~~~~~~~~~~~~~~~~~
+
+The GraphWindow class creates a window that displays a 3D graph. This window includes three dockwidgets: "Node Info", "Next Nodes Info" and "Media Files". Each dockwidget contains a QTextEdit or QWidget that displays information about the selected node, neighboring nodes, or media files associated with the selected node.
+
+The d_graph function reads a graphml file, retrieves the x, y coordinates for each node and creates a 3D plot of the graph. If 3D models exist that match the node descriptions, they are loaded and displayed as 3D objects in the plot. Otherwise, a 3D image or sphere appears.
+
+The callback function is executed when you click on a point in the 3D plot. Calculate the distance between the selected point and each node in the graph, find the closest node and display the information of this node in the QTextEdit. If the node has an associated media file, it is displayed in the QWidget.
+
+The eventFilter function handles mouse events to start, pause, and stop playing a video when you click the mouse on the QWidget showing the video.
+
+pyarchinit_Interactive_Matrix class
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The `pyarchinit_Interactive_Matrix` class handles the generation of an interactive matrix.
+
+The `__init__` method initializes the class and sets the `DATA_LIST` and `ID_US_DICT` variables.
+
+The `csv_connect` method takes care of connecting to the CSV file.
+
+The `urlify` method converts a string to a URL-friendly format, replacing spaces with underscores.
+
+The `generate_matrix` method generates the matrix from the supplied data. Different functions are used to process and organize data.
+
+HarrisMatrix class
 ~~~~~~~~~~~~~~~~~~~~
 
-La classe `HarrisMatrix` gestisce l'esportazione della matrice di Harris in diversi formati.
+The `HarrisMatrix` class manages the export of the Harris matrix in different formats.
 
-Il metodo `__init__` inizializza la classe e imposta le variabili `sequence`, `conteporene`, `property` e `periodi`.
+The `__init__` method initializes the class and sets the `sequence`, `conteporene`, `property` and `periods` variables.
 
-Il metodo `export_matrix_2` genera la matrice di Harris utilizzando la libreria Graphviz. Vengono creati diversi sottografi per rappresentare le relazioni tra i dati.
+The `export_matrix_2` method generates the Harris matrix using the Graphviz library. Several subgraphs are created to represent the relationships between the data.
 
-Installazione di Graphviz
+Installing Graphviz
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Il programma verifica se Graphviz è installato e se è nel PATH del sistema operativo. Graphviz è necessario per la conversione dei grafici.
+The program checks whether Graphviz is installed and whether it is in the operating system's PATH. Graphviz is required for graph conversion.
 
-La funzione `is_graphviz_installed` esegue il comando "dot -V" per verificare se Graphviz è installato. Se il comando viene eseguito con successo, la funzione restituisce True, altrimenti restituisce False.
+The `is_graphviz_installed` function runs the "dot -V" command to check if Graphviz is installed. If the command executes successfully, the function returns True, otherwise it returns False.
 
-La funzione `is_graphviz_in_path` verifica se la directory bin di Graphviz è nel PATH del sistema operativo. Se lo è, la funzione restituisce True, altrimenti restituisce False.
+The `is_graphviz_in_path` function checks whether the Graphviz bin directory is in the operating system's PATH. If it is, the function returns True, otherwise it returns False.
 
-La funzione `install_graphviz` mostra un messaggio di avviso se Graphviz non è installato. Il messaggio suggerisce come installare Graphviz a seconda del sistema operativo.
+The `install_graphviz` function displays a warning message if Graphviz is not installed. The message suggests how to install Graphviz depending on your operating system.
 
-La funzione `set_graphviz_path` mostra un messaggio di avviso se Graphviz non è nel PATH del sistema operativo. Il messaggio suggerisce di aggiungere la directory di Graphviz al PATH.
+The `set_graphviz_path` function displays a warning message if Graphviz is not in the operating system's PATH. The message suggests adding the Graphviz directory to your PATH.
 
-La funzione `check_graphviz` chiama le funzioni `is_graphviz_installed` e `is_graphviz_in_path`, e mostra un messaggio appropriato a seconda dei risultati. Se Graphviz è installato e nel PATH, mostra un messaggio che dice "Graphviz è installato e pronto all'uso".
+The `check_graphviz` function calls the `is_graphviz_installed` and `is_graphviz_in_path` functions, and displays an appropriate message depending on the results. If Graphviz is installed and in the PATH, it shows a message that says "Graphviz is installed and ready to use".

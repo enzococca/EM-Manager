@@ -6,17 +6,17 @@
 Welcome to help's documentation!
 ================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   .. toctree::
+      :maxdepth: 2
+      :caption: Contents:
 
-   help.rst
-   api.rst
+      help
+
 
 Indices and tables
 ==================
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   * :ref:`genindex`
+   * :ref:`modindex`
+   * :ref:`search`
 

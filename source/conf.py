@@ -5,7 +5,9 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
-
+import os
+import sys
+#sys.path.insert(0, os.path.abspath('..'))
 project = 'EM-Manager help'
 copyright = '2023, Enzo Cocca'
 author = 'Enzo Cocca'
@@ -19,8 +21,8 @@ extensions = ["sphinx.ext.autodoc"]
 templates_path = ['_templates']
 exclude_patterns = []
 
-root_doc = 'index2'
-language = 'it'
+root_doc = 'index'
+language = 'en'
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
