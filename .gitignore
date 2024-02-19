@@ -5,8 +5,7 @@
 /__pycache__/
 log/log.txt
 log/temp.log
-/build/
-/source/
+
+
 settings.json
-Makefile
-make.bat
+
