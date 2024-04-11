@@ -27,7 +27,7 @@ class OBJPROXY(QtWidgets.QMainWindow):
         self.plotter = QtInteractor(self)
         self.plotter.enable_trackball_style()
         self.plotter.set_background('white')
-        self.plotter.add_logo_widget(r'C:\Users\enzoc\Documents\OpenDevin\OpenDivin\workspace\logo.jpeg')
+        self.plotter.add_logo_widget(r'logo.jpeg')
 
 
         #self.plotter.show_grid(color='black')
