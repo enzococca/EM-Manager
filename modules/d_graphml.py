@@ -102,7 +102,7 @@ class GraphWindow(QtWidgets.QMainWindow):
                     self.plotter.add_mesh(tube, color=EDGE_COLOR)#lo aggiugno alla mesh
 
             meshes = []#creao una lista vuota dove inserire le mesh che devono essere visualizzate come oggetti 3D
-
+            mesh=''
             # Directory dei modelli 3D
             dir = os.path.dirname(self.graphml_path)
 
@@ -166,9 +166,13 @@ class GraphWindow(QtWidgets.QMainWindow):
 
                             mesh.translate([x, y, z])
                             # print(f"Centro della mesh dopo la traslazione: {mesh.center}")
-                            texture = pv.read_texture(model_img)#leggo la texture in png la tegture deve avere lo stesso nome della obj
+                            try:
+                                texture = pv.read_texture(model_img)#leggo la texture in png la tegture deve avere lo stesso nome della obj
+                                self.plotter.add_mesh(mesh, texture=texture)
+                            except Exception as e:
+                                print('texture non trovata')
 
-                            self.plotter.add_mesh(mesh, texture=texture)
+                                self.plotter.add_mesh(mesh)
 
 
                         else:
