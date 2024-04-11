@@ -1,4 +1,4 @@
-#from modules import splash
+from modules import splash
 from typing import Optional
 import re
 from PyQt5.QtCore import (QAbstractTableModel, QVariant,
@@ -45,11 +45,6 @@ from modules.config import config
 
 MAIN_DIALOG_CLASS, _ = loadUiType(
     os.path.join(os.path.dirname(__file__),  'ui', 'edm2grapml.ui'))
-
-
-
-
-
 
 from PyQt5.QtGui import QIcon
 
