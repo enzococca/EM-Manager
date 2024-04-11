@@ -259,7 +259,6 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.pushButton_3D.clicked.connect(self.display_3D)
         self.data_table.currentCellChanged.connect(self.on_table_selection_changed)
         self.search_bar.textChanged.connect(self.search)
-
     def search(self, text):
         self.data_table.setRowCount(0)  # Clear the table
 
