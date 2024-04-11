@@ -1,4 +1,4 @@
-from modules import splash
+#from modules import splash
 from typing import Optional
 import re
 from PyQt5.QtCore import (QAbstractTableModel, QVariant,

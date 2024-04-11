@@ -27,7 +27,7 @@ class OBJPROXY(QtWidgets.QMainWindow):
         self.plotter = QtInteractor(self)
         self.plotter.enable_trackball_style()
         self.plotter.set_background('white')
-        self.plotter.add_logo_widget(r'logo.jpeg')
+        #self.plotter.add_logo_widget(r'logo.jpeg')
 
 
         #self.plotter.show_grid(color='black')
@@ -82,6 +82,11 @@ class OBJPROXY(QtWidgets.QMainWindow):
                 color = None  # Nessun colore Kd trovato nel file mtl
 
         model = pv.read(obj_path)
+        if model is None:
+            print(f"Failed to read the model from {obj_path}")
+            return
+
+
         if color is not None:  # se c'è il colore nel file .mtl lo utilizza, altrimenti 'gray'
             actor = self.plotter.add_mesh(model, specular=1, specular_power=20, color=color)
         else:
@@ -98,7 +103,7 @@ class OBJPROXY(QtWidgets.QMainWindow):
         self.original_colors[mesh_name] = (original_color, original_opacity)
 
         self.plotter.lighting = True
-        self.plotter.add_light(pv.Light(intensity=0.7))
+        self.plotter.add_light(pv.Light(intensity=1))
 
         return (model, actor, False)  # `False` indica che il proxy non è selezionato
 
