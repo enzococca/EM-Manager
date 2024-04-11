@@ -1,6 +1,9 @@
-import modules.splash
+#from modules import splash
+from typing import Optional
+import re
 from PyQt5.QtCore import (QAbstractTableModel, QVariant,
-                          Qt)
+                          Qt, QSize)
+from PyQt5.QtGui import QPixmap, QIcon, QStandardItem, QStandardItemModel
 from PyQt5.QtWidgets import (QDialog,
                              QFileDialog,
                              QAction,
@@ -12,7 +15,8 @@ from PyQt5.QtWidgets import (QDialog,
                              QVBoxLayout,
                              QInputDialog,
                              QComboBox,
-                             QMessageBox)
+                             QDockWidget,QMessageBox, QTextEdit, QWidget, QLabel, QGraphicsScene, QGraphicsView, QListWidgetItem,
+                             QListWidget)
 from PyQt5.uic import loadUiType
 from modules.interactive_matrix import pyarchinit_Interactive_Matrix
 import json
@@ -29,19 +33,81 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 import io
 from modules.d_graphml import GraphWindow
+from modules.load_3d import OBJPROXY
+from modules.graphml_to_excel import load_graphml
 from modules.check_graphviz_path import check_graphviz
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl
+
+
+
 from modules.config import config
 
 MAIN_DIALOG_CLASS, _ = loadUiType(
     os.path.join(os.path.dirname(__file__),  'ui', 'edm2grapml.ui'))
 
+
+
+
+
+
+from PyQt5.QtGui import QIcon
+
+
+class ImageItem(QListWidgetItem):
+    def __init__(self, image_path, text, parent=None):
+        super().__init__(parent)
+
+        self.image = QPixmap(image_path)
+        self.image_label = QLabel()
+        self.image_label.setPixmap(self.image.scaled(800, 800, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+        self.setText(text)
+        self.setIcon(QIcon(self.image))  # Imposta l'icona dal QPixmap
+
+    def mousePressEvent(self, event):
+        self.image_label.show()
+
+
+
+class EnhancedDockWidget(QDockWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.list_widget = QListWidget()
+        self.text_edit = QTextEdit()
+
+        # Imposta la dimensione dell'icona
+        self.list_widget.setIconSize(QSize(100, 100))
+
+        # Collega il doppio clic del list widget alla funzione show_image
+        self.list_widget.itemDoubleClicked.connect(self.show_image)
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.list_widget)
+        self.layout.addWidget(self.text_edit)
+
+        self.container = QWidget()
+        self.container.setLayout(self.layout)
+
+        self.setWidget(self.container)
+
+    def show_image(self, item):
+        # Quando c'è un doppio clic, mostra l'immagine
+        item.image_label.show()
+
+    def add_image_item(self, image_path, text):
+        item = ImageItem(image_path, text)
+        self.list_widget.addItem(item)
+
+    def append_text(self, text):
+        self.text_edit.append(text)
+
+
 class EpochDialog(QDialog):
     def __init__(self, epochs_df, parent=None):
         super().__init__(parent)
 
-        self.setWindowTitle("Seleziona epoca storica")
+        self.setWindowTitle("Select historical era")
         self.setWindowModality(Qt.ApplicationModal)
 
         # Create the epoch combobox
@@ -54,7 +120,7 @@ class EpochDialog(QDialog):
 
         # Create the OK and Cancel buttons
         self.ok_button = QPushButton("OK")
-        self.cancel_button = QPushButton("Annulla")
+        self.cancel_button = QPushButton("Cancel")
         self.ok_button.clicked.connect(self.accept)
         self.cancel_button.clicked.connect(self.reject)
 
@@ -82,7 +148,7 @@ class UnitDialog(QDialog):
     def __init__(self, unit_df, parent=None):
         super().__init__(parent)
 
-        self.setWindowTitle("Seleziona unità tipo")
+        self.setWindowTitle("Select unit type")
         self.setWindowModality(Qt.ApplicationModal)
 
         # Create the epoch combobox
@@ -95,7 +161,7 @@ class UnitDialog(QDialog):
 
         # Create the OK and Cancel buttons
         self.ok_button = QPushButton("OK")
-        self.cancel_button = QPushButton("Annulla")
+        self.cancel_button = QPushButton("Cancel")
         self.ok_button.clicked.connect(self.accept)
         self.cancel_button.clicked.connect(self.reject)
 
@@ -137,9 +203,11 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
     def __init__(self, parent=None,data_file=None, spreadsheet=None):
 
         super(CSVMapper, self).__init__(parent=parent)
+        self.obj_proxy = None
         self.df = None
         self.data_fields = None
         self.setupUi(self)
+        self.resize(1000, 1000)
         self.custumize_gui()
 
 
@@ -151,6 +219,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             self.data_source = 'google_sheet'
         else:
             self.data_source = None
+
         # Collegare i bottoni alle funzioni corrispondenti
         self.save_button.clicked.connect(self.save_csv)
         self.save_google_button.clicked.connect(self.save_google)
@@ -182,7 +251,211 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.help_action.triggered.connect(self.show_help)
         # Aggiungi l'azione al menu
         self.menu_help_2.addAction(self.help_action)
+        # Controlla se la cartella 3dObject è vuota
 
+        if self.data_file is not None:
+            csv_directory = os.path.dirname(self.data_file)
+            self.object_directory = os.path.join(csv_directory, '3d_obj')
+
+            # Controlla se la cartella 3dObject esiste e non è vuota
+            if not os.path.exists(self.object_directory) or not os.listdir(self.object_directory):
+                # Se è vuota o non esiste, disattiva pushButton_3D
+                self.pushButton_3D.setEnabled(False)
+        self.pushButton_3D.clicked.connect(self.display_3D)
+        self.data_table.currentCellChanged.connect(self.on_table_selection_changed)
+        self.search_bar.textChanged.connect(self.search)
+
+    def search(self, text):
+        self.data_table.setRowCount(0)  # Clear the table
+
+        if self.df is not None:
+            if len(text) >= 3:  # If search text has 3 or more characters
+                # Filter the DataFrame
+                filtered_df = self.df[
+                    self.df.apply(
+                        lambda row: row.astype(str).str.contains(re.escape(text), case=False, regex=True).any(), axis=1)
+                ]
+
+                # Update the table with filtered results
+                self.update_table(filtered_df)
+            else:  # If search text is cleared or less than 3 characters
+                # Show all data
+                self.update_table(self.df)
+
+    def update_table(self, dataframe):
+        self.data_table.setRowCount(0)  # Clear the table before updating
+        for index, row in dataframe.iterrows():
+            row_index = self.data_table.rowCount()
+            self.data_table.insertRow(row_index)
+            for col_index, value in enumerate(row.values):
+                self.data_table.setItem(row_index, col_index, QTableWidgetItem(str(value)))
+
+    def deselect_proxies(self):
+        # Verifica se esiste un oggetto proxy.
+        if hasattr(self, 'obj_proxy'):
+            # Rimuovi la selezione da tutti gli items nel proxy.
+            self.obj_proxy.deselect_all_proxies()
+
+
+    def display_3D(self):
+        #self.deselect_proxies()
+        if self.data_file is not None:
+            csv_directory = os.path.dirname(self.data_file)
+            self.object_directory = os.path.join(csv_directory, '3d_obj')
+        self.obj_proxy = OBJPROXY(self.object_directory)
+        self.obj_proxy.update_models_dir(self.object_directory)
+        self.tabWidget.insertTab(2, self.obj_proxy, "3D View Time Manager")
+
+    def on_table_selection_changed(self):
+        if self.obj_proxy is None:
+            print("obj_proxy non è stato inizializzato.")
+            return
+        selected_row = self.data_table.currentRow()
+
+        # trova il nome dell'oggetto 3d che corrisponde alla riga selezionata
+        # supponendo che il nome dell'oggetto 3d sia il contenuto della terza colonna
+        tipo = self.data_table.item(selected_row, 1).text()
+        mesh_name = self.data_table.item(selected_row, 0).text()
+
+        # divide mesh_name sui slash e prende il primo elemento
+        tipo = tipo.split('/')[0]
+
+
+        meshes_name =tipo+mesh_name+ '.obj'
+        self.obj_proxy.deselect_all_proxies()
+
+
+
+        print(meshes_name)
+        print(self.obj_proxy.meshes.get(meshes_name))
+        print(self.obj_proxy.meshes.keys())
+
+        # se il mesh_name corrisponde a una chiave nel dizionario self.obj_proxy.meshes
+        if self.obj_proxy.meshes.get(meshes_name) is not None:
+            # chiamare `highlight_mesh` su OBJPROXY
+            #self.obj_proxy.select_proxy(meshes_name)
+
+            self.obj_proxy.highlight_mesh(meshes_name)
+
+            self.display_related_info(mesh_name)
+
+        descrizione = self.data_table.item(selected_row,
+                                           3).text()  # Assumendo che la descrizione sia nella quarta colonna
+        self.lineEdit_desc_label.setText(descrizione)
+
+    def get_related_nodes(self, mesh_name):
+        # Trova la riga nel DataFrame che corrisponde al mesh_name
+        row = self.df.loc[self.df['nome us'] == mesh_name]
+
+        if row.empty:
+            print(f"No data for {mesh_name}")
+            return []
+
+        # Unisci le stringhe da properties_ant e properties_post in una sola lista
+        related_nodes = row['properties_ant'].tolist() + row['properties_post'].tolist()
+
+        # Divide ogni stringa con virgole per ottenere una lista di nodi correlati
+        related_nodes = [node.strip() for nodes in related_nodes if isinstance(nodes, str) for node in nodes.split(',')]
+
+        # Crea una lista per contenere anche i nodi collegati ai nodi collegati
+        related_nodes_plus = related_nodes.copy()
+
+        # Per ogni nodo collegato, trova i suoi nodi collegati e aggiungili a related_nodes_plus
+        for node in related_nodes:
+            row = self.df.loc[self.df['nome us'] == node]
+            if not row.empty:
+                more_nodes = row['properties_ant'].tolist() + row['properties_post'].tolist()
+                more_nodes = [node.strip() for nodes in more_nodes if isinstance(nodes, str) for node in
+                              nodes.split(',')]
+                related_nodes_plus.extend(more_nodes)
+
+        return related_nodes_plus
+
+    def display_related_info(self, mesh_name):
+        related_nodes = self.get_related_nodes(mesh_name)
+
+        def get_description_from_df(dataframe, node):
+            description = dataframe[dataframe['nome us'] == node]['descrizione'].values[0]
+            return description
+
+        # Crea un'istanza del widget
+        dock_widget = EnhancedDockWidget(self)
+
+        for node in related_nodes:
+            node_description = get_description_from_df(self.df, node)
+            dock_widget.append_text(node + ": " + str(node_description))
+
+        # Se i nodi hanno media
+        if self.nodes_have_media(related_nodes):
+            self.display_media_in_widget(related_nodes, dock_widget)
+
+    def nodes_have_media(self, related_nodes):
+        """
+        Controlla se i nodi correlati hanno file multimediali associati. Considera che i file multimediali sono archiviati nella directory "DoSco" e
+        hanno lo stesso nome del nodo.
+        """
+        if self.data_file is not None:
+            csv_directory = os.path.dirname(self.data_file)
+            self.media_directory = os.path.join(csv_directory, 'DosCo')
+
+
+        print(f"directory dosco{self.media_directory}")
+        for node in related_nodes:
+            print(node)
+            # Check if a file with the same name as the node exists in the media directory
+            if os.path.isfile(os.path.join(self.media_directory, node+".png")):
+                return True
+
+        return False
+
+    def display_media_in_widget(self, related_nodes, dock_widget: Optional[EnhancedDockWidget] = None):
+        if dock_widget is None:
+            # Crea un'istanza del widget
+            dock_widget = EnhancedDockWidget(self)
+
+        for node in related_nodes:
+            media_path = os.path.join(self.media_directory, node + ".png")
+            if os.path.isfile(media_path):
+                dock_widget.add_image_item(media_path, node)
+
+        dock_widget.show()
+
+    def import_graphml(self):
+        load_graphml(self.dir_path, self.base_name)
+        # Costruisci il percorso al file CSV
+        csv_path = os.path.join(self.dir_path, self.base_name)
+
+        if os.path.isfile(csv_path):
+            # Open the data CSV file
+            self.data_file = csv_path
+
+            try:
+                self.transform_data(self.data_file, self.data_file)
+            except AssertionError:
+                pass
+            self.df = pd.read_csv(self.data_file, dtype=str)
+            self.data_fields = self.df.columns.tolist()
+
+            self.data_table.setDragEnabled(True)
+            # Impostare il numero di righe e colonne nel QTableWidget
+            self.data_table.setRowCount(len(self.df))
+            self.data_table.setColumnCount(len(self.df.columns))
+
+            # Impostare le etichette delle colonne orizzontali
+            self.data_table.setHorizontalHeaderLabels(self.df.columns)
+
+            # Inserire i dati nelle celle del QTableWidget
+            for row in range(len(self.df)):
+                for col in range(len(self.df.columns)):
+                    item = QTableWidgetItem(str(self.df.iat[row, col]))
+                    self.data_table.setItem(row, col, item)
+            for i in range(self.data_table.rowCount()):
+                self.data_table.setRowHeight(i, 50)
+
+            for i in range(self.data_table.columnCount()):
+                self.data_table.setColumnWidth(i, 250)
+        else:
+            QMessageBox.warning(self, 'Warning', f"The CSV file {csv_path} does not exist")
 
     def show_help(self):
         self.help_view.show()
@@ -193,7 +466,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         """
         # Add the button to load data from a Google Sheet to the menubar
 
-        google_sheet_action = QAction("Carica dati da un Google Sheet", self)
+        google_sheet_action = QAction("Load data from a Google Sheet", self)
         google_sheet_action.triggered.connect(self.on_google_sheet_action_triggered)
 
         self.update_relationships_button.triggered.connect(self.update_relations)
@@ -241,16 +514,16 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         self.openRecentProj.triggered.connect(self.open_recent_project)
         self.actionApri_progetto.triggered.connect(self.open_project)
-       
+        self.actionImport_graphml.triggered.connect(self.import_graphml)
 
     def open_project(self):
         projects_file = 'projects.json'
 
         # Fornisco un dialogo di selezione del file
-        project, _ = QFileDialog.getOpenFileName(self, "Seleziona un progetto", "", "CSV Files (*.csv)")
+        project, _ = QFileDialog.getOpenFileName(self, "Select a project", "", "CSV Files (*.csv)")
 
         if project:  # Se un file è stato selezionato
-            print(f"Apertura del progetto {project}")
+            print(f"Opening of the project {project}")
 
             # Let's add try-except block to handle exceptions while opening JSON
             try:
@@ -260,7 +533,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 else:
                     projects = []
             except Exception as e:
-                QMessageBox.critical(self,'Attenzione',f"Si è verificato un errore durante la lettura del file dei progetti: {str(e)}")
+                QMessageBox.critical(self,'Warning',f"An error occurred while reading the projects file: {str(e)}")
                 return  # Termina la funzione
 
             # Se il progetto non è già nella lista, aggiungilo
@@ -286,7 +559,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     self.transform_data(self.data_file, self.data_file)
                     self.df = pd.read_csv(self.data_file, dtype=str)
                 except Exception as e:
-                    QMessageBox.critical(self,'Attenzione',f"Si è verificato un errore durante la trasformazione dei dati o la lettura di CSV: {str(e)}")
+                    QMessageBox.critical(self,'Warning',f"An error occurred while transforming data or reading CSV: {str(e)}")
                     return  # Termina la funzione
 
                 
@@ -311,7 +584,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 for i in range(self.data_table.columnCount()):
                     self.data_table.setColumnWidth(i, 250)
             else:
-                QMessageBox.warning(self,'Attenzione',f"Il file CSV {csv_path} non esiste")
+                QMessageBox.warning(self,'Warning',f"The CSV file {csv_path} does not exist")
 
     def open_recent_project(self):
         """
@@ -354,10 +627,10 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             with open(projects_file, 'r') as file:
                 projects = json.load(file)
 
-            project, ok = QInputDialog.getItem(self, "Seleziona un progetto recente", "Progetti:", projects, 0, False)
+            project, ok = QInputDialog.getItem(self, "Select a recent project", "Projects:", projects, 0, False)
             if ok and project:
                 # qui puoi implementare il codice per aprire il progetto selezionato
-                print(f"Apertura del progetto {project}")
+                print(f"Opening of the project {project}")
 
                 # Get the base name of the project
                 base_name = os.path.basename(project)
@@ -396,7 +669,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     for i in range(self.data_table.columnCount()):
                         self.data_table.setColumnWidth(i, 250)
                 else:
-                    QMessageBox.warning(self,'Attenzione',f"Il file CSV {csv_path} non esiste")
+                    QMessageBox.warning(self,'Warning',f"The CSV file {csv_path} does not exist")
 
 
     def save_project_to_json(self, project_dir):
@@ -444,37 +717,39 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         # Seleziona la cartella e il nome del file
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fname, _ = QFileDialog.getSaveFileName(self, 'Seleziona la cartella e il nome del file', '',
+        fname, _ = QFileDialog.getSaveFileName(self, 'Select the folder and file name', '',
                                                'CSV Files (*.csv)', options=options)
-
+        # Aggiungi l'estensione .csv se l'utente non l'ha già fatto
+        if not fname.endswith(".csv"):
+            fname += ".csv"
         if fname:
             # Crea le directory in modo sicuro
-            dir_path = os.path.dirname(fname)
-            base_name = os.path.basename(fname)
-            base_name_no_ext = os.path.splitext(base_name)[0]  # Rimuovi l'estensione del file
+            self.dir_path = os.path.dirname(fname)
+            self.base_name = os.path.basename(fname)
+            #base_name_no_ext = os.path.splitext(base_name)[0]  # Rimuovi l'estensione del file
 
             try:
-                os.makedirs(dir_path, exist_ok=True)
-                os.makedirs(os.path.join(dir_path, "DosCo"), exist_ok=True)
-                os.makedirs(os.path.join(dir_path, "3d_obj"), exist_ok=True)
+                os.makedirs(self.dir_path, exist_ok=True)
+                os.makedirs(os.path.join(self.dir_path, "DosCo"), exist_ok=True)
+                os.makedirs(os.path.join(self.dir_path, "3d_obj"), exist_ok=True)
             except OSError as e:
-                QMessageBox.critical(None, "Errore", f"Errore durante la creazione delle directory: {e}")
+                QMessageBox.critical(None, "Error", f"Error creating directories: {e}")
                 return
 
             # Crea il file CSV in modo sicuro
-            csv_path = os.path.join(dir_path, base_name)
+            csv_path = os.path.join(self.dir_path, self.base_name)
             try:
                 with open(csv_path, 'w', newline='') as file:
                     writer = csv.writer(file)
-                    writer.writerow(['nome us', 'tipo', 'tipo di nodi', 'descrizione', 'epoca',
-                                     'epoca index', 'area', 'anteriore', 'posteriore', 'contemporaneo',
+                    writer.writerow(['nome us', 'tipo', 'tipo di nodo', 'descrizione', 'epoca', 'epoca index',
+                                     'anteriore', 'posteriore', 'contemporaneo',
                                      'properties_ant', 'properties_post'])
             except OSError as e:
-                QMessageBox.critical(None, "Errore", f"Errore durante la creazione del file CSV: {e}")
+                QMessageBox.critical(None, "Error", f"Error creating CSV file: {e}")
                 return
 
             # Salva i dettagli del progetto
-            self.save_project_to_json(dir_path)
+            self.save_project_to_json(self.dir_path)
 
             # Open the data CSV file
             self.data_file = csv_path
@@ -561,7 +836,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         try:# Carica il visualizzatore 3D
             GraphWindow(graphml_path)
-        except:
+        except Exception as e:
+            print(e)
             QMessageBox.critical(self,'Attenzione','Il graphml non è stato aperto con yed e lanciato\n'
                                                    'lo swimlane.\n'
                                                    'Ricordati di salvare in yed il graphml prima di usare il visualizzatore')
@@ -601,7 +877,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     if related_us_names != 'nan':
                         related_us_names = related_us_names.split(',')
                         if len(related_us_names) != len(set(related_us_names)):
-                            errors.append((related_us_names), f"{related_us_names} è duplicato")
+                            errors.append((related_us_names), f"{related_us_names} is duplicated")
         return errors
     def check_relation_exists(self,rows, header):
         '''
@@ -659,7 +935,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                                 us_name in related_row[header.index(inverse_relation_type)].split(',') for related_row
                                 in rows if related_row[0] == related_us_name):
                             errors.append((us_name, related_us_name,
-                                           f"{us_name} ha una {relation_type} relazione a {related_us_name} but {related_us_name} non ha un  {inverse_relation_type} relazione a {us_name}."))
+                                           f"{us_name} has a {relation_type} relationship with {related_us_name} but {related_us_name} not has a  {inverse_relation_type} relationship whith {us_name}."))
         return errors
     def check_relation_type(self,rows, header):
         errors = []
@@ -669,7 +945,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             if us_type in ['property', 'document', 'combiner', 'extractor']:
                 if row[header.index('anteriore')] != 'nan' or row[header.index('posteriore')] != 'nan':
                     errors.append(
-                        (us_name, "", f"{us_name} è tipo {us_type} ma ha relazione 'anteriore' o 'posteriore'."))
+                        (us_name, "", f"{us_name} is type {us_type} but has relationship 'anteriore' or 'posteriore'."))
         return errors
 
 
@@ -684,7 +960,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.textEdit.clear()
         for us_name, related_us_name, error_message in errors:
             #text_edit=self.textEdit
-            text_edit.append(f'Errore in row con il nome US"{us_name}" relativo a "{related_us_name}": {error_message}\n')
+            text_edit.append(f'Error in row with name US"{us_name}" relative to "{related_us_name}": {error_message}\n')
 
 
     ###aggiornamento delle relazioni
@@ -760,16 +1036,16 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             # Se l'unità stratigrafica è di tipo 'property', 'document', 'combiner' o 'extractor'
             if row[header.index('tipo')] in ['property', 'document', 'combiner', 'extractor']:
                 # Aggiorna le relazioni 'properties_ant' e 'properties_post'
-                update_relation(row, 10, 'properties_ant')  # properties_ant
-                update_relation(row, 11, 'properties_post')  # properties_post
+                update_relation(row, 9, 'properties_ant')  # properties_ant
+                update_relation(row, 10, 'properties_post')  # properties_post
             # Se l'unità stratigrafica è di tipo 'contemporaneo'
             elif row[header.index('tipo')] == 'contemporaneo':
                 # Aggiorna la relazione 'contemporaneo'
-                update_relation(row, 9, 'contemporaneo')  # contemporaneo
+                update_relation(row, 8, 'contemporaneo')  # contemporaneo
             else:
                 # Altrimenti, aggiorna le relazioni 'anteriore' e 'posteriore'
-                update_relation(row, 7, 'anteriore')  # anteriore
-                update_relation(row, 8, 'posteriore')  # posteriore
+                update_relation(row, 6, 'anteriore')  # anteriore
+                update_relation(row, 7, 'posteriore')  # posteriore
 
         rows.extend(new_rows)
 
@@ -796,7 +1072,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             # Apri il foglio di calcolo
             spreadsheet = client.open_by_key(self.spreadsheet_id)
         except Exception as e:
-            QMessageBox.warning(self, 'Attenzione',f"Errore nell'apertura del foglio di calcolo: {e}")
+            QMessageBox.warning(self, 'Warning',f"Error opening spreadsheet: {e}")
             return
 
         try:
@@ -810,8 +1086,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             rows = rows[1:]
 
         except Exception as e:
-            print(f"Errore nella lettura del foglio di calcolo: {e}")
-            QMessageBox.warning(self, 'Attenzione',f"Errore nell'apertura del foglio di calcolo: {e}")
+            print(f"Error reading spreadsheet: {e}")
+            QMessageBox.warning(self, 'Warning',f"Error opening spreadsheet: {e}")
             return
 
         # La prima riga è l'intestazione
@@ -906,20 +1182,20 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 for j, item in enumerate(row):
                     self.data_table.setItem(i, j, QTableWidgetItem(item))
         except Exception as e:
-            QMessageBox.warning(self,'Attenzione',f"Errore nell'aggiornamento della tabella: {e}")
+            QMessageBox.warning(self,'Warning',f"Error updating table: {e}")
             return
-    def update_relationships(self):
+    def update_rapporti(self):
         # Leggere i dati dalla QTableWidget e aggiungerli al nuovo DataFrame
         current_df = self.get_current_dataframe()
 
         # Aggiornare i rapporti nel DataFrame
-        updated_df, new_header = self.update_relationships_in_dataframe(current_df)
+        updated_df, new_header = self.update_rapporti_in_dataframe(current_df)
 
         # Chiedere all'utente se vuole salvare le modifiche e, se necessario, salvare il file CSV
         #self.ask_to_save_changes(self, updated_df, new_header)
         self.show_errors_in_dock_widget()
 
-    def update_relationships_in_dataframe(self,df):
+    def update_rapporti_in_dataframe(self,df):
         with io.StringIO() as buffer:
             df.to_csv(buffer, index=False)
             buffer.seek(0)
@@ -930,17 +1206,17 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         return updated_df, new_header
 
     def show_changes(self,old_rows, new_rows):
-        print("Differenze:")
+        print("Difference:")
         for old_row, new_row in zip(old_rows, new_rows):
             if old_row != new_row:
-                print(f"- Vecchia riga: {old_row}")
-                print(f"+ Nuova riga:  {new_row}")
+                print(f"- Old line: {old_row}")
+                print(f"+ New line:  {new_row}")
                 print()
 
     def ask_to_save_changes(self, input_csv, output_csv, header, new_rows):
         message_box = QMessageBox(self)
-        message_box.setWindowTitle("Salva modifiche")
-        message_box.setText("Vuoi salvare le modifiche?")
+        message_box.setWindowTitle("Save Changes")
+        message_box.setText("Do you want to save the changes?")
         message_box.setIcon(QMessageBox.Question)
         message_box.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
 
@@ -952,7 +1228,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 writer.writerow(header)
                 for row in new_rows:
                     writer.writerow(row)
-            print(f"Modifiche salvate in {output_csv}")
+            print(f"Changes saved in {output_csv}")
 
             # Ricarica il file CSV di output
             with open(output_csv, 'r') as f:
@@ -960,13 +1236,13 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 new_header = next(reader)
                 new_rows = list(reader)
         else:
-            print("Modifiche non salvate.")
+            print("Changes not saved.")
 
     def show_epoch_dialog(self, pos):
         # Verifica se la posizione è valida
         if not self.data_table.indexAt(pos).isValid():
             return
-
+        print(pos)
         # Ottieni la cella corrente
         current_cell = self.data_table.itemAt(pos)
         if current_cell is None:
@@ -1007,7 +1283,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             try:
                 self.unit_df = pd.read_csv("template/unita_tipo.csv")
             except FileNotFoundError:
-                QMessageBox.critical(None, "Errore", "File unita_tipo.csv non trovato.")
+                QMessageBox.critical(None, "Error", "File unit_type.csv not found.")
                 return
 
             # Crea un dock widget con la combobox delle unità
@@ -1029,7 +1305,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             except FileNotFoundError:
                 creds = self.get_google_sheets_credentials()
             except Exception as e:
-                QMessageBox.warning(self, 'Attenzione', f"Errore: {e}")
+                QMessageBox.warning(self, 'Warning', f"Error:{e}")
                 return
                 return  # Exit the function if an error occurred
 
@@ -1047,17 +1323,17 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             file_names = [file['name'] for file in files]
 
             # Mostra un QInputDialog con l'elenco dei nomi dei file
-            file_name, ok = QInputDialog.getItem(self, 'Seleziona file', 'Seleziona un file:', file_names, 0, False)
+            file_name, ok = QInputDialog.getItem(self, 'Select file', 'Select a file:', file_names, 0, False)
 
             if ok and file_name:
                 # Trova l'ID del file selezionato
                 file_id = next((file['id'] for file in files if file['name'] == file_name), None)
                 if file_id:
-                    print(f"Hai selezionato il file {file_name} con ID {file_id}")
+                    print(f"You have selected the file {file_name} with ID{file_id}")
             default_id = file_id
 
         # Open a QInputDialog with the current ID as the default value
-        spreadsheet_id, ok = QInputDialog.getText(self, 'Inserisci ID', 'Inserisci l\'ID dello spreadsheet di Google:',
+        spreadsheet_id, ok = QInputDialog.getText(self, 'Enter ID', 'Enter Google spreadsheet ID:',
                                                   text=default_id)
 
         if ok:
@@ -1344,33 +1620,33 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         # Verify if file exists and is not empty
         if not self.data_file:
-            self.show_error('Nessun file selezionato.')
+            self.show_error('No file selected.')
             return
 
         # Read data and handle possible errors
         try:
             self.original_df = pd.read_csv(self.data_file)
         except Exception as e:
-            self.show_error(f"Errore durante la lettura del file: {e}")
+            self.show_error(f"Error reading file: {e}")
             return
 
         # Verify if the data is empty
         if self.original_df.empty:
-            self.show_error('Il file selezionato è vuoto.')
+            self.show_error('The selected file is empty.')
             return
 
         # Transform data and handle possible errors
         try:
             self.transform_data(self.data_file, self.data_file)
         except Exception as e:
-            self.show_error(f"Errore durante la trasformazione dei dati: {e}")
+            self.show_error(f"Error during data transformation: {e}")
             return
 
         # Read data again with dtype=str and handle possible errors
         try:
             self.df = pd.read_csv(self.data_file, dtype=str)
         except Exception as e:
-            self.show_error(f"Errore durante la lettura del file: {e}")
+            self.show_error(f"Error reading file: {e}")
             return
 
         self.data_fields = self.df.columns.tolist()
@@ -1405,7 +1681,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 required_columns = ['anteriore', 'posteriore', 'contemporaneo', 'properties_ant', 'properties_post']
                 for column in required_columns:
                     if column not in header:
-                        raise ValueError(f"Colonna {column} non presente nel file.")
+                        raise ValueError(f"Column {column} not present in the file.")
 
                 # Get column indices
                 col1_idx = header.index('anteriore')
@@ -1434,38 +1710,38 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 required_values = [col1_values, col2_values, col3_values, col4_values, col5_values]
                 for val in required_values:
                     if not val:
-                        raise ValueError("Valore richiesto non presente.")
+                        raise ValueError("Requested value not present.")
 
                 new_col = []
                 for val1 in col1_values:
                     if val1:
                         for r in all_rows:
                             if r[0] == val1:
-                                new_col.append(['anteriore', val1, r[1], r[3], r[4], r[5], r[6]])
+                                new_col.append(['anteriore', val1, r[1], r[3], r[4], r[5]])
 
                 for val2 in col2_values:
                     if val2:
                         for r in all_rows:
                             if r[0] == val2:
-                                new_col.append(['posteriore', val2, r[1], r[3], r[4], r[5], r[6]])
+                                new_col.append(['posteriore', val2, r[1], r[3], r[4], r[5]])
 
                 for val3 in col3_values:
                     if val3:
                         for r in all_rows:
                             if r[0] == val3:
-                                new_col.append(['contemporaneo', val3, r[1], r[3], r[4], r[5], r[6]])
+                                new_col.append(['contemporaneo', val3, r[1], r[3], r[4], r[5]])
 
                 for val4 in col4_values:
                     if val4:
                         for r in all_rows:
                             if r[0] == val4:
-                                new_col.append(['properties_ant', val4, r[1], r[3], r[4], r[5], r[6]])
+                                new_col.append(['properties_ant', val4, r[1], r[3], r[4], r[5]])
 
                 for val5 in col5_values:
                     if val5:
                         for r in all_rows:
                             if r[0] == val5:
-                                new_col.append(['properties_post', val5, r[1], r[3], r[4], r[5], r[6]])
+                                new_col.append(['properties_post', val5, r[1], r[3], r[4], r[5]])
 
 
                 row += [new_col]
@@ -1482,11 +1758,11 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             self.show_errors_in_dock_widget('log/log.txt')
 
         except IOError:
-            self.show_error('Errore durante la lettura o la scrittura del file.')
+            self.show_error('Error reading or writing the file.')
         except ValueError as ve:
             self.show_error(str(ve))
         except Exception as e:
-            self.show_error(f"Errore sconosciuto: {e}")
+            self.show_error(f"Unknown error:{e}")
     def transform_data_google(self,file_buffer, output_buffer):
         # Read the lines from the StringIO buffer
         lines = file_buffer.readlines()
@@ -1507,11 +1783,11 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             if rapporti_idx is not None:
                 del row[rapporti_idx]
 
-            col1_values = row[col1_idx].split('|')
-            col2_values = row[col2_idx].split('|')
-            col3_values = row[col3_idx].split('|')
-            col4_values = row[col4_idx].split('|')
-            col5_values = row[col5_idx].split('|')
+            col1_values = row[col1_idx].split(',')
+            col2_values = row[col2_idx].split(',')
+            col3_values = row[col3_idx].split(',')
+            col4_values = row[col4_idx].split(',')
+            col5_values = row[col5_idx].split(',')
 
             new_col = []
             for val1 in col1_values:
@@ -1560,11 +1836,11 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
     def on_convert_data_pressed(self):
         try:
             data_list, id_us_dict = self.read_transformed_csv(self.data_file)
-            CSVMapper.GRAPHML_PATH, _ = QFileDialog.getSaveFileName(self, 'Seleziona la cartella e il nome del file',
+            CSVMapper.GRAPHML_PATH, _ = QFileDialog.getSaveFileName(self, 'Select the folder and file name',
                                                                     '', 'Graphml Files (*.graphml)')
 
             if not CSVMapper.GRAPHML_PATH:
-                self.show_error('Nessun file selezionato.')
+                self.show_error('No file selected.')
                 return
 
             # Get directory and base path
@@ -1572,7 +1848,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             dir_path = os.path.dirname(base_path)
 
             config.path = dir_path  # Set config.path
-            print(f"Config path settato in: {config.path}")
+            print(f"Config path setted in: {config.path}")
 
             dlg = pyarchinit_Interactive_Matrix(data_list, id_us_dict)
             dlg.generate_matrix()  # Crea il file .dot
@@ -1616,18 +1892,18 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
             # Assicurati che i file esistano
             if not os.path.exists(dottoxml) or not os.path.exists(dot_file):
-                raise Exception("File non trovato")
+                raise Exception("File not found")
 
             # Esecuzione del comando
             try:
                 command = [python_command, dottoxml, '-f', 'Graphml', dot_file, CSVMapper.GRAPHML_PATH]
-                print("Esecuzione del comando:", " ".join(command))
+                print("Execution of the command:", " ".join(command))
                 
                 # Utilizza 'shell=False' e passa il comando come lista
                 subprocess.check_call(command, shell=False)
             except subprocess.CalledProcessError as e:
-                print("Errore durante l'esecuzione del subprocesso:")
-                print("Codice di ritorno:", e.returncode)
+                print("Error executing subprocess:")
+                print("Return code:", e.returncode)
                 raise            
 
             with open(CSVMapper.GRAPHML_PATH, 'r') as file:
@@ -1641,11 +1917,11 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             with open(CSVMapper.GRAPHML_PATH, 'w') as file:
                 file.write(filedata)
         except IOError:
-            self.show_error('Errore durante la lettura o la scrittura del file.')
+            self.show_error('Error reading or writing the file.')
         except KeyError as e:
-            self.show_error('Errore: ' + str(e))
+            self.show_error('Error: ' + str(e))
         except Exception as e:
-            self.show_error('Errore sconosciuto: ' + str(e))
+            self.show_error('Unknown error: ' + str(e))
 
         #self.d_graph(self.graphml_path)
 
@@ -1662,7 +1938,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 required_columns = ["nome us", "tipo", "descrizione", "epoca", "epoca index", "rapporti"]
                 for column in required_columns:
                     if column not in header:
-                        raise ValueError(f"Colonna {column} non presente nel file.")
+                        raise ValueError(f"Column {column} not present in the file.")
 
                 # Find the indices of the desired columns
                 us_idx = header.index("nome us")
@@ -1684,14 +1960,14 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
                     # Add the values to data_list and id_us_dict
                     data_list.append([us, unita_tipo, descrizione, epoca, e_id, rapporti_stratigrafici])
-                    id_us_dict[us] = {"nome_us": us}
+                    id_us_dict[us] = {"nome us": us}
 
         except IOError:
-            self.show_error('Errore durante la lettura del file.')
+            self.show_error('Error reading the file.')
         except ValueError as ve:
             self.show_error(str(ve))
         except Exception as e:
-            self.show_error(f"Errore sconosciuto: {e}")
+            self.show_error(f"Unknown error: {e}")
 
         return data_list, id_us_dict
 
@@ -1726,8 +2002,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     elif relation_type == 'posteriore':
                         inverse_relation_type = 'anteriore'
                     elif relation_type == 'properties_ant':
-                        inverse_relation_type = 'properties post'
-                    elif relation_type == 'properties post':
+                        inverse_relation_type = 'properties_post'
+                    elif relation_type == 'properties_post':
                         inverse_relation_type = 'properties_ant'
                     else:  # 'contemporaneo'
                         inverse_relation_type = 'contemporaneo'
@@ -1740,7 +2016,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
                     if not inverse_relation_found:
                         errors.append(
-                            f"Error: Inconsistent relation between {us_name} ({relation_type}) and {related_us} ({inverse_relation_type}).")
+                            f"Error: Inconsistent relation between{us_name} ({relation_type}) and {related_us} ({inverse_relation_type}).")
 
             with open(output_file, 'w') as f:
                 if errors:
