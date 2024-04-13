@@ -1,9 +1,10 @@
 #from modules import splash
+import mimetypes
 from typing import Optional
 import re
 from PyQt5.QtCore import (QAbstractTableModel, QVariant,
-                          Qt, QSize)
-from PyQt5.QtGui import QPixmap, QIcon, QStandardItem, QStandardItemModel
+                          Qt, QSize, QFileInfo)
+from PyQt5.QtGui import QPixmap, QIcon, QStandardItem, QStandardItemModel, QDesktopServices
 from PyQt5.QtWidgets import (QDialog,
                              QFileDialog,
                              QAction,
@@ -15,9 +16,12 @@ from PyQt5.QtWidgets import (QDialog,
                              QVBoxLayout,
                              QInputDialog,
                              QComboBox,
-                             QDockWidget,QMessageBox, QTextEdit, QWidget, QLabel, QGraphicsScene, QGraphicsView, QListWidgetItem,
-                             QListWidget)
+                             QDockWidget, QMessageBox, QTextEdit, QWidget, QLabel, QGraphicsScene, QGraphicsView,
+                             QListWidgetItem,
+                             QListWidget, QFileIconProvider)
 from PyQt5.uic import loadUiType
+from pandas.io.sas.sas_constants import magic
+
 from modules.interactive_matrix import pyarchinit_Interactive_Matrix
 import json
 import csv
@@ -39,14 +43,13 @@ from modules.check_graphviz_path import check_graphviz
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl
 
-
-
 from modules.config import config
 
 MAIN_DIALOG_CLASS, _ = loadUiType(
     os.path.join(os.path.dirname(__file__),  'ui', 'edm2grapml.ui'))
 
 from PyQt5.QtGui import QIcon
+
 
 
 class ImageItem(QListWidgetItem):
@@ -70,13 +73,12 @@ class EnhancedDockWidget(QDockWidget):
         super().__init__(parent)
         self.list_widget = QListWidget()
         self.text_edit = QTextEdit()
-
+        icon_provider = QFileIconProvider()
         # Imposta la dimensione dell'icona
         self.list_widget.setIconSize(QSize(100, 100))
 
         # Collega il doppio clic del list widget alla funzione show_image
-        self.list_widget.itemDoubleClicked.connect(self.show_image)
-
+        self.list_widget.itemDoubleClicked.connect(self.handle_double_click)
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.list_widget)
         self.layout.addWidget(self.text_edit)
@@ -85,11 +87,62 @@ class EnhancedDockWidget(QDockWidget):
         self.container.setLayout(self.layout)
 
         self.setWidget(self.container)
+        # Set DockWidget to floating and set it's size
+        self.setFloating(True)
+        self.resize(500, 500)
+
+        self.mime_to_icon = {
+            "application/pdf": "icons/pdf_icon.png",
+            "application/msword": "icons/doc_icon.png",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "icons/doc_icon.png",
+            "application/vnd.ms-excel": "icons/xls_icon.png",
+            "text/csv": "icons/xls_icon.png",
+            "text/plain": "icons/doc_icon.png",
+            "video/mp4": "icons/video_icon.png",
+            "video/x-msvideo": "icons/video_icon.png"
+            # ...
+        }
 
     def show_image(self, item):
         # Quando c'è un doppio clic, mostra l'immagine
         item.image_label.show()
 
+    def open_file(self, item):
+        QDesktopServices.openUrl(QUrl.fromLocalFile(item.toolTip()))
+
+    def get_icon_for_file(self,filepath):
+        # Utilizza il modulo mimetypes per indovinare il tipo MIME del file
+        mime_type, _ = mimetypes.guess_type(filepath)
+        print(mime_type)
+        # Ottieni l'icona appropriata
+        icon_path = self.mime_to_icon.get(mime_type,
+                                     "icons/default_icon.png")  # Utilizza un'icona predefinita se non ne abbiamo una per il tipo MIME
+        icon = QIcon(icon_path)
+
+        return icon
+
+
+    def handle_double_click(self, item):
+        filepath = item.toolTip()  # Ottieni il percorso del file dal "tooltip" dell'elemento
+        _, ext = os.path.splitext(filepath)
+
+        # Mostra l'immagine se il file è un'immagine (in base all'estensione del file)
+        if ext.lower() in ['.png', '.jpg', '.jpeg']:
+            self.show_image(item)
+        else:
+            self.open_file(item)
+
+
+
+    def add_generic_item(self, filepath, name):
+        item = QListWidgetItem()
+        item.setText(name)
+        # Utilizza get_icon_for_file per ottenere e impostare l'icona appropriata
+        icon = self.get_icon_for_file(filepath)
+        item.setIcon(icon)
+        item.setToolTip(filepath)
+        # ...handle other stuff such as double click interaction
+        self.list_widget.addItem(item)
     def add_image_item(self, image_path, text):
         item = ImageItem(image_path, text)
         self.list_widget.addItem(item)
@@ -195,9 +248,12 @@ class UnitDialog(QDialog):
         return None
 class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
     GRAPHML_PATH = None
+
     def __init__(self, parent=None,data_file=None, spreadsheet=None):
 
         super(CSVMapper, self).__init__(parent=parent)
+        #csv_mapper = CSVMapper()
+        #obj_proxy = OBJPROXY(CSVMapper,None)
         self.obj_proxy = None
         self.df = None
         self.data_fields = None
@@ -214,7 +270,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             self.data_source = 'google_sheet'
         else:
             self.data_source = None
-
+        self.dock_widget = EnhancedDockWidget(self)
+        self.dock_widget.setHidden(True)
         # Collegare i bottoni alle funzioni corrispondenti
         self.save_button.clicked.connect(self.save_csv)
         self.save_google_button.clicked.connect(self.save_google)
@@ -296,8 +353,9 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         if self.data_file is not None:
             csv_directory = os.path.dirname(self.data_file)
             self.object_directory = os.path.join(csv_directory, '3d_obj')
-        self.obj_proxy = OBJPROXY(self.object_directory)
+        self.obj_proxy = OBJPROXY(self,self.object_directory)
         self.obj_proxy.update_models_dir(self.object_directory)
+        #self.obj_proxy.mousePressEvent()
         self.tabWidget.insertTab(2, self.obj_proxy, "3D View Time Manager")
 
     def on_table_selection_changed(self):
@@ -366,22 +424,23 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         return related_nodes_plus
 
     def display_related_info(self, mesh_name):
+        print(f"Displaying related info for {mesh_name}")
         related_nodes = self.get_related_nodes(mesh_name)
 
         def get_description_from_df(dataframe, node):
             description = dataframe[dataframe['nome us'] == node]['descrizione'].values[0]
             return description
 
-        # Crea un'istanza del widget
-        dock_widget = EnhancedDockWidget(self)
+        # Pulisci le vecchie info
+        self.dock_widget.text_edit.clear()
 
         for node in related_nodes:
             node_description = get_description_from_df(self.df, node)
-            dock_widget.append_text(node + ": " + str(node_description))
+            self.dock_widget.append_text(node + ": " + str(node_description))
 
         # Se i nodi hanno media
         if self.nodes_have_media(related_nodes):
-            self.display_media_in_widget(related_nodes, dock_widget)
+            self.display_media_in_widget(related_nodes, self.dock_widget)
 
     def nodes_have_media(self, related_nodes):
         """
@@ -403,14 +462,35 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         return False
 
     def display_media_in_widget(self, related_nodes, dock_widget: Optional[EnhancedDockWidget] = None):
-        if dock_widget is None:
+        if self.dock_widget is None:
             # Crea un'istanza del widget
             dock_widget = EnhancedDockWidget(self)
 
+        # Rimuove tutti gli elementi esistenti dal QListWidget
+        dock_widget.list_widget.clear()
+
         for node in related_nodes:
-            media_path = os.path.join(self.media_directory, node + ".png")
-            if os.path.isfile(media_path):
-                dock_widget.add_image_item(media_path, node)
+            # Assuming media filenames are like node.extension
+            for ext in ['jpg', 'docx','jpeg','png', 'pdf', 'doc', 'xls', 'xlsx', 'mp4', 'avi','csv','txt']:
+                media_path = os.path.join(self.media_directory, f"{node}.{ext}")
+                print(media_path)
+                if os.path.isfile(media_path):
+                    # For images
+                    if ext in ['png', 'jpg', 'jpeg']:
+                        dock_widget.add_image_item(media_path, f"{node}.{ext}")
+                    # For docs, pdfs and excel files
+                    elif ext in ['doc', 'docx', 'pdf']:
+                        dock_widget.add_generic_item(media_path, f"{node}.{ext}")  # Need to create this function
+                    #for excel
+                    elif ext in ['xls', 'xlsx', 'csv', 'txt']:
+                        dock_widget.add_generic_item(media_path, f"{node}.{ext}")
+                    # For videos
+
+                    elif ext in ['mp4', 'avi']:
+                        dock_widget.add_generic_item(media_path, f"{node}.{ext}")  # Need to create this function
+                    else:
+                        dock_widget.add_generic_item(media_path, f"{node}.{ext}")
+                    break  # If we find a file with node's name, we don't check for others
 
         dock_widget.show()
 

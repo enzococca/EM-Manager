@@ -1,14 +1,19 @@
+import re
+
+import vtk
 from PyQt5 import QtWidgets, QtCore
 from pyvista import QtInteractor
 from pyvistaqt import QtInteractor
 import pyvista as pv
 import os
-import matplotlib.colors as mcolors
+import numpy as np
+# Nella script EDMatrix2Graphml.py:
+
 
 class OBJPROXY(QtWidgets.QMainWindow):
-    def __init__(self, models_dir,parent=None, show=True):
+    def __init__(self, csv_mapper,models_dir,parent=None, show=True):
         QtWidgets.QMainWindow.__init__(self, parent)
-
+        self.csv_mapper2 = csv_mapper
         # Creazione di un frame e layout verticale.
         self.frame = QtWidgets.QFrame()
         vlayout = QtWidgets.QVBoxLayout()
@@ -40,8 +45,8 @@ class OBJPROXY(QtWidgets.QMainWindow):
         self.meshes = {}  # già esistente
         self.original_colors = {}  # nuovo dizionario
         self.current_selected_proxy = None
-
-        # ...
+        self.cell_picker = vtk.vtkCellPicker()
+        self.plotter.iren.add_observer('EndPickEvent', self.click_callback)
 
     def select_proxy(self, proxy):
         model, actor, _ = proxy
@@ -135,7 +140,7 @@ class OBJPROXY(QtWidgets.QMainWindow):
         else:
             for i in range(len(self.meshes), value + 1):
                 path = os.path.join(self.models_dir, self.models_list[i])
-                name = os.path.basename(path)
+                self.name = os.path.basename(path)
                 model, actor, _ = self.load_model_and_color_from_mtl(path)
                 self.meshes[self.models_list[i]] = (model, actor, False)  # Aggiungi lo stato "selezionato" alla tuple
 
@@ -145,16 +150,22 @@ class OBJPROXY(QtWidgets.QMainWindow):
     def highlight_mesh(self, mesh_name):
         # Questo metodo è usato per evidenziare una specifica mesh cambiando il suo colore in rosso.
         # Ottieni il proxy corrispondente al nome del mesh
-        proxy = self.meshes.get(mesh_name)
+        self.proxy = self.meshes.get(mesh_name)
 
         # Se il proxy esiste, selezionalo
-        if proxy is not None:
-            self.select_proxy(proxy)
+        if self.proxy is not None:
+            self.select_proxy(self.proxy)
 
         mesh, actor, _ = self.meshes[mesh_name]
         actor.GetProperty().SetColor(1, 0, 0)  # Settare il colore a verde brillante
         actor.GetProperty().SetOpacity(0.7)  # Imposta l'opacità a 0 (completamente trasparente)
+        self.csv_mapper2.display_related_info(mesh_name)
 
+        # Also highlight the related cell in CSVMapper table
+        for row in range(self.csv_mapper2.data_table.rowCount()):
+            if self.csv_mapper2.data_table.item(row, 0).text() == mesh_name:
+                self.csv_mapper2.data_table.selectRow(row)
+                break
     def unhighlight_mesh(self, mesh_name):
         # Recupera il proxy corrispondente al nome della mesh
         proxy = self.meshes.get(mesh_name)
@@ -166,8 +177,20 @@ class OBJPROXY(QtWidgets.QMainWindow):
         actor.GetProperty().SetColor(*color)  # Ripristina il colore predefinito
         actor.GetProperty().SetOpacity(opacity)  # Ripristina l'opacità predefinita
 
+    def click_callback(self, obj, event):
+        x, y = obj.GetEventPosition()
+        self.cell_picker.Pick(x, y, 0, self.plotter.renderer)
+        actor = self.cell_picker.GetActor()
+        if actor:
+            for name, (_, actor_item, _) in self.meshes.items():
+                if actor is actor_item:
+                    print(f"Mesh name: {name}")
+                    name=re.sub(r'[^\d]', '', name.split(".")[0])
+                    self.get_clicked_mesh_name(name)
+                    break
+    def get_clicked_mesh_name(self, name):
+        self.csv_mapper2.display_related_info(name)
 
-# Questa è la funzione principale che avvia l'applicazione.
 def main():
     app = QtWidgets.QApplication([])
     window = OBJPROXY()
