@@ -103,7 +103,7 @@ class OBJPROXY(QtWidgets.QMainWindow):
         original_opacity = 1.0  # assumes default opacity is 1.0, adjust if necessary
 
         # Salva la mesh e i suoi colori originali nei dizionari
-        mesh_name = os.path.basename(obj_path)  # assuming you use the file name as the mesh name
+        mesh_name = os.path.basename(obj_path)  # si assume che il nome del file sia uguale al nome dell'obj
         self.meshes[mesh_name] = (model, actor, False)
         self.original_colors[mesh_name] = (original_color, original_opacity)
 
@@ -178,6 +178,15 @@ class OBJPROXY(QtWidgets.QMainWindow):
         actor.GetProperty().SetOpacity(opacity)  # Ripristina l'opacità predefinita
 
     def click_callback(self, obj, event):
+        #questa funzione viene chiamata quando si verifica un evento di clic.
+        # L'evento di clic è associato a un oggetto (probabilmente un oggetto
+        # grafico nella rappresentazione 3D). La funzione accede alla posizione
+        #
+        # dell’evento (x, y) e la usa per selezionare una cella nel renderer 3D.
+        # Se l'oggetto cliccato esiste, la funzione itera sugli elementi memorizzati
+        # in self.meshes per cercare l'attore che è stato cliccato. Quando trova la corrispondenza,
+        # separa il nome dall'attore, pulisce il nome per rimuovere tutti i caratteri non numerici,
+        # e quindi chiama un'altra funzione, get_clicked_mesh_name(), passando il nome pulito.
         x, y = obj.GetEventPosition()
         self.cell_picker.Pick(x, y, 0, self.plotter.renderer)
         actor = self.cell_picker.GetActor()
@@ -189,6 +198,7 @@ class OBJPROXY(QtWidgets.QMainWindow):
                     self.get_clicked_mesh_name(name)
                     break
     def get_clicked_mesh_name(self, name):
+        # Questa funzione è chiamata quando si fa clic su una mesh
         self.csv_mapper2.display_related_info(name)
 
 def main():
