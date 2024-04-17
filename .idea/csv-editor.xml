@@ -10,6 +10,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\template\property.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\template\unita_tipo.csv">
           <value>
             <Attribute>

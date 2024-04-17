@@ -1,4 +1,5 @@
 #from modules import splash
+import chardet
 import mimetypes
 from typing import Optional
 import re
@@ -23,6 +24,7 @@ from PyQt5.uic import loadUiType
 from pandas.io.sas.sas_constants import magic
 
 from modules.interactive_matrix import pyarchinit_Interactive_Matrix
+from modules.graph_modeller import *
 import json
 import csv
 import pandas as pd
@@ -316,6 +318,12 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.pushButton_3D.clicked.connect(self.display_3D)
         self.data_table.currentCellChanged.connect(self.on_table_selection_changed)
         self.search_bar.textChanged.connect(self.search)
+        self.graph_modeller.clicked.connect(self.open_graph_modeller)
+
+    def open_graph_modeller(self):
+        self.graph_modeller = MainWindow()
+        self.graph_modeller.show()
+
     def search(self, text):
         self.data_table.setRowCount(0)  # Clear the table
 
@@ -1463,11 +1471,10 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     self.data_table.setItem(row, col, item)
 
     def save_csv(self):
-
-        # Creare un nuovo DataFrame per salvare i dati dalla QTableWidget
+        # Create a new DataFrame to save data from QTableWidget
         new_df = pd.DataFrame(columns=self.df.columns)
 
-        # Leggere i dati dalla QTableWidget e aggiungerli al nuovo DataFrame
+        # Read data from QTableWidget and add to new DataFrame
         for row in range(self.data_table.rowCount()):
             row_data = {}
             for col in range(self.data_table.columnCount()):
@@ -1478,28 +1485,34 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 else:
                     value = 'nan'
                 row_data[self.df.columns[col]] = value
-            print(type(new_df))
+            # print(type(new_df))
             new_df = new_df._append(row_data, ignore_index=True)
 
-        # Salvare il nuovo DataFrame nel file CSV
+        # Save the new DataFrame in the CSV file
         new_df.to_csv(self.data_file, index=False)
+
         try:
             self.transform_data(self.data_file, self.data_file)
         except AssertionError:
             pass
-        self.df2 = pd.read_csv(self.data_file, dtype=str)
+
+        # Use chardet to find out the encoding
+        rawdata = open(self.data_file, 'rb').read()
+        result = chardet.detect(rawdata)
+        charenc = result['encoding']
+
+        self.df2 = pd.read_csv(self.data_file, dtype=str, encoding=charenc)
         self.data_fields2 = self.df2.columns.tolist()
 
-
         self.data_table.setDragEnabled(True)
-        # Impostare il numero di righe e colonne nel QTableWidget
+        # Set the number of rows and columns in the QTableWidget
         self.data_table.setRowCount(len(self.df2))
         self.data_table.setColumnCount(len(self.df2.columns))
 
-        # Impostare le etichette delle colonne orizzontali
+        # Set horizontal column labels
         self.data_table.setHorizontalHeaderLabels(self.df2.columns)
 
-        # Inserire i dati nelle celle del QTableWidget
+        # Enter data in the cells of QTableWidget
         for row in range(len(self.df2)):
             for col in range(len(self.df2.columns)):
                 item = QTableWidgetItem(str(self.df2.iat[row, col]))
@@ -1509,7 +1522,6 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         for i in range(self.data_table.columnCount()):
             self.data_table.setColumnWidth(i, 250)
-
 
     def save_google(self):
         # Creare un nuovo DataFrame per salvare i dati dalla QTableWidget
