@@ -42,6 +42,7 @@ from modules.d_graphml import GraphWindow
 from modules.load_3d import OBJPROXY
 from modules.graphml_to_excel import load_graphml
 from modules.check_graphviz_path import check_graphviz
+from modules.json2cvs import DataExtractor, DataImporter
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl
 
@@ -404,51 +405,132 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.lineEdit_desc_label.setText(descrizione)
 
     def get_related_nodes(self, mesh_name):
-        # Trova la riga nel DataFrame che corrisponde al mesh_name
+        # Trova la riga nel DataFrame che corrisponde a mesh_name
         row = self.df.loc[self.df['nome us'] == mesh_name]
 
+        # Se il DataFrame è vuoto, stampa un messaggio e ritorna una lista vuota
         if row.empty:
-            print(f"No data for {mesh_name}")
+            print(f"Nessun dato per {mesh_name}")
             return []
 
-        # Unisci le stringhe da properties_ant e properties_post in una sola lista
+        # Unisci le liste da 'properties_ant' e 'properties_post' in una sola lista
         related_nodes = row['properties_ant'].tolist() + row['properties_post'].tolist()
 
-        # Divide ogni stringa con virgole per ottenere una lista di nodi correlati
-        related_nodes = [node.strip() for nodes in related_nodes if isinstance(nodes, str) for node in nodes.split(',')]
+        # Trasforma le stringhe in nodi e rimuovi eventuali stringhe 'nan'
+        related_nodes = [node.strip() for nodes in related_nodes if isinstance(nodes, str) for node in nodes.split(',')
+                         if
+                         node.strip().lower() != 'nan']
 
-        # Crea una lista per contenere anche i nodi collegati ai nodi collegati
+        # Crea una copia di related_nodes
         related_nodes_plus = related_nodes.copy()
 
-        # Per ogni nodo collegato, trova i suoi nodi collegati e aggiungili a related_nodes_plus
+        # Cerca nodi correlati ai nodi in related_nodes e aggiungi alla lista related_nodes_plus
         for node in related_nodes:
             row = self.df.loc[self.df['nome us'] == node]
             if not row.empty:
                 more_nodes = row['properties_ant'].tolist() + row['properties_post'].tolist()
                 more_nodes = [node.strip() for nodes in more_nodes if isinstance(nodes, str) for node in
-                              nodes.split(',')]
+                              nodes.split(',') if
+                              node.strip().lower() != 'nan']
                 related_nodes_plus.extend(more_nodes)
 
+        # Crea una nuova lista per i nodi document
+        document_nodes = []
+
+        # Cerca nodi document correlati ai nodi in related_nodes_plus e aggiungi alla lista document_nodes
+        for node in related_nodes_plus:
+            row = self.df.loc[self.df['nome us'] == node]
+            if not row.empty:
+                more_nodes = row['properties_ant'].tolist() + row['properties_post'].tolist()
+                more_nodes = [node.strip() for nodes in more_nodes if isinstance(nodes, str) for node in
+                              nodes.split(',') if
+                              node.strip().lower() != 'nan']
+                document_nodes.extend(more_nodes)
+
+        # Aggiungi i nodi document alla lista finale
+        related_nodes_plus.extend(document_nodes)
+
+        # Rimuovo eventuali duplicati convertendo la lista in un set e poi di nuovo in una lista
+        related_nodes_plus = list(set(related_nodes_plus))
+
+        print(f"I nodi correlati a {mesh_name} sono {related_nodes_plus}")
         return related_nodes_plus
 
     def display_related_info(self, mesh_name):
         print(f"Displaying related info for {mesh_name}")
         related_nodes = self.get_related_nodes(mesh_name)
 
+        # Function to retrieve the description of a node from the dataframe
         def get_description_from_df(dataframe, node):
             description = dataframe[dataframe['nome us'] == node]['descrizione'].values[0]
             return description
 
-        # Pulisci le vecchie info
+        # Clear the old info
         self.dock_widget.text_edit.clear()
 
+        # Initialize lists to store various types of nodes
+        property_nodes = []
+        combiners_nodes = []
+        extractors_nodes = []
+        document_nodes = []
+
+        # Categorize the nodes into property, combiner, extractor, and document nodes
         for node in related_nodes:
-            node_description = get_description_from_df(self.df, node)
-            self.dock_widget.append_text(node + ": " + str(node_description))
+            node_type = self.df[self.df['nome us'] == node]['tipo'].values[0]
+            if node_type.startswith('property'):
+                property_nodes.append(node)
+            elif node_type in ['combiner']:
+                combiners_nodes.append(node)
+            elif node_type in ['extractor']:
+                extractors_nodes.append(node)
+            elif node_type == 'document':
+                document_nodes.append(node)
+
+        # Iterate over properties, print their details and related combiners
+        for property_node in property_nodes:
+            property_description = get_description_from_df(self.df, property_node)
+            self.dock_widget.append_text(f"\nProperty (US - {property_node}). Description: {property_description}")
+
+            # Print details of related combiners
+            for combiner_node in combiners_nodes:
+                combiner_description = get_description_from_df(self.df, combiner_node)
+
+                if \
+                self.df[((self.df['properties_ant'] == property_node) | (self.df['properties_post'] == property_node)) &
+                        (self.df['nome us'] == combiner_node)].shape[0] > 0:
+                    self.dock_widget.append_text(
+                        f"\n\tCombiner ({combiner_node}) linked to property. Description: {combiner_description}")
+
+
+                # Print details of related extractors
+                for extractor_node in extractors_nodes:
+                    extractor_description = get_description_from_df(self.df, extractor_node)
+
+                    if self.df[
+                        ((self.df['properties_ant'] == combiner_node) | (self.df['properties_post'] == combiner_node) |
+                         (self.df['properties_ant'] == property_node) | (self.df['properties_post'] == property_node)) &
+                        (self.df['nome us'] == extractor_node)
+                    ].shape[0] > 0:
+
+                        self.dock_widget.append_text(
+                            f"\n\tExtractor ({extractor_node}) linked to property. Description: {extractor_description}")
+
+                        # Print details of related documents
+                        for document_node in document_nodes:
+
+                            document_description = get_description_from_df(self.df, document_node)
+
+                            if self.df[((self.df['properties_ant'] == extractor_node) | (
+                                    self.df['properties_post'] == extractor_node)) |
+                                       (self.df['nome us'] == document_node)].shape[0] > 0:
+
+                                self.dock_widget.append_text(
+                                    f"\n\t\tDocument ({document_node}) linked to the Extractor. Description: {document_description}")
 
         # Se i nodi hanno media
         if self.nodes_have_media(related_nodes):
             self.display_media_in_widget(related_nodes, self.dock_widget)
+
 
     def nodes_have_media(self, related_nodes):
         """
@@ -554,7 +636,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.update_relationships_button.triggered.connect(self.update_relations)
         self.actionAggiorna_rapporti_Google.triggered.connect(self.update_relations_google)
         self.actionVisualizzatore_3D.triggered.connect(self.d_graph)
-
+        self.actionimport_json.triggered.connect(self.import_json)
+        self.actionexport_json.triggered.connect(self.export_json)
         def handle_check_relations_action():
             """
             This function handles the action of checking relations in a data table and printing any errors to a QTextEdit.
@@ -597,6 +680,52 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.openRecentProj.triggered.connect(self.open_recent_project)
         self.actionApri_progetto.triggered.connect(self.open_project)
         self.actionImport_graphml.triggered.connect(self.import_graphml)
+    def import_json(self):
+        file, _ = QFileDialog.getOpenFileName(self, "Select a JSON file", "", "JSON Files (*.json)")
+        if file:
+
+            js = DataExtractor(file)
+            print(f"Extracting data from {js}")
+            extracted_data = js.extract_data()
+            print(f"Extracted data: {extracted_data}")
+            # Here I've added a debug step to check if the extracted_data returned by js.extract_data() is a pandas DataFrame as expected
+            if isinstance(extracted_data, pd.DataFrame):
+                self.df = extracted_data
+                print("Data extraction successful")
+            else:
+                print(f"Data extraction failed, expected pandas DataFrame but got {type(extracted_data)}")
+                return  # Exit the function because we can't proceed if data extraction failed
+
+            self.data_fields = self.df.columns.tolist()
+
+            self.data_table.setDragEnabled(True)
+            # Set the number of rows and columns in the QTableWidget
+            self.data_table.setRowCount(len(self.df))
+            self.data_table.setColumnCount(len(self.df.columns))
+
+            # Set the horizontal column headers
+            self.data_table.setHorizontalHeaderLabels(self.df.columns)
+
+            # Populate cells of the QTableWidget with data
+            for row in range(len(self.df)):
+                for col in range(len(self.df.columns)):
+                    item = QTableWidgetItem(str(self.df.iat[row, col]))
+                    self.data_table.setItem(row, col, item)
+            for i in range(self.data_table.rowCount()):
+                self.data_table.setRowHeight(i, 50)
+
+            for i in range(self.data_table.columnCount()):
+                self.data_table.setColumnWidth(i, 250)
+
+            js.export_to_csv('exported_data.csv')
+
+    def export_json(self):
+        filename, _ = QFileDialog.getSaveFileName(self, 'Export Data', '', '*.json')
+        if filename:  # check whether user has chosen file or canceled the dialog
+            js = DataImporter(self.get_current_dataframe())
+            data_to_write = js.to_json_structure()
+            with open(filename, "w") as outfile:  # open the file in write mode
+                json.dump(data_to_write, outfile)
 
     def open_project(self):
         projects_file = 'projects.json'
@@ -1619,7 +1748,13 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 row_data.append(cell_data)
             data.append(row_data)
 
-        current_df = pd.DataFrame(data, columns=self.df.columns)
+        # Check if columns in data matches with self.df
+        if len(data[0]) == len(self.df.columns):
+            current_df = pd.DataFrame(data, columns=self.df.columns)
+        else:
+            print("Error: mismatch in number of columns in data and self.df")
+            return None
+
         print(data)
         return current_df
 

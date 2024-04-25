@@ -206,6 +206,8 @@
     <addaction name="actionVisualizzatore_3D"/>
     <addaction name="separator"/>
     <addaction name="actionImport_graphml"/>
+    <addaction name="actionimport_json"/>
+    <addaction name="actionexport_json"/>
    </widget>
    <widget class="QMenu" name="menu_help_2">
     <property name="title">
@@ -318,6 +320,16 @@
   <action name="actionImport_graphml">
    <property name="text">
     <string>Import graphml</string>
+   </property>
+  </action>
+  <action name="actionimport_json">
+   <property name="text">
+    <string>Import json</string>
+   </property>
+  </action>
+  <action name="actionexport_json">
+   <property name="text">
+    <string>Export json</string>
    </property>
   </action>
  </widget>
