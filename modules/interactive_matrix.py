@@ -13,7 +13,7 @@ class pyarchinit_Interactive_Matrix:
 
         self.DATA_LIST = data_list
         self.ID_US_DICT = id_us_dict
-
+        #self.record = None
 
         ##      self.textbox.setText('1 2 3 4')
         # self.on_draw()
@@ -38,7 +38,7 @@ class pyarchinit_Interactive_Matrix:
 
 
         #funzione per rimuovere gli underscore nella liste di liste
-        def replace_spaces_with_underscore(us, ut,d_interpretativa, epoca,e_id):
+        def replace_spaces_with_underscore(us, ut, d_interpretativa, epoca, e_id):
             us = str(us).replace(' ', '_')
             ut = str(ut).replace(' ', '_')
             d_interpretativa = d_interpretativa.replace(' ', '_')
@@ -59,10 +59,10 @@ class pyarchinit_Interactive_Matrix:
 
                 for record_str in rapporti_stratigrafici:
                     # Dividi la stringa in singole liste di stringhe
-                    record_strings = re.findall(r"\[.*?\]", record_str)
+                    record_strings = re.findall(r"\[.*?]", record_str)
 
                     # Converte ogni lista di stringhe in una lista di tuple
-                    record = [tuple(ast.literal_eval(s)) for s in record_strings]
+                    self.record = [tuple(ast.literal_eval(s)) for s in record_strings]
 
             except (NameError, SyntaxError) as e:
                 QMessageBox.warning(self, 'ATTENZIONE',
@@ -71,17 +71,17 @@ class pyarchinit_Interactive_Matrix:
                 break
 
             # Utilizza la funzione replace_spaces_with_underscore per sostituire gli spazi con underscore
-            us,ut, d_interpretativa, epoca,e_id = replace_spaces_with_underscore(sing_rec[0], sing_rec[1],sing_rec[2], sing_rec[3],sing_rec[4])
+            us,ut, d_interpretativa, epoca, e_id =  replace_spaces_with_underscore(sing_rec[0], sing_rec[1],sing_rec[2], sing_rec[3],sing_rec[4])
 
             try:
-                for sing_rapp in record:
+                for sing_rapp in self.record:
                     d_interpretativa_sing_rapp = sing_rapp[3].replace(' ', '_')
 
                     if sing_rapp[0] == 'anteriore':
                         if sing_rapp[1] != '':
                             harris_rapp1 = (
                                 ut+us + '_' + d_interpretativa + '_' + e_id+'-'+epoca,str(sing_rapp[2])+
-                                str(sing_rapp[1]) + '_' + d_interpretativa_sing_rapp + '_' + str(sing_rapp[5])+'-'+str(sing_rapp[4]))
+                                str(sing_rapp[1]) + '_' + d_interpretativa_sing_rapp + '_' + str(sing_rapp[5])+'-'+str(sing_rapp[4].replace(' ','_')))
                             data.append(harris_rapp1)
 
                     if sing_rapp[0] == 'properties_ant':
@@ -89,7 +89,7 @@ class pyarchinit_Interactive_Matrix:
                             harris_rapp3 = (
                                 ut + us + '_' + d_interpretativa + '_' + e_id + '-' + epoca, str(sing_rapp[2]) +
                                 str(sing_rapp[1]) + '_' + d_interpretativa_sing_rapp + '_' + str(
-                                    sing_rapp[5]) + '-' + str(sing_rapp[4]))
+                                    sing_rapp[5]) + '-' + str(sing_rapp[4].replace(' ','_')))
                             properties_ant.append(harris_rapp3)
 
                     if sing_rapp[0] == 'contemporaneo':
@@ -97,11 +97,11 @@ class pyarchinit_Interactive_Matrix:
                             harris_rapp2 = (
                                 ut + us + '_' + d_interpretativa + '_' + e_id + '-' + epoca, str(sing_rapp[2]) +
                                 str(sing_rapp[1]) + '_' + d_interpretativa_sing_rapp + '_' + str(
-                                    sing_rapp[5]) + '-' + str(sing_rapp[4]))
+                                    sing_rapp[5]) + '-' + str(sing_rapp[4].replace(' ','_')))
                             contemporane.append(harris_rapp2)
 
             except Exception as e:
-                QMessageBox.warning(self, 'ATTENZIONE',
+                QMessageBox.warning(None, 'ATTENZIONE',
                                     'Mancano i valori unita tipo e interpretazione startigrafica nella tablewidget dei rapporti startigrafici. affinchè il matrix sia esportato correttamente devi inserirli',
                                     QMessageBox.Ok)
 
@@ -134,25 +134,25 @@ class pyarchinit_Interactive_Matrix:
         for epoch in unique_epochs:
             print(f'ciclo su epoca: {epoch}')
             cluster_label = "cluster%s" % (clust_number)
-            periodo_label = "Epoca: %s" % (epoch)
+            periodo_label = "Epoch: %s" % (epoch)
             sing_per = [cluster_label, periodo_label]
             sing_us = []
 
             for rec in data_list:
-                us, ut, d_interpretativa, epoca,e_id = replace_spaces_with_underscore(rec[0], rec[1], rec[2], rec[3],rec[4])
+                us, ut, d_interpretativa, epoca, e_id = replace_spaces_with_underscore(rec[0], rec[1], rec[2], rec[3],rec[4])
 
                 if epoca == epoch:
-                    sing_us.append(ut+str(us) + '_' + d_interpretativa + '_' + e_id + '-'+epoca)
+                    sing_us.append(ut+str(us) + '_' + d_interpretativa + '_' + e_id + '-'+epoca.replace(' ', '_'))
 
             sing_per.insert(0, sing_us)
             periodi_us_list.append(sing_per)
             clust_number += 1
-        print(f'data:{data}\n\n,conteporaneo:{contemporane}\n\n,propeties: {properties_ant}\n\n epoche:{periodi_us_list}\n\n' )
+        print(f'data:{data}\n\n,conteporaneo:{contemporane}\n\n,properties: {properties_ant}\n\n epoche:{periodi_us_list}\n\n' )
         matrix_exp = HarrisMatrix(data,contemporane,properties_ant, periodi_us_list)
         try:
             matrix_exp.export_matrix_2
         except Exception as e :
-            QMessageBox.information(self, "Info", str(e), QMessageBox.Ok)
+            QMessageBox.information(None, "Info", str(e), QMessageBox.Ok)
         finally:
             data_plotting_2 = matrix_exp.export_matrix_2
             #QMessageBox.information(self, "Info", "Esportazione completata")

@@ -308,7 +308,7 @@ def exportGraphml(o, nodes, edges, options,ff=0):
     epoch=[]
     epoch_sigla = []
     for i in sorted(nodes):
-        if i.startswith('Epoca') or i.startswith('epoca'):
+        if i.startswith('Epoc') or i.startswith('epoc'):
             epoch.append(i)
         elif i.startswith('US') or i.startswith('SU') or i.startswith('WSU'):
             descrizione_us, singola_epoca = i.rsplit('_',1)
