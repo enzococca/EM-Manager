@@ -2,7 +2,7 @@ import networkx as nx
 import pyvista as pv
 import sys
 from PyQt5 import QtWidgets, QtCore,QtWebEngineWidgets
-from PyQt5.QtCore import QUrl,Qt,QEvent
+from PyQt5.QtCore import QUrl,Qt,QEvent,QObject
 from PyQt5.QtGui import QPixmap,QMouseEvent
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
@@ -12,14 +12,51 @@ from pyvistaqt import QtInteractor
 import os
 import numpy as np
 from PIL import Image
+import trimesh
 from docx import Document
 import openpyxl
 from html import escape
 import tempfile
 
 
+
 G = None  # Definisci G all'inizio del tuo codice
 graphml_path=None
+class HoverHandler(QObject):
+    def __init__(self, plotter, graph, x_coord, y_coord, z_coord, info_widget):
+        super().__init__()
+        self.plotter = plotter
+        self.graph = graph
+        self.x_coord = x_coord
+        self.y_coord = y_coord
+        self.z_coord = z_coord
+        self.info_widget = info_widget
+        self.threshold_distance = 0.1  # Set this value appropriately for your case
+    def eventFilter(self, obj, event):
+        if event.type() == QEvent.MouseMove:
+            # Get the mouse position and convert it to world coordinates
+            mouse_pos = event.pos()
+            world_pos = self.plotter.pick_mouse_position()
+
+            # Find the closest node to the mouse position
+            closest_node_id, min_dist = None, float('inf')
+            for node_id in self.graph.nodes():
+                # Check if the node_id exists in the dictionaries before using it
+                if (node_id in self.x_coord) and (node_id in self.y_coord) and (node_id in self.z_coord):
+                    node_pos = np.array([self.x_coord[node_id], self.y_coord[node_id], self.z_coord[node_id]])
+                    dist = np.linalg.norm(world_pos - node_pos)
+                    if dist < min_dist:
+                        closest_node_id, min_dist = node_id, dist
+
+            # If a node is close enough to the mouse position, display its information
+            if closest_node_id and min_dist < self.threshold_distance:
+                node_data = self.graph.nodes[closest_node_id]
+                info_text = "\n".join(f"{key}: {value}" for key, value in node_data.items())
+                self.info_widget.setText(info_text)
+            else:
+                self.info_widget.clear()
+
+        return super().eventFilter(obj, event)
 
 class GraphWindow(QtWidgets.QMainWindow):
 
@@ -30,6 +67,7 @@ class GraphWindow(QtWidgets.QMainWindow):
         # Creo layout
         layout = QtWidgets.QHBoxLayout()
         self.graphml_path = graphml_path
+
         # Creo three dockwidgets
         self.dock1 = QtWidgets.QDockWidget("Node Info")
         self.dock2 = QtWidgets.QDockWidget("Nodi prossimi Info")
@@ -66,7 +104,14 @@ class GraphWindow(QtWidgets.QMainWindow):
             self.show()#mostro il plotter
 
         self.statusbar = None
+        # Create the hover handler and install it as an event filter on the plotter interactor
+        self.hover_handler = HoverHandler(self.plotter, G, self.x_coord, self.y_coord, self.z_coord,
+                                          self.node_info_textedit)
+        self.plotter.interactor.installEventFilter(self.hover_handler)
+
     def d_graph(self):
+
+
         print(f"path da d_graph: {self.graphml_path}")
         global G  # Utilizza la parola chiave global per fare riferimento alla variabile G definita all'esterno
         # Colore per gli archi
@@ -98,99 +143,86 @@ class GraphWindow(QtWidgets.QMainWindow):
                         [self.x_coord[node1], self.y_coord[node1], self.z_coord[node1]],
                         [self.x_coord[node2], self.y_coord[node2], self.z_coord[node2]],
                     )
-                    tube = line.tube(radius=0.1)# tubo è lo stile 3d
+                    tube = line.tube(radius=0.5)# tubo è lo stile 3d
                     self.plotter.add_mesh(tube, color=EDGE_COLOR)#lo aggiugno alla mesh
 
             meshes = []#creao una lista vuota dove inserire le mesh che devono essere visualizzate come oggetti 3D
             mesh=''
-            # Directory dei modelli 3D
-            dir = os.path.dirname(self.graphml_path)
+            try:
+                # Directory dei modelli 3D
+                dir = os.path.dirname(self.graphml_path)
+                models_dir = os.path.join(dir, "3d_obj")
+                graph_icon = os.path.join(dir, "3d_obj")
 
+                # Lista dei modelli 3D esistenti
+                existing_models = [f[:-4] for f in os.listdir(models_dir) if f.endswith(".obj")]
 
-            models_dir=os.path.join(dir,"3d_obj")
-            # Lista dei modelli 3D esistenti
-            existing_models = [f[:-4] for f in os.listdir(models_dir) if f.endswith(".obj")]  # Rimuovi l'estensione .obj
-            # print(existing_models)
-            # Verifica quali modelli 3D corrispondono alle descrizioni dei nodi
-            for node_id, node_data in G.nodes(data=True):
-                # print(node_data)
-                if "label" in node_data and node_data["label"] in existing_models:
-                    print(f"Modello 3D {node_data['label']}.obj esiste e corrisponde al nodo {node_id}.")
-                else:
-                    print(f"Modello 3D per il nodo {node_id} non trovato.")
-                if node_id in self.x_coord and node_id in self.y_coord:
-                    x = float(self.x_coord[node_id])
-                    y = float(self.y_coord[node_id])
-                    z = float(self.z_coord[node_id])
+                # Dizionario dei modelli di default per tipo di nodo
+                default_models = {
+                    "USV": "USVn.obj",
+                    "VSF": "VSF.obj",
+                    "SF": "SF.obj",
+                    "US": "US.obj",
+                    "USVs": "USVs.obj",
+                    "combiner": "combiner.obj",
+                    "extractor": "extractor.obj",
+                    "D.": "document.obj",
+                    "property": "property.obj",
+                    "USD": "USD.obj",
+                    "TSU": "TSU.obj"
+                }
 
-                    # Recupero del percorso del file del modello 3D corrispondente alla descrizione del nodo
-                    try:
-                        model_path = f"{models_dir}/{G.nodes[node_id]['label']}.obj"
-                        model_img = f"{models_dir}/{G.nodes[node_id]['label']}.jpg"
+                # Verifica quali modelli 3D corrispondono alle descrizioni dei nodi
+                for node_id, node_data in G.nodes(data=True):
+                    # Check if the node has 'x', 'y', and 'label' attributes
+                    if 'x' in node_data and 'y' in node_data and 'label' in node_data:
+                        x = float(node_data['x'])
+                        y = float(node_data['y'])
+                        z = self.z_coord.get(node_id, 0)  # Use a default value if 'z' is not present
+                        label = node_data['label']
 
-                        if "USV" in node_data["label"]:
-                            image_path = f"{models_dir}/USV.png"
-                        if "VSF" in node_data["label"]:
-                            image_path = f"{models_dir}/VSF.png"
-                        if "SF" in node_data["label"]:
-                            image_path = f"{models_dir}/SF.png"
-                        else:
-                            image_path = f"{models_dir}/{G.nodes[node_id]['label']}.png"
-                    except KeyError:
+                        # Determine the model filename based on the existing models or use a default
+                        model_filename = f"{label}.obj" if label in existing_models else None
+                        if not model_filename:
+                            # Find a default model based on the node type
+                            for node_type, default_model in default_models.items():
+                                if node_type in label:
+                                    model_filename = default_model
+                                    break
 
-                        print(KeyError)
+                        # If a model filename was determined, try to load it
+                        if model_filename:
+                            model_path = os.path.join(models_dir, model_filename)
+                            if os.path.exists(model_path):
+                                mesh = pv.read(model_path)
 
-                    else:
+                                # Calculate the scale factor based on the desired size
+                                mesh_size = max(mesh.bounds[1] - mesh.bounds[0],
+                                                mesh.bounds[3] - mesh.bounds[2],
+                                                mesh.bounds[5] - mesh.bounds[4])
+                                desired_size = 50  # Diameter of the sphere (twice the radius)
+                                scale_factor = desired_size / mesh_size
 
-                        #se model path esiste carica il 3D, altrimenti carica l'immagine, se non trova l'immagine carica una sfera 3d
-                        if os.path.exists(model_path):
-
-                            # Caricamento del modello 3D
-                            mesh = pv.read(model_path)
-                            # Creazione di una matrice di trasformazione per la rotazione di 180 gradi attorno all'asse x
-                            #Se no lo faccio il 3D non si sposta. la funzione translate() non funziona
-                            transform_matrix = np.array([[1, 0, 0, 0],
-                                                         [0, -1, 0, 0],
-                                                         [0, 0, -1, 0],
-                                                         [0, 0, 0, 1]])
-
-                            # Applicazione della trasformazione alla mesh
-                            mesh.transform(transform_matrix)
-                            # Calcola la traslazione
-                            translation = np.array([x, y, z])
-
-                            # Sposta la mesh di prova
-                            mesh.points = mesh.points - mesh.center + translation
-                            # print(f"Centro della mesh prima della traslazione: {mesh.center}")
-                            mesh.rotate_x(180)  # Per ruotare attorno all'asse y devoruotoare la mesh se no mi viene capovolta
-
-                            mesh.translate([x, y, z])
-                            # print(f"Centro della mesh dopo la traslazione: {mesh.center}")
-                            try:
-                                texture = pv.read_texture(model_img)#leggo la texture in png la tegture deve avere lo stesso nome della obj
-                                self.plotter.add_mesh(mesh, texture=texture)
-                            except Exception as e:
-                                print('texture non trovata')
-
-                                self.plotter.add_mesh(mesh)
-
-
-                        else:
-                            if os.path.exists(image_path):
-                                image = Image.open(image_path)
-                                image = image.rotate(180)
-                                image = np.array(image)  # Converti l'immagine PIL in un array NumPy per pyvista
-
-                                texture = pv.Texture(image)
-                                mesh = pv.Plane(center=(x, y, z), direction=(0, 0, 1), i_size=20, j_size=10)
-                                mesh.texture_map_to_plane(inplace=True)
-
-                                self.plotter.add_mesh(mesh, texture=texture)
+                                # Scale the mesh
+                                mesh.points *= scale_factor
+                                # Apply transformations...
+                                self.plotter.add_mesh(mesh, color='white')
                             else:
-                                mesh = pv.Sphere(center=(x, y, z), radius=10)
-                                self.plotter.add_mesh(mesh)
+                                print(f"Model file not found: {model_path}")
+                        else:
+                            print(f"No default model found for node {node_id} with label '{label}'")
+
+                        # If no model was loaded, create a fallback sphere
+                        if not model_filename or not os.path.exists(model_path):
+                            print(f"Creating fallback sphere for node {node_id}")
+                            mesh = pv.Sphere(center=(x, y, z), radius=25)
+                            self.plotter.add_mesh(mesh, color='white')
+                    else:
+                        print(f"Error: Node {node_id} is missing required data.")
 
                     meshes.append(mesh)
+            except Exception as e:
+                print(f"Errore durante la creazione del modello 3D: {e}")
         else:
             print('Grahml non trovato')
             QMessageBox.warning(self, 'Attenzione', 'Devi caricare un progetto con Graphml valido')

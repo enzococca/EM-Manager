@@ -43,6 +43,8 @@ from modules.load_3d import OBJPROXY
 from modules.graphml_to_excel import load_graphml
 from modules.check_graphviz_path import check_graphviz
 from modules.json2cvs import DataExtractor, DataImporter
+from modules.autoswimlane import YEdAutomation
+from modules.check_yed_path import YEdSetup
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl
 
@@ -290,6 +292,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         self.statusbar.setStyleSheet("QStatusBar{border-top: 1px solid grey;}")
         check_graphviz(self.statusbar)
+
+
         # Crea un nuovo QWebEngineView
         self.help_view = QWebEngineView()
         # Imposta le dimensioni della finestra
@@ -320,6 +324,15 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.data_table.currentCellChanged.connect(self.on_table_selection_changed)
         self.search_bar.textChanged.connect(self.search)
         self.graph_modeller.clicked.connect(self.open_graph_modeller)
+
+    def yed_path(self):
+        yed_setup = YEdSetup()
+
+        yed_path = yed_setup.check_installation()
+        if yed_path:
+            print(f"yEd is installed at {yed_path}")
+            return str(yed_path)
+
 
     def open_graph_modeller(self):
         self.graph_modeller = MainWindow()
@@ -1045,7 +1058,17 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             else:
                 return
 
-        try:# Carica il visualizzatore 3D
+        try:# Cerca se yed è installato, se lo è, carica il file graphml in yed e poi chiama la finestra 3D.
+            # Carica il visualizzatore 3D
+            yed_path = self.yed_path()
+            graphml_path = graphml_path
+
+            yed_auto = YEdAutomation(yed_path, graphml_path)
+            yed_auto.launch_yed()
+            yed_auto.bring_yed_to_foreground()
+            yed_auto.apply_swimlane_layout()
+            yed_auto.save_file()
+            #yed_auto.close_yed()
             GraphWindow(graphml_path)
         except Exception as e:
             print(e)
