@@ -27,6 +27,9 @@ jobs:
       run: |
         pip uninstall typing -y || echo "typing not installed."
 
+    - name: Remove pathlib if exists
+      run: |
+        pip uninstall pathlib -y || echo "pathlib not installed."
     
     - name: Build App
       run: |
