@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+import sys
 
 class LogDialog(QtWidgets.QDialog):
     def __init__(self, parent=None):
