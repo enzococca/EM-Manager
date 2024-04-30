@@ -16,7 +16,7 @@ class YEdAutomation:
 
     def bring_yed_to_foreground(self):
         # Tenta di trovare la finestra yEd e portarla in primo piano
-        for _ in range(2):
+        for _ in range(1):
             windows = pyautogui.getWindowsWithTitle("yEd")
             if windows:
                 windows[0].activate()
@@ -28,14 +28,14 @@ class YEdAutomation:
     def apply_swimlane_layout(self):
         # Premi Alt+Shift+S per applicare il layout Swimlane
         pyautogui.hotkey('alt', 'shift', 's')
-        time.sleep(2)  # Attendi che il layout venga applicato
+        time.sleep(1)  # Attendi che il layout venga applicato
         # Premere "Invio" per confermare l'applicazione del layout
         pyautogui.press('enter')  # Si presuppone che il pulsante "OK" sia selezionato per impostazione predefinita
         time.sleep(1)  # Attendi che il layout venga applicato
     def save_file(self):
         # Premi Ctrl+S per salvare il file
         pyautogui.hotkey('ctrl', 's')
-        time.sleep(2)  # Attendi il completamento dell'operazione di salvataggio
+        time.sleep(1)  # Attendi il completamento dell'operazione di salvataggio
 
     def close_yed(self):
         # Chiudi yEd

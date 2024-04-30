@@ -325,6 +325,9 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.search_bar.textChanged.connect(self.search)
         self.graph_modeller.clicked.connect(self.open_graph_modeller)
 
+
+    def show_message(self, message: str) -> None:
+        print(message)
     def yed_path(self):
         yed_setup = YEdSetup()
 
@@ -2160,6 +2163,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             # Write the file out again
             with open(CSVMapper.GRAPHML_PATH, 'w') as file:
                 file.write(filedata)
+            self.show_message('Conversion completed successfully.')
+            self.d_graph()
         except IOError:
             self.show_error('Error reading or writing the file.')
         except KeyError as e:
@@ -2167,7 +2172,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         except Exception as e:
             self.show_error('Unknown error: ' + str(e))
 
-        #self.d_graph(self.graphml_path)
+
 
     def read_transformed_csv(self, file_path):
         data_list = []

@@ -179,9 +179,7 @@ class OBJPROXY(QtWidgets.QMainWindow):
 
     def click_callback(self, obj, event):
         #questa funzione viene chiamata quando si verifica un evento di clic.
-        # L'evento di clic è associato a un oggetto (probabilmente un oggetto
-        # grafico nella rappresentazione 3D). La funzione accede alla posizione
-        #
+        # L'evento di clic è associato a un oggetto. La funzione accede alla posizione
         # dell’evento (x, y) e la usa per selezionare una cella nel renderer 3D.
         # Se l'oggetto cliccato esiste, la funzione itera sugli elementi memorizzati
         # in self.meshes per cercare l'attore che è stato cliccato. Quando trova la corrispondenza,
