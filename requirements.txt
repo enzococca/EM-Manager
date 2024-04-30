@@ -20,7 +20,6 @@ pyinstaller
 pyautogui
 vtk
 chardet
-typing
 pyqtgraph
 collection
 trimesh
