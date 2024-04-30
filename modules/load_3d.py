@@ -1,15 +1,11 @@
 import re
 
 import vtk
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets
 from pyvista import QtInteractor
 from pyvistaqt import QtInteractor
 import pyvista as pv
 import os
-import numpy as np
-# Nella script EDMatrix2Graphml.py:
-
-
 class OBJPROXY(QtWidgets.QMainWindow):
     def __init__(self, csv_mapper,models_dir,parent=None, show=True):
         QtWidgets.QMainWindow.__init__(self, parent)

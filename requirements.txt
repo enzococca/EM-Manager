@@ -26,5 +26,4 @@ trimesh
 openpyxl
 python-docx
 svgwrite
-pathlib
 
