@@ -1,27 +1,21 @@
-#from modules import splash
+from modules import splash
 import chardet
 import mimetypes
 from typing import Optional
 import re
-from PyQt5.QtCore import (QAbstractTableModel, QVariant,
-                          Qt, QSize, QFileInfo)
-from PyQt5.QtGui import QPixmap, QIcon, QStandardItem, QStandardItemModel, QDesktopServices
+from PyQt5.QtCore import (QAbstractTableModel, QVariant)
+from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import (QDialog,
                              QFileDialog,
                              QAction,
-                             QTableWidgetItem,
-                             QMainWindow,
-                             QApplication,
-                             QPushButton,
+
                              QHBoxLayout,
-                             QVBoxLayout,
-                             QInputDialog,
+
                              QComboBox,
-                             QDockWidget, QMessageBox, QTextEdit, QWidget, QLabel, QGraphicsScene, QGraphicsView,
-                             QListWidgetItem,
-                             QListWidget, QFileIconProvider)
+                             QDockWidget, QMessageBox, QTextEdit, QLabel
+                             , QFileIconProvider)
 from PyQt5.uic import loadUiType
-from pandas.io.sas.sas_constants import magic
+
 
 from modules.interactive_matrix import pyarchinit_Interactive_Matrix
 from modules.graph_modeller import *

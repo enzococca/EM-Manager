@@ -14,7 +14,6 @@ from pyvistaqt import QtInteractor
 import os
 import numpy as np
 from PIL import Image
-import trimesh
 from docx import Document
 import openpyxl
 from html import escape

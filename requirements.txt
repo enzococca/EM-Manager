@@ -17,3 +17,15 @@ python-docx
 openpyxl
 winregistry
 pyinstaller
+pyautogui
+vtk
+chardet
+typing
+pyqtgraph
+collection
+trimesh
+openpyxl
+python-docx
+svgwrite
+pathlib
+

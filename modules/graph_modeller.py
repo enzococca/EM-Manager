@@ -5,12 +5,11 @@ import traceback
 import pandas as pd
 from PyQt5.QtWidgets import QApplication, QMainWindow, QGraphicsScene, QGraphicsView, QGraphicsItem, \
     QGraphicsEllipseItem, \
-    QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem, QGraphicsLineItem, QListWidgetItem, QListWidget, \
-    QGraphicsPixmapItem, QListView, QGraphicsSimpleTextItem, QGraphicsRectItem, QInputDialog, QLineEdit, \
-    QGraphicsPathItem, QPushButton, QAbstractItemView
-from PyQt5.QtCore import Qt, QRectF, QLineF, QDataStream, QFile, QSize, QTimer, QPoint, QPointF
-from PyQt5.QtGui import QPen, QColor, QPainterPath, QKeyEvent, QMouseEvent, QCursor, QTransform, QIcon, QPixmap, QFont, \
-    QBrush
+    QVBoxLayout, QWidget, QTableWidget, QTableWidgetItem, QListWidgetItem, QListWidget, \
+    QListView, QGraphicsSimpleTextItem, QGraphicsRectItem, QInputDialog, QLineEdit, \
+    QGraphicsPathItem
+from PyQt5.QtCore import Qt,  QLineF, QFile, QSize,  QPoint, QPointF
+from PyQt5.QtGui import QPen, QColor, QPainterPath, QKeyEvent, QMouseEvent, QCursor,  QIcon, QFont
 import networkx as nx
 
 from pyqtgraph import QtCore
