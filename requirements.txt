@@ -23,8 +23,6 @@ chardet
 pyqtgraph
 collection
 trimesh
-openpyxl
-python-docx
 svgwrite
-
+docx
 
