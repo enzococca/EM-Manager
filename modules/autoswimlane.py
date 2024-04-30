@@ -12,7 +12,7 @@ class YEdAutomation:
     def launch_yed(self):
         # Avvia yEd con il file GraphML
         subprocess.Popen([self.yed_path, self.graphml_path])
-        time.sleep(5)  # Attendi che yEd si apra
+        time.sleep(10)  # Attendi che yEd si apra
 
     def bring_yed_to_foreground(self):
         # Tenta di trovare la finestra yEd e portarla in primo piano
@@ -28,10 +28,10 @@ class YEdAutomation:
     def apply_swimlane_layout(self):
         # Premi Alt+Shift+S per applicare il layout Swimlane
         pyautogui.hotkey('alt', 'shift', 's')
-        time.sleep(1)  # Attendi che il layout venga applicato
+        time.sleep(2)  # Attendi che il layout venga applicato
         # Premere "Invio" per confermare l'applicazione del layout
         pyautogui.press('enter')  # Si presuppone che il pulsante "OK" sia selezionato per impostazione predefinita
-        time.sleep(1)  # Attendi che il layout venga applicato
+        time.sleep(2)  # Attendi che il layout venga applicato
     def save_file(self):
         # Premi Ctrl+S per salvare il file
         pyautogui.hotkey('ctrl', 's')
