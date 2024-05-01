@@ -1,3 +1,4 @@
+python-docx~=1.1.1
 PyQt5~=5.15.10
 pyqtwebengine
 pandas~=2.2.2
@@ -13,7 +14,6 @@ pyvista~=0.43.6
 pyvistaqt~=0.11.0
 numpy~=1.26.4
 Pillow~=10.3.0
-python-docx
 openpyxl~=3.1.2
 winregistry
 pyautogui~=0.9.54
