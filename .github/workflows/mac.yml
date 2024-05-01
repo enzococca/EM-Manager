@@ -33,7 +33,7 @@ jobs:
     
     - name: Build App
       run: |
-        pyinstaller --noconfirm --onedir --console --icon "./icon/H_check.ico" --name "EM-Manager"  --add-data "./EDMatrix2Graphml.py:./" --add-data "./ui:ui/" --add-data "./test:test/" --add-data "./icon:icon/" --add-data "./modules/EM3dnodes:EM3dnodes/" --add-data "./modules/icons:icons/" --add-data "./icons:icons/" --add-data "./template:template/" --collect-all "graphviz" --collect-all "networkx" --collect-all "pyautogui" --collect-all "python-docx" --collect-all "pyvista" --collect-all "pyvistaqt" --collect-all "pyqtgraph" --add-data "./parser:parser/" --add-data "./modules:modules/" --add-data "./help:help/"  "./EDMatrix2Graphml.py"
+        pyinstaller --noconfirm --onedir --windowed --icon "./icon/H_check.ico" --name "EM-Manager"  --add-data "./EDMatrix2Graphml.py:./" --add-data "./ui:ui/" --add-data "./test:test/" --add-data "./icon:icon/" --add-data "./modules/EM3dnodes:EM3dnodes/" --add-data "./modules/icons:icons/" --add-data "./icons:icons/" --add-data "./template:template/" --collect-all "graphviz" --collect-all "networkx" --collect-all "pyautogui" --collect-all "python-docx" --collect-all "pyvista" --collect-all "pyvistaqt" --collect-all "pyqtgraph" --add-data "./parser:parser/" --add-data "./modules:modules/" --add-data "./help:help/"  "./EDMatrix2Graphml.py"
 
     - name: Create DMG
       run: |
