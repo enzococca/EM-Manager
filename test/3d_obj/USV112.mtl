@@ -1,37 +1,12 @@
-newmtl initialShadingGroup
-illum 4
-Kd 0.50 0.50 0.50
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-Ni 1.00
-newmtl lambert2SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd -s 0.1 0.1 Sandstone_Wall_1.jpg
-Ni 1.00
-newmtl lambert3SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd -s 0.2 0.2 Ground10_1.jpg
-bump -s 0.333333 0.333333 Bitmap2Material_3_Normal.tga -bm 0.45977
-Ni 1.00
-newmtl lambert4SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.41 0.41 0.41
-Tf 1.00 1.00 1.00
-map_Kd -s 0.2 0.2 Stone_10_UV_H_CM_1.jpg
-bump -s 0.2 0.2 Bitmap2Material_3_Normal.tga -bm -0.0574713
-Ni 1.00
-newmtl lambert5SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd -s 0.2 0.2 main_wall.jpg
-bump -s 0.2 0.2 Bitmap2Material_3_Normal.tga -bm 0.075
-Ni 1.00
+# Blender 4.0.2 MTL File: 'EM_dataset_2023_19.blend'
+# www.blender.org
+
+newmtl USVn
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.031000 0.191000 0.026000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 0.310000
+illum 9

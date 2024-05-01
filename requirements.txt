@@ -16,7 +16,6 @@ Pillow
 python-docx
 openpyxl
 winregistry
-pyinstaller
 pyautogui
 vtk
 chardet
@@ -24,5 +23,5 @@ pyqtgraph
 collection
 trimesh
 svgwrite
-docx
+
 

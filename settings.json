@@ -26,10 +26,6 @@
    "value": "EM-Manager"
   },
   {
-   "optionDest": "ascii",
-   "value": false
-  },
-  {
    "optionDest": "clean_build",
    "value": false
   },
@@ -46,10 +42,6 @@
    "value": false
   },
   {
-   "optionDest": "embed_manifest",
-   "value": true
-  },
-  {
    "optionDest": "uac_admin",
    "value": false
   },
@@ -58,19 +50,11 @@
    "value": false
   },
   {
-   "optionDest": "win_private_assemblies",
-   "value": false
-  },
-  {
-   "optionDest": "win_no_prefer_redirects",
+   "optionDest": "argv_emulation",
    "value": false
   },
   {
    "optionDest": "bootloader_ignore_signals",
-   "value": false
-  },
-  {
-   "optionDest": "argv_emulation",
    "value": false
   },
   {
@@ -160,6 +144,14 @@
   {
    "optionDest": "excludes",
    "value": "opencv-python"
+  },
+  {
+   "optionDest": "collect_all",
+   "value": "pyautogui"
+  },
+  {
+   "optionDest": "collect_all",
+   "value": "python-docx"
   }
  ],
  "nonPyinstallerOptions": {
