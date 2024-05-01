@@ -32,7 +32,7 @@ jobs:
     - name: Build executables
       run: |
         if ("${{ matrix.os }}" -eq "windows-latest") {
-          pyinstaller --noconfirm --onedir --windowed --contents-directory "." --icon "icon/H_check.ico" --name "EM-Manager" --add-data "ui:ui" --add-data "icon:icon" --add-data "parser:parser" --add-data "modules:modueles" --add-data "template:template" --add-data "help:help" --add-data "test:test" --add-data "./EDMatrix2Graphml.py;." --collect-all "graphviz" --collect-all "pyautogui" --collect-all "networkx" --collect-all "pyvista" --collect-all "pyvistaqt" --collect-all "pyqtgraph" "EDMatrix2Graphml.py"
+          pyinstaller --noconfirm --onedir --windowed --contents-directory "EM Manager" --icon "icon/H_check.ico" --name "EM-Manager" --add-data "ui:ui" --add-data "icon:icon" --add-data "parser:parser" --add-data "modules:modueles" --add-data "template:template" --add-data "help:help" --add-data "test:test" --add-data "./EDMatrix2Graphml.py;." --collect-submodules "python-docx" --collect-all "graphviz" --collect-all "pyautogui" --collect-all "networkx" --collect-all "pyvista" --collect-all "pyvistaqt" --collect-all "pyqtgraph" "./EDMatrix2Graphml.py"
         }
 
     - name: Archive production artifacts
