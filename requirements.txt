@@ -23,5 +23,6 @@ pyqtgraph
 collection
 trimesh
 svgwrite
+pyinstaller
 
 
