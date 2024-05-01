@@ -24,3 +24,4 @@ collection
 trimesh~=4.3.2
 svgwrite~=1.4.3
 pyinstaller
+docx~=0.2.4

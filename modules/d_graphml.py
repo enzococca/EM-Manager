@@ -1,25 +1,23 @@
 import csv
+import os
+import sys
+import tempfile
+from html import escape
 
 import networkx as nx
+import numpy as np
+import openpyxl
 import pyvista as pv
-import sys
-from PyQt5 import QtWidgets, QtCore,QtWebEngineWidgets
-from PyQt5.QtCore import QUrl,Qt,QEvent
-from PyQt5.QtGui import QPixmap,QMouseEvent
+from PIL import Image
+from PyQt5 import QtWidgets, QtCore, QtWebEngineWidgets
+from PyQt5.QtCore import QUrl, Qt, QEvent
+from PyQt5.QtGui import QPixmap, QMouseEvent
 from PyQt5.QtMultimedia import QMediaPlayer, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtWidgets import QLabel,QMessageBox
+from PyQt5.QtWidgets import QLabel, QMessageBox
+#from docx import
 from pyvistaqt import QtInteractor
-import os
-import numpy as np
-from PIL import Image
-from docx import Document
-import openpyxl
-from html import escape
-import tempfile
-
-
 
 G = None  # Definisci G all'inizio del tuo codice
 graphml_path=None
@@ -318,34 +316,34 @@ class GraphWindow(QtWidgets.QMainWindow):
                 self.file_info_widget.load(QUrl.fromLocalFile(file_path_pdf))
                 self.dock3.setWidget(self.file_info_widget)
 
-            elif extension in ('.docx'):
-
-                def docx_to_html(file_path, output_dir):
-                    document = Document(file_path)
-                    html = "<html><body>"
-                    for paragraph in document.paragraphs:
-                        html += "<p>{}</p>".format(paragraph.text)
-                    html += "</body></html>"
-
-                    # Write the HTML to a file in the output directory
-                    output_path = os.path.join(output_dir, 'output.html')
-                    with open(output_path, 'w', encoding='utf-8') as f:
-                        f.write(html)
-
-                    return output_path
-
-                # creo un dir temporanea
-                tmpdirname = tempfile.mkdtemp()
-
-                # path assoluta
-                file_path_dc = os.path.join(dir,file_path)
-                file_path_dc = os.path.abspath(file_path_dc)
-                #converto in html
-                html_path = docx_to_html(file_path_dc, tmpdirname)
-
-                self.file_info_web = QWebEngineView()
-                self.file_info_web.load(QUrl.fromLocalFile(html_path))
-                self.dock3.setWidget(self.file_info_web)
+            # elif extension in ('.docx'):
+            #
+            #     def docx_to_html(file_path, output_dir):
+            #         document = opendocx(file_path)
+            #         html = "<html><body>"
+            #         for paragraph in document.paragraphs:
+            #             html += "<p>{}</p>".format(paragraph.text)
+            #         html += "</body></html>"
+            #
+            #         # Write the HTML to a file in the output directory
+            #         output_path = os.path.join(output_dir, 'output.html')
+            #         with open(output_path, 'w', encoding='utf-8') as f:
+            #             f.write(html)
+            #
+            #         return output_path
+            #
+            #     # creo un dir temporanea
+            #     tmpdirname = tempfile.mkdtemp()
+            #
+            #     # path assoluta
+            #     file_path_dc = os.path.join(dir,file_path)
+            #     file_path_dc = os.path.abspath(file_path_dc)
+            #     #converto in html
+            #     html_path = docx_to_html(file_path_dc, tmpdirname)
+            #
+            #     self.file_info_web = QWebEngineView()
+            #     self.file_info_web.load(QUrl.fromLocalFile(html_path))
+            #     self.dock3.setWidget(self.file_info_web)
 
                 # per rimuovere il file temporaneo
                 #shutil.rmtree(tmpdirname)
