@@ -3,6 +3,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QTimer
 from EDMatrix2Graphml import CSVMapper
 import sys
+
 app = QApplication(sys.argv)
 
 # Carica e ridimensiona l'immagine per lo splash screen
@@ -21,7 +22,8 @@ log_layout = QVBoxLayout()
 
 # Aggiungi un'etichetta per le righe del log
 log_lines = QLabel()
-log_lines.setStyleSheet('background-color: rgba(255, 255, 255, 128); font-size: 18px;')  # Cambia la dimensione del font qui
+log_lines.setStyleSheet(
+    'background-color: rgba(255, 255, 255, 128); font-size: 18px;')  # Cambia la dimensione del font qui
 
 # Aggiungi l'etichetta del contenuto del log al layout
 log_layout.addWidget(log_lines)
@@ -48,6 +50,7 @@ splash.show()
 base_text = "Caricamento"
 log_lines.setText(base_text)
 
+
 def update_text():
     current_text = log_lines.text()
     if current_text.count('.') < 3:
@@ -55,9 +58,12 @@ def update_text():
     else:
         log_lines.setText(base_text)
 
+
 update_timer = QTimer()
+# Aggiorna il testo ogni mezzo secondo
 update_timer.timeout.connect(update_text)
 update_timer.start(500)  # Aggiorna ogni mezzo secondo
+
 
 def start_main():
     splash.close()
@@ -66,6 +72,7 @@ def start_main():
     main_window = CSVMapper()
     main_window.show()
 
-QTimer.singleShot(7000,start_main)
+
+QTimer.singleShot(7000, start_main)
 
 sys.exit(app.exec_())

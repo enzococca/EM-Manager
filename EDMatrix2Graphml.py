@@ -4,7 +4,7 @@ import mimetypes
 from typing import Optional
 import re
 from PyQt5.QtCore import (QAbstractTableModel, QVariant)
-from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtGui import QDesktopServices, QPixmap
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
 
