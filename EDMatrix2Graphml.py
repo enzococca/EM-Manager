@@ -1,3 +1,4 @@
+import ast
 import shutil
 import sys
 
@@ -323,8 +324,140 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.data_table.currentCellChanged.connect(self.on_table_selection_changed)
         self.search_bar.textChanged.connect(self.search)
         self.graph_modeller.clicked.connect(self.open_graph_modeller)
+        # Connect the QLineEdit's textChanged or returnPressed signal
+        #self.lineEdit_nameus.textChanged.connect(self.add_text_to_table)
+        # or
+        self.lineEdit_nameus.returnPressed.connect(self.add_text_to_table)
+        self.pushButton_next_rec.clicked.connect(self.next_record)
+        self.pushButton_prev_rec.clicked.connect(self.prev_record)
+        # Connect the signal to the slot.
+        self.data_table.itemSelectionChanged.connect(self.update_ui_widgets)
+
+        self.comboBox_typeunit.addItem("")
+        self.comboBox_epoch.addItem("")
+        typeunit_df = pd.read_csv(os.path.join('template', 'unita_tipo.csv'))
+        for index, row in typeunit_df.iterrows():
+            self.comboBox_typeunit.addItem(str(row[1]))  # change '0' to column name
+        # For epoch
+        epoch_df = pd.read_csv(os.path.join('template', 'epoche_storiche.csv'))
+        for index, row in epoch_df.iterrows():
+            combined_item = str(row[1]) + ' - ' + str(row[2])  # merge second and third column
+            self.comboBox_epoch.addItem(combined_item)
+    def add_text_to_table(self):
+        txt_nameus = self.lineEdit_nameus.text()
+        txt_typeunit = self.comboBox_typeunit.currentText()
+        txt_descunit = self.lineEdit_descriptionunit.text()
+        txt_epoch = self.comboBox_epoch.currentText()
+        txt_epochindex = self.lineEdit_epochindex.text()
+        txt_desc = self.textEdit_description.toPlainText()
+        row_position =None
+        # Get all data from the QTableWidget
+        txt_relationship = ""
+        for i in range(self.tableWidget_relationship.rowCount()):
+            for j in range(self.tableWidget_relationship.columnCount()):
+                item = self.tableWidget_relationship.item(i, j)
+                if item is not None:
+                    txt_relationship += item.text() + " "
+
+        # Check if the current nameus already exists in the table
+        exists = False
+        for i in range(self.data_table.rowCount()):
+            if self.data_table.item(i, 0) and self.data_table.item(i, 0).text() == txt_nameus:
+                row_position = i
+                exists = True
+                break
+        if not exists:
+            row_position = self.data_table.rowCount()
+            self.data_table.insertRow(row_position)
+        self.data_table.setItem(row_position, 0, QTableWidgetItem(txt_nameus))
+        self.data_table.setItem(row_position, 1, QTableWidgetItem(txt_typeunit))
+        self.data_table.setItem(row_position, 2, QTableWidgetItem(txt_descunit))
+        self.data_table.setItem(row_position, 3, QTableWidgetItem(txt_desc))
+        self.data_table.setItem(row_position, 4, QTableWidgetItem(txt_epoch))
+        self.data_table.setItem(row_position, 5, QTableWidgetItem(txt_epochindex))
+        self.data_table.setItem(row_position, 11, QTableWidgetItem(txt_relationship))
+
+    def update_ui_widgets(self):
+        current_row = self.data_table.currentRow()
+        current_item_nameus = self.data_table.item(current_row, 0)  # The column index depends on where the nameus is.
+        current_item_typeunit = self.data_table.item(current_row, 1)  # Similar for other values...
+        current_item_descunit = self.data_table.item(current_row, 2)
+        current_item_desc = self.data_table.item(current_row, 3)
+        current_item_epoch = self.data_table.item(current_row, 4)
+        current_item_epochindex = self.data_table.item(current_row, 5)
+        current_item_relationships = self.data_table.item(current_row, 11)
+
+        if current_item_nameus is not None:
+            self.lineEdit_nameus.setText(current_item_nameus.text())
+        if current_item_typeunit is not None:
+            typeunit_text = current_item_typeunit.text()
+            if typeunit_text:
+                self.comboBox_typeunit.setCurrentText(typeunit_text)
+            else:
+                print("Warning: current_item_typeunit.text() is empty.")
+        else:
+            print("Warning: current_item_typeunit is None.")
+        if current_item_descunit is not None:
+            self.lineEdit_descriptionunit.setText(current_item_descunit.text())
 
 
+        if current_item_epoch is not None:
+            epoch_text = current_item_epoch.text()
+            if epoch_text:
+                self.comboBox_epoch.setCurrentText(epoch_text)
+            else:
+                print("Warning: current_item_epoch.text() is empty.")
+        else:
+            print("Warning: current_item_epoch is None.")
+        if current_item_epochindex is not None:
+            self.lineEdit_epochindex.setText(current_item_epochindex.text())
+        if current_item_desc is not None:
+            self.textEdit_description.setPlainText(current_item_desc.text())
+
+        # Update the relationship table
+        if current_item_relationships is not None:
+            self.tableWidget_relationship.setRowCount(0)
+            self.tableWidget_relationship.setColumnCount(6)  # Since each relationship has 6 elements
+            text = current_item_relationships.text()
+            try:
+                relationships = ast.literal_eval(text)
+            except ValueError:
+                print(f"Unable to parse text {text!r} as a python literal.")
+            else:
+                for relationship in relationships:
+                    row_position = self.tableWidget_relationship.rowCount()
+                    self.tableWidget_relationship.insertRow(row_position)
+                    for i, item in enumerate(relationship):
+                        self.tableWidget_relationship.setItem(row_position, i, QTableWidgetItem(str(item)))
+    # Method to move to the next record
+    def next_record(self):
+        row_position = self.data_table.currentRow()  # Get currently selected row
+        if row_position != -1 and row_position < self.data_table.rowCount() - 1:
+            self.data_table.selectRow(row_position + 1)  # Move selection to the next row
+            self.load_data_into_fields()  # Load the newly selected row's data into the fields
+
+    # Method to move to the previous record
+    def prev_record(self):
+        row_position = self.data_table.currentRow()  # Get currently selected row
+        if row_position != -1 and row_position > 0:
+            self.data_table.selectRow(row_position - 1)  # Move selection to the previous row
+            self.load_data_into_fields()  # Load the newly selected row's data into the fields
+
+    # Method to load selected row's data into the fields
+    def load_data_into_fields(self):
+        fields = [self.lineEdit_nameus, self.comboBox_typeunit, self.lineEdit_descriptionunit, self.textEdit_description,
+                  self.comboBox_epoch, self.lineEdit_epochindex]
+        row_position = self.data_table.currentRow()
+
+        indices = list(range(5)) + [11]  # Includes the first 5 and the 12th (which is indexed as 11)
+
+        for i in indices:  # Now i will iterate over the first five and the last position
+            if self.data_table.item(row_position, i):
+                item_text = self.data_table.item(row_position, i).text()
+                if isinstance(fields[i], QComboBox):
+                    fields[i].setCurrentText(item_text)
+                else:
+                    fields[i].setText(item_text)
     def show_message(self, message: str) -> None:
         print(message)
     def yed_path(self):

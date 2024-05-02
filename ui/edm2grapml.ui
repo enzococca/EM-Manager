@@ -199,6 +199,9 @@ font: 75 10pt &quot;Noto Sans Hebrew&quot;;</string>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
       <item row="4" column="3" colspan="2">
@@ -267,6 +270,9 @@ font: 75 10pt &quot;Noto Sans Hebrew&quot;;</string>
        <widget class="QComboBox" name="comboBox_epoch">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
