@@ -1,3 +1,8 @@
+import shutil
+import sys
+
+sys.path.insert(0, "ui")
+
 from modules import splash
 import chardet
 import mimetypes
@@ -31,13 +36,18 @@ from modules.check_graphviz_path import check_graphviz
 from modules.json2cvs import DataExtractor, DataImporter
 from modules.autoswimlane import YEdAutomation
 from modules.check_yed_path import YEdSetup
+
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl
 
 from modules.config import config
+import sys
+
 
 MAIN_DIALOG_CLASS, _ = loadUiType(
-    os.path.join(os.path.dirname(__file__),  'ui', 'edm2grapml.ui'))
+    os.path.join(os.path.dirname(__file__), 'ui', 'edm2grapml.ui'))
+
+
 
 from PyQt5.QtGui import QIcon
 
@@ -132,7 +142,7 @@ class EnhancedDockWidget(QDockWidget):
         icon = self.get_icon_for_file(filepath)
         item.setIcon(icon)
         item.setToolTip(filepath)
-        # ...handle other stuff such as double click interaction
+        # li aggiungo alla listwidget
         self.list_widget.addItem(item)
     def add_image_item(self, image_path, text):
         item = ImageItem(image_path, text)
@@ -263,6 +273,9 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             self.data_source = None
         self.dock_widget = EnhancedDockWidget(self)
         self.dock_widget.setHidden(True)
+        self.pushButton_removerow.setHidden(True)
+        self.pushButton_addrow.setHidden(True)
+        self.data_table.setHidden(True)
         # Collegare i bottoni alle funzioni corrispondenti
         self.save_button.clicked.connect(self.save_csv)
         self.save_google_button.clicked.connect(self.save_google)
@@ -949,6 +962,14 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 QMessageBox.critical(None, "Error", f"Error creating directories: {e}")
                 return
 
+            # Subito dopo, includo la funzione per copiare i file
+            src_dir = 'modules/icons'  # specificare il percorso assoluto se necessario
+            dst_dir = os.path.join(self.dir_path, "3d_obj")
+            file_names = os.listdir(src_dir)
+            for file_name in file_names:
+                # Aggiungo un controllo per l'estensione .png
+                if file_name.endswith('.png'):
+                    shutil.move(os.path.join(src_dir, file_name), dst_dir)
             # Crea il file CSV in modo sicuro
             csv_path = os.path.join(self.dir_path, self.base_name)
             try:
