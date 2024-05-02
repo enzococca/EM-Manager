@@ -1,0 +1,31 @@
+<RCC>
+  <qresource prefix="/">
+    
+    <file>icons/4_leftArrow.png</file>
+    <file>icons/5_leftArrows.png</file>
+    <file>icons/6_rightArrow.png</file>
+    <file>icons/7_rightArrows.png</file>
+    
+
+    <file>icons/delete.png</file>
+
+    <file>icons/search.png</file>
+    <file>icons/new_search.png</file>
+
+    <file>icons/newrec.png</file>
+  
+    <file>icons/sort.png</file>
+
+    <file>icons/view_all.png</file>
+
+ 
+    <file>icons/import-excel.png</file>
+    <file>icons/remove_tag.png</file>
+    <file>icons/add_tag.png</file>
+   
+    <file>icons/toolbox.png</file>
+    <file>icons/matrix.png</file>
+    <file>icons/open-folder.png</file>
+   
+  </qresource>
+</RCC>
