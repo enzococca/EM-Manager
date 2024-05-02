@@ -333,16 +333,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         # Connect the signal to the slot.
         self.data_table.itemSelectionChanged.connect(self.update_ui_widgets)
 
-        self.comboBox_typeunit.addItem("")
-        self.comboBox_epoch.addItem("")
-        typeunit_df = pd.read_csv(os.path.join('template', 'unita_tipo.csv'))
-        for index, row in typeunit_df.iterrows():
-            self.comboBox_typeunit.addItem(str(row[1]))  # change '0' to column name
-        # For epoch
-        epoch_df = pd.read_csv(os.path.join('template', 'epoche_storiche.csv'))
-        for index, row in epoch_df.iterrows():
-            combined_item = str(row[1]) + ' - ' + str(row[2])  # merge second and third column
-            self.comboBox_epoch.addItem(combined_item)
+    
     def add_text_to_table(self):
         txt_nameus = self.lineEdit_nameus.text()
         txt_typeunit = self.comboBox_typeunit.currentText()
@@ -828,6 +819,16 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.openRecentProj.triggered.connect(self.open_recent_project)
         self.actionApri_progetto.triggered.connect(self.open_project)
         self.actionImport_graphml.triggered.connect(self.import_graphml)
+        self.comboBox_typeunit.addItem("")
+        self.comboBox_epoch.addItem("")
+        typeunit_df = pd.read_csv(os.path.join('template', 'unita_tipo.csv'))
+        for index, row in typeunit_df.iterrows():
+            self.comboBox_typeunit.addItem(str(row[1]))  # change '0' to column name
+        # For epoch
+        epoch_df = pd.read_csv(os.path.join('template', 'epoche_storiche.csv'))
+        for index, row in epoch_df.iterrows():
+            combined_item = str(row[1]) + ' - ' + str(row[2])  # merge second and third column
+            self.comboBox_epoch.addItem(combined_item)
     def import_json(self):
         file, _ = QFileDialog.getOpenFileName(self, "Select a JSON file", "", "JSON Files (*.json)")
         if file:
@@ -942,6 +943,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
                 for i in range(self.data_table.columnCount()):
                     self.data_table.setColumnWidth(i, 250)
+                self.data_table.selectRow(0)
             else:
                 QMessageBox.warning(self,'Warning',f"The CSV file {csv_path} does not exist")
 
@@ -1027,6 +1029,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
                     for i in range(self.data_table.columnCount()):
                         self.data_table.setColumnWidth(i, 250)
+                    self.data_table.selectRow(0)
                 else:
                     QMessageBox.warning(self,'Warning',f"The CSV file {csv_path} does not exist")
 
@@ -1998,7 +2001,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         # Convert the data to a Pandas DataFrame
         data = result.get('values', [])
         df = pd.DataFrame(data[1:], columns=data[0])
-
+        self.data_table.selectRow(0)
         return df
 
     def on_toolButton_load_pressed(self):
