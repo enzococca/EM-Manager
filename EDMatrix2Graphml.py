@@ -862,11 +862,28 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         numRows = self.tableWidget_relationship.rowCount()
         print(f"Row count: {numRows}")
 
+        typeunit_df = pd.read_csv(os.path.join('template', 'unita_tipo.csv'))
+        epoch_df = pd.read_csv(os.path.join('template', 'epoche_storiche.csv'))
+        self.combo_box = QComboBox()
+        self.combobox_epo=QComboBox()
+        self.unit=QComboBox()
+        self.combo_box.addItems([''])
+        self.combobox_epo.addItems([''])
+        self.unit.addItems([''])
+        for index, row in typeunit_df.iterrows():
+            self.unit.addItem(str(row[1]))  # change '0' to column name
+        # For epoch
+
+        for index, row in epoch_df.iterrows():
+            combined_item = str(row[1]) + ' - ' + str(row[2])  # merge second and third column
+            self.combobox_epo.addItem(combined_item)
         for row_position in range(numRows):
-            self.combo_box = QComboBox()
+
             self.combo_box.addItems(values)
             self.tableWidget_relationship.setCellWidget(row_position, 0, self.combo_box)
             print(f"Combo box added to row {row_position}.")
+            self.tableWidget_relationship.setCellWidget(row_position, 2, self.combobox_epo)
+            self.tableWidget_relationship.setCellWidget(row_position, 4, self.unit)
 
     def import_json(self):
         file, _ = QFileDialog.getOpenFileName(self, "Select a JSON file", "", "JSON Files (*.json)")
@@ -2660,6 +2677,7 @@ class PandasModel(QAbstractTableModel):
 
 if __name__ == '__main__':
     app = QApplication([])
+    app.setStyle('Fusion')
     mapper = CSVMapper()
     mapper.show()
     app.exec_()

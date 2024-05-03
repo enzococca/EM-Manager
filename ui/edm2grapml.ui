@@ -7,7 +7,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1178</width>
+    <width>1219</width>
     <height>789</height>
    </rect>
   </property>
@@ -28,7 +28,10 @@
    <string notr="true">color: rgb(0, 0, 0);
 color: rgb(0, 0, 255);
 font: 75 10pt &quot;Noto Sans Hebrew&quot;;
-background-color: rgb(220, 208, 73);</string>
+border-color: rgb(255, 85, 0);
+background-color: rgb(193, 193, 188);
+
+</string>
   </property>
   <property name="documentMode">
    <bool>true</bool>
@@ -41,23 +44,10 @@ background-color: rgb(220, 208, 73);</string>
   </property>
   <widget class="QWidget" name="widget">
    <layout class="QGridLayout" name="gridLayout_5">
-    <item row="4" column="1">
-     <widget class="QPushButton" name="save_google_button">
+    <item row="4" column="2">
+     <widget class="QPushButton" name="save_button">
       <property name="text">
-       <string>Save google</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="pushButton_switch">
-      <property name="text">
-       <string>Switch</string>
-      </property>
-      <property name="checkable">
-       <bool>true</bool>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
+       <string>Save</string>
       </property>
      </widget>
     </item>
@@ -74,15 +64,451 @@ background-color: rgb(220, 208, 73);</string>
       </property>
      </widget>
     </item>
+    <item row="4" column="1">
+     <widget class="QPushButton" name="save_google_button">
+      <property name="text">
+       <string>Save google</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="3">
+     <widget class="QPushButton" name="update_button">
+      <property name="text">
+       <string>Update</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="5">
+     <widget class="QToolButton" name="toolButton_load">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Load data</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="pushButton_switch">
+      <property name="text">
+       <string>Switch</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QPushButton" name="graph_modeller">
+      <property name="text">
+       <string>Graph modeller</string>
+      </property>
+     </widget>
+    </item>
     <item row="3" column="0" colspan="7">
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="4" column="8">
-       <layout class="QVBoxLayout" name="verticalLayout_3"/>
+      <item row="7" column="2" colspan="3">
+       <widget class="QComboBox" name="comboBox_epoch">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);
+font: 75 9pt &quot;Noto Sans Hebrew&quot;;
+color: rgb(0, 0, 0);</string>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="3">
+       <widget class="QComboBox" name="comboBox_typeunit">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);
+font: 75 9pt &quot;Noto Sans Hebrew&quot;;
+color: rgb(0, 0, 0);</string>
+        </property>
+        <property name="editable">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="2">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Description</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="2">
+       <widget class="QLineEdit" name="lineEdit_nameus">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);
+font: 75 9pt &quot;Noto Sans Hebrew&quot;;
+color: rgb(0, 0, 0);</string>
+        </property>
+       </widget>
       </item>
       <item row="6" column="2">
        <widget class="QLabel" name="label_5">
         <property name="text">
          <string>Epoch</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="6">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Epoch index</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="4">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Description Unit</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QPushButton" name="pushButton_addtab">
+        <property name="minimumSize">
+         <size>
+          <width>23</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>23</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(0, 0, 0);</string>
+        </property>
+        <property name="text">
+         <string>+</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="pushButton_addrow">
+        <property name="minimumSize">
+         <size>
+          <width>23</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>23</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <family>Noto Sans Hebrew</family>
+          <pointsize>10</pointsize>
+          <weight>9</weight>
+          <italic>false</italic>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(0, 0, 0);
+font: 75 10pt &quot;Noto Sans Hebrew&quot;;</string>
+        </property>
+        <property name="text">
+         <string>+</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="4" colspan="3">
+       <widget class="QLineEdit" name="lineEdit_descriptionunit">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);
+font: 75 9pt &quot;Noto Sans Hebrew&quot;;
+color: rgb(0, 0, 0);</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="8">
+       <layout class="QVBoxLayout" name="verticalLayout_3"/>
+      </item>
+      <item row="3" column="2" colspan="5">
+       <widget class="QTableWidget" name="data_table">
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);
+font: 9pt &quot;Noto Sans Hebrew&quot;;
+color: rgb(0, 0, 0);</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::AdjustToContents</enum>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::AllEditTriggers</set>
+        </property>
+        <property name="dragEnabled">
+         <bool>true</bool>
+        </property>
+        <property name="dragDropMode">
+         <enum>QAbstractItemView::DropOnly</enum>
+        </property>
+        <property name="defaultDropAction">
+         <enum>Qt::MoveAction</enum>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QAbstractItemView::SingleSelection</enum>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="0">
+       <widget class="QPushButton" name="pushButton_removetab">
+        <property name="minimumSize">
+         <size>
+          <width>23</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>23</width>
+          <height>23</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(0, 0, 0);</string>
+        </property>
+        <property name="text">
+         <string>-</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Name US</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="2" colspan="5">
+       <widget class="QTextEdit" name="textEdit_description">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);
+font: 75 9pt &quot;Noto Sans Hebrew&quot;;
+color: rgb(0, 0, 0);</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Box</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="2" colspan="5">
+       <widget class="QTableWidget" name="tableWidget_relationship">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(239, 239, 239);
+font: 75 9pt &quot;Noto Sans Hebrew&quot;;
+color: rgb(0, 0, 0);</string>
+        </property>
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="gridStyle">
+         <enum>Qt::DashDotLine</enum>
+        </property>
+        <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <attribute name="horizontalHeaderDefaultSectionSize">
+         <number>127</number>
+        </attribute>
+        <column>
+         <property name="text">
+          <string>Releationship</string>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;select and insert a relationship&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Noto Sans Hebrew</family>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="background">
+          <color>
+           <red>203</red>
+           <green>203</green>
+           <blue>0</blue>
+          </color>
+         </property>
+         <property name="foreground">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icons/matrix.png</normaloff>:/icons/matrix.png</iconset>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Name US</string>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Insert node name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Noto Serif Hebrew</family>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="background">
+          <color>
+           <red>203</red>
+           <green>203</green>
+           <blue>0</blue>
+          </color>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Unit type</string>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select and insert a unit type&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Noto Serif Hebrew</family>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="background">
+          <color>
+           <red>203</red>
+           <green>203</green>
+           <blue>0</blue>
+          </color>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Description</string>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Insert a description of the node&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Noto Serif Hebrew</family>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="background">
+          <color>
+           <red>203</red>
+           <green>203</green>
+           <blue>0</blue>
+          </color>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Epoch</string>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Select and insert a epoch&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Noto Sans Hebrew</family>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="background">
+          <color>
+           <red>203</red>
+           <green>203</green>
+           <blue>0</blue>
+          </color>
+         </property>
+        </column>
+        <column>
+         <property name="text">
+          <string>Epoch index</string>
+         </property>
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Inserta an index to the epoch&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Noto Sans Hebrew</family>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="background">
+          <color>
+           <red>203</red>
+           <green>203</green>
+           <blue>0</blue>
+          </color>
+         </property>
+        </column>
+       </widget>
+      </item>
+      <item row="7" column="6">
+       <widget class="QLineEdit" name="lineEdit_epochindex">
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);
+font: 75 9pt &quot;Noto Sans Hebrew&quot;;
+color: rgb(0, 0, 0);</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Type unit</string>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="2">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Relationships</string>
         </property>
        </widget>
       </item>
@@ -121,58 +547,27 @@ font: 75 10pt &quot;Noto Sans Hebrew&quot;;</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="2" colspan="5">
-       <widget class="Line" name="line_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="2" colspan="3">
-       <widget class="QComboBox" name="comboBox_epoch">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);
-font: 75 9pt &quot;Noto Sans Hebrew&quot;;
-color: rgb(0, 0, 0);</string>
-        </property>
-        <property name="editable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="3">
-       <widget class="QComboBox" name="comboBox_typeunit">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);
-font: 75 9pt &quot;Noto Sans Hebrew&quot;;
-color: rgb(0, 0, 0);</string>
-        </property>
-        <property name="editable">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="2">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>Name US</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2" colspan="5">
+      <item row="0" column="0" colspan="7">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <layout class="QGridLayout" name="gridLayout_14">
           <item row="0" column="0">
-           <widget class="QPushButton" name="pushButton_connect">
-            <property name="text">
-             <string>Connection test</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="2">
            <layout class="QGridLayout" name="gridLayout_17">
-            <item row="0" column="7">
+            <item row="0" column="9">
+             <widget class="QPushButton" name="pushButton_next_rec">
+              <property name="toolTip">
+               <string>Next rec</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icons/6_rightArrow.png</normaloff>:/icons/6_rightArrow.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="8">
              <widget class="QPushButton" name="pushButton_prev_rec">
               <property name="toolTip">
                <string>Prev rec</string>
@@ -186,7 +581,104 @@ color: rgb(0, 0, 0);</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="11">
+            <item row="0" column="7">
+             <widget class="QPushButton" name="pushButton_first_rec">
+              <property name="toolTip">
+               <string>First rec</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icons/5_leftArrows.png</normaloff>:/icons/5_leftArrows.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="10">
+             <widget class="QPushButton" name="pushButton_last_rec">
+              <property name="toolTip">
+               <string>Last rec</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icons/7_rightArrows.png</normaloff>:/icons/7_rightArrows.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="9">
+             <widget class="QPushButton" name="pushButton_new_search">
+              <property name="font">
+               <font>
+                <family>Noto Sans Hebrew</family>
+                <pointsize>10</pointsize>
+                <weight>9</weight>
+                <italic>false</italic>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="toolTip">
+               <string>new search</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icons/new_search.png</normaloff>:/icons/new_search.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="9">
+             <widget class="QPushButton" name="pushButton_search_go">
+              <property name="font">
+               <font>
+                <family>Noto Sans Hebrew</family>
+                <pointsize>10</pointsize>
+                <weight>9</weight>
+                <italic>false</italic>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="toolTip">
+               <string>search !!!</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icons/search.png</normaloff>:/icons/search.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="7">
+             <widget class="QPushButton" name="pushButton_new_rec">
+              <property name="font">
+               <font>
+                <family>Noto Sans Hebrew</family>
+                <pointsize>10</pointsize>
+                <weight>9</weight>
+                <italic>false</italic>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="toolTip">
+               <string>New record</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="resources.qrc">
+                <normaloff>:/icons/newrec.png</normaloff>:/icons/newrec.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="7">
              <widget class="QPushButton" name="pushButton_delete">
               <property name="enabled">
                <bool>true</bool>
@@ -212,104 +704,7 @@ color: rgb(0, 0, 0);</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="12">
-             <widget class="QPushButton" name="pushButton_new_search">
-              <property name="font">
-               <font>
-                <family>Noto Sans Hebrew</family>
-                <pointsize>10</pointsize>
-                <weight>9</weight>
-                <italic>false</italic>
-                <bold>false</bold>
-               </font>
-              </property>
-              <property name="toolTip">
-               <string>new search</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/icons/new_search.png</normaloff>:/icons/new_search.png</iconset>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="8">
-             <widget class="QPushButton" name="pushButton_next_rec">
-              <property name="toolTip">
-               <string>Next rec</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/icons/6_rightArrow.png</normaloff>:/icons/6_rightArrow.png</iconset>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="9">
-             <widget class="QPushButton" name="pushButton_last_rec">
-              <property name="toolTip">
-               <string>Last rec</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/icons/7_rightArrows.png</normaloff>:/icons/7_rightArrows.png</iconset>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="13">
-             <widget class="QPushButton" name="pushButton_search_go">
-              <property name="font">
-               <font>
-                <family>Noto Sans Hebrew</family>
-                <pointsize>10</pointsize>
-                <weight>9</weight>
-                <italic>false</italic>
-                <bold>false</bold>
-               </font>
-              </property>
-              <property name="toolTip">
-               <string>search !!!</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/icons/search.png</normaloff>:/icons/search.png</iconset>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="10">
-             <widget class="QPushButton" name="pushButton_new_rec">
-              <property name="font">
-               <font>
-                <family>Noto Sans Hebrew</family>
-                <pointsize>10</pointsize>
-                <weight>9</weight>
-                <italic>false</italic>
-                <bold>false</bold>
-               </font>
-              </property>
-              <property name="toolTip">
-               <string>New record</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/icons/newrec.png</normaloff>:/icons/newrec.png</iconset>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="15">
+            <item row="1" column="10">
              <widget class="QPushButton" name="pushButton_view_all_2">
               <property name="font">
                <font>
@@ -332,7 +727,7 @@ color: rgb(0, 0, 0);</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="14">
+            <item row="2" column="10">
              <widget class="QPushButton" name="pushButton_sort">
               <property name="font">
                <font>
@@ -355,26 +750,15 @@ color: rgb(0, 0, 0);</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="5">
-             <widget class="QPushButton" name="pushButton_first_rec">
-              <property name="toolTip">
-               <string>First rec</string>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="icon">
-               <iconset resource="resources.qrc">
-                <normaloff>:/icons/5_leftArrows.png</normaloff>:/icons/5_leftArrows.png</iconset>
-              </property>
-             </widget>
-            </item>
            </layout>
           </item>
          </layout>
         </item>
         <item>
          <widget class="Line" name="line_7">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(203, 203, 0);</string>
+          </property>
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
@@ -631,238 +1015,28 @@ color: rgb(0, 0, 0);</string>
         </item>
        </layout>
       </item>
-      <item row="4" column="4">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>Description Unit</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="6">
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>Epoch index</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="4" colspan="3">
-       <widget class="QLineEdit" name="lineEdit_descriptionunit">
+      <item row="1" column="0" colspan="7">
+       <widget class="Line" name="line_2">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);
-font: 75 9pt &quot;Noto Sans Hebrew&quot;;
-color: rgb(0, 0, 0);</string>
+         <string notr="true">background-color: rgb(203, 203, 0);</string>
         </property>
-       </widget>
-      </item>
-      <item row="7" column="6">
-       <widget class="QLineEdit" name="lineEdit_epochindex">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);
-font: 75 9pt &quot;Noto Sans Hebrew&quot;;
-color: rgb(0, 0, 0);</string>
-        </property>
-       </widget>
-      </item>
-      <item row="8" column="2">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>Description</string>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="0">
-       <widget class="QPushButton" name="pushButton_removetab">
-        <property name="minimumSize">
-         <size>
-          <width>23</width>
-          <height>23</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>23</width>
-          <height>23</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>-</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="2" colspan="5">
-       <widget class="QTableWidget" name="data_table">
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);
-font: 9pt &quot;Noto Sans Hebrew&quot;;
-color: rgb(0, 0, 0);</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QAbstractScrollArea::AdjustToContents</enum>
-        </property>
-        <property name="editTriggers">
-         <set>QAbstractItemView::AllEditTriggers</set>
-        </property>
-        <property name="dragEnabled">
-         <bool>true</bool>
-        </property>
-        <property name="dragDropMode">
-         <enum>QAbstractItemView::DropOnly</enum>
-        </property>
-        <property name="defaultDropAction">
-         <enum>Qt::MoveAction</enum>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>true</bool>
-        </property>
-        <property name="selectionMode">
-         <enum>QAbstractItemView::SingleSelection</enum>
-        </property>
-        <property name="selectionBehavior">
-         <enum>QAbstractItemView::SelectRows</enum>
-        </property>
-        <property name="sortingEnabled">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="3">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Type unit</string>
-        </property>
-       </widget>
-      </item>
-      <item row="9" column="2" colspan="5">
-       <widget class="QTextEdit" name="textEdit_description">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);
-font: 75 9pt &quot;Noto Sans Hebrew&quot;;
-color: rgb(0, 0, 0);</string>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::Box</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="2">
-       <widget class="QLineEdit" name="lineEdit_nameus">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);
-font: 75 9pt &quot;Noto Sans Hebrew&quot;;
-color: rgb(0, 0, 0);</string>
-        </property>
-       </widget>
-      </item>
-      <item row="11" column="2" colspan="5">
-       <widget class="QTableWidget" name="tableWidget_relationship">
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(255, 255, 255);
-font: 75 9pt &quot;Noto Sans Hebrew&quot;;
-color: rgb(0, 0, 0);</string>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>true</bool>
-        </property>
-        <attribute name="horizontalHeaderDefaultSectionSize">
-         <number>127</number>
-        </attribute>
-        <column>
-         <property name="text">
-          <string>Releationship</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Name US</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Unit type</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Description</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Epoch</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>Epoch index</string>
-         </property>
-        </column>
-       </widget>
-      </item>
-      <item row="10" column="2">
-       <widget class="QLabel" name="label_7">
-        <property name="text">
-         <string>Relationships</string>
-        </property>
-       </widget>
-      </item>
-      <item row="10" column="1">
-       <widget class="QPushButton" name="pushButton_addtab">
-        <property name="minimumSize">
-         <size>
-          <width>23</width>
-          <height>23</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>23</width>
-          <height>23</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>+</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="pushButton_addrow">
-        <property name="minimumSize">
-         <size>
-          <width>23</width>
-          <height>23</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>23</width>
-          <height>23</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <family>Noto Sans Hebrew</family>
-          <pointsize>10</pointsize>
-          <weight>9</weight>
-          <italic>false</italic>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">color: rgb(0, 0, 0);
-font: 75 10pt &quot;Noto Sans Hebrew&quot;;</string>
-        </property>
-        <property name="text">
-         <string>+</string>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
         </property>
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="2" column="0" colspan="7">
+     <widget class="Line" name="line">
+      <property name="styleSheet">
+       <string notr="true">color: rgb(255, 0, 0);
+background-color: rgb(203, 203, 0);</string>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
     </item>
     <item row="4" column="4">
      <widget class="QPushButton" name="rollback_button">
@@ -871,33 +1045,6 @@ font: 75 10pt &quot;Noto Sans Hebrew&quot;;</string>
       </property>
       <property name="text">
        <string>Rollback</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="5">
-     <widget class="QToolButton" name="toolButton_load">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Load data</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="2">
-     <widget class="QPushButton" name="save_button">
-      <property name="text">
-       <string>Save</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="4">
-     <widget class="QPushButton" name="pushButton_3D">
-      <property name="text">
-       <string>Time manager</string>
       </property>
      </widget>
     </item>
@@ -913,24 +1060,10 @@ color: rgb(0, 0, 0);</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="3">
-     <widget class="QPushButton" name="graph_modeller">
+    <item row="1" column="4">
+     <widget class="QPushButton" name="pushButton_3D">
       <property name="text">
-       <string>Graph modeller</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="3">
-     <widget class="QPushButton" name="update_button">
-      <property name="text">
-       <string>Update</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0" colspan="7">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+       <string>Time manager</string>
       </property>
      </widget>
     </item>
@@ -952,7 +1085,7 @@ color: rgb(0, 0, 0);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1178</width>
+     <width>1219</width>
      <height>24</height>
     </rect>
    </property>
@@ -998,10 +1131,20 @@ color: rgb(0, 0, 0);</string>
    <property name="floating">
     <bool>false</bool>
    </property>
+   <property name="features">
+    <set>QDockWidget::AllDockWidgetFeatures</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::AllDockWidgetAreas</set>
+   </property>
    <attribute name="dockWidgetArea">
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3">
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(218, 218, 109);
+font: 9pt &quot;Noto Sans Hebrew&quot;;</string>
+    </property>
     <layout class="QGridLayout" name="gridLayout">
      <item row="0" column="1">
       <widget class="QTabWidget" name="tabWidget">
@@ -1026,7 +1169,7 @@ color: rgb(0, 0, 0);</string>
        </widget>
        <widget class="QWidget" name="tab_2">
         <attribute name="title">
-         <string>Graphml view</string>
+         <string>Graphml web view</string>
         </attribute>
         <layout class="QGridLayout" name="gridLayout_4">
          <item row="0" column="0">
@@ -1035,6 +1178,20 @@ color: rgb(0, 0, 0);</string>
             <url>
              <string>https://www.yworks.com/yed-live/</string>
             </url>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_3">
+        <attribute name="title">
+         <string>DosCo</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_6">
+         <item row="0" column="0">
+          <widget class="QListWidget" name="listWidget">
+           <property name="styleSheet">
+            <string notr="true">background-color: rgb(255, 255, 255);</string>
            </property>
           </widget>
          </item>
@@ -1547,22 +1704,6 @@ color: rgb(0, 0, 0);</string>
     <hint type="destinationlabel">
      <x>134</x>
      <y>49</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>pushButton_switch</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>pushButton_connect</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>83</x>
-     <y>87</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>124</x>
-     <y>123</y>
     </hint>
    </hints>
   </connection>
