@@ -332,7 +332,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.pushButton_prev_rec.clicked.connect(self.prev_record)
         # Connect the signal to the slot.
         self.data_table.itemSelectionChanged.connect(self.update_ui_widgets)
-
+        self.tablewidget_change_value()
     
     def add_text_to_table(self):
         txt_nameus = self.lineEdit_nameus.text()
@@ -368,12 +368,22 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.data_table.setItem(row_position, 5, QTableWidgetItem(txt_epochindex))
         self.data_table.setItem(row_position, 11, QTableWidgetItem(txt_relationship))
 
-    def parse_text(self,text):
+
+    def parse_text(self, text):
+        # Questa funzione analizza un testo in un
+        # formato specifico e restituisce una lista di valori.
+        # Se il testo non è nel formato corretto, restituisce una lista vuota.
+
         text = text.replace("] [", "], [")
         text = "[" + text + "]"
         try:
             print(text)
-            print(ast.literal_eval(text))
+            print(ast.literal_eval(text))#La funzione  ast.literal_eval()
+            # è una funzione del modulo  ast  in Python che valuta in modo
+            # letterale l'espressione Python specificata in una stringa.
+            # Questa funzione è utile quando si desidera valutare un'espressione
+            # Python contenuta in una stringa in modo sicuro, senza eseguire codice
+            # dannoso o non sicuro.
             return ast.literal_eval(text)
         except ValueError as er:
             print(f"Could not parse {text}: {str(er)}")
@@ -381,8 +391,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
     def update_ui_widgets(self):
         current_row = self.data_table.currentRow()
-        current_item_nameus = self.data_table.item(current_row, 0)  # The column index depends on where the nameus is.
-        current_item_typeunit = self.data_table.item(current_row, 1)  # Similar for other values...
+        current_item_nameus = self.data_table.item(current_row, 0)  # L'indice della colonna dipende da dove si trova il nome.
+        current_item_typeunit = self.data_table.item(current_row, 1)
         current_item_descunit = self.data_table.item(current_row, 2)
         current_item_desc = self.data_table.item(current_row, 3)
         current_item_epoch = self.data_table.item(current_row, 4)
@@ -416,15 +426,15 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         if current_item_desc is not None:
             self.textEdit_description.setPlainText(current_item_desc.text())
 
-        # Update the relationship table
+        # Aggiorna la tabella delle relazioni
         if current_item_relationships is not None:
             self.tableWidget_relationship.setRowCount(0)
-            self.tableWidget_relationship.setColumnCount(6)  # Since each relationship has 6 elements
+            self.tableWidget_relationship.setColumnCount(6)  # Poiché ogni relazione ha 6 elementi
             raw_text = current_item_relationships.text()
-            # Parse raw_text to a list of lists
+            # Analizza raw_text in un elenco di elenchi
             relationships = self.parse_text(raw_text)
 
-            # Proceed as before
+            # Itero su ogni relazione e aggiungo una riga alla tabella
             for relationship in relationships:
                 row_position = self.tableWidget_relationship.rowCount()
                 self.tableWidget_relationship.insertRow(row_position)
@@ -432,35 +442,32 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     print(f"Adding {item} to row {row_position}, column {i}")
                     self.tableWidget_relationship.setItem(row_position, i, QTableWidgetItem(str(item)))
     def next_record(self):
-        row_position = self.data_table.currentRow()  # Get currently selected row
+        row_position = self.data_table.currentRow()  # Ottieni la riga attualmente selezionata
         if row_position != -1 and row_position < self.data_table.rowCount() - 1:
-            self.data_table.selectRow(row_position + 1)  # Move selection to the next row
-            self.load_data_into_fields()  # Load the newly selected row's data into the fields
-
-    # Method to move to the previous record
+            self.data_table.selectRow(row_position + 1)  # Sposta la selezione alla riga successiva
+            self.load_data_into_fields()  # Carica i dati della riga appena selezionata nei campi
+    # Metodo per passare al record precedente
     def prev_record(self):
-        row_position = self.data_table.currentRow()  # Get currently selected row
+        row_position = self.data_table.currentRow()  # Ottieni la riga attualmente selezionata
         if row_position != -1 and row_position > 0:
-            self.data_table.selectRow(row_position - 1)  # Move selection to the previous row
-            self.load_data_into_fields()  # Load the newly selected row's data into the fields
+            self.data_table.selectRow(row_position - 1)  # Sposta la selezione alla riga precedente
+            self.load_data_into_fields()  # Carica i dati della riga appena selezionata nei campi
 
-    # Method to load selected row's data into the fields
+    # Metodo per caricare i dati della riga selezionata nei campi
     def load_data_into_fields(self):
         fields = [self.lineEdit_nameus, self.comboBox_typeunit, self.lineEdit_descriptionunit,
                   self.textEdit_description,
                   self.comboBox_epoch, self.lineEdit_epochindex]
         row_position = self.data_table.currentRow()
 
-        indices = list(range(5)) + [11]  # Includes the first 5 and the 12th (which is indexed as 11)
-
-        for i in indices:  # Now i will iterate over the first five and the last position
+        indices = list(range(5)) + [11]  # Indici delle colonne da cui ottenere i dati
+        for i in indices:  # Ora  itererò su questi indici
             if i >= len(fields):
                 continue
             if self.data_table.item(row_position, i):
                 item_text = self.data_table.item(row_position, i).text()
                 if item_text.strip().lower() == 'nan':
-                    item_text = None  # Or some default value
-
+                    item_text = None
                 if isinstance(fields[i], QComboBox):
                     fields[i].setCurrentText(item_text)
                 else:
@@ -847,6 +854,20 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         for index, row in epoch_df.iterrows():
             combined_item = str(row[1]) + ' - ' + str(row[2])  # merge second and third column
             self.comboBox_epoch.addItem(combined_item)
+
+    def tablewidget_change_value(self):
+        print("Tablewidget_change_value function called")
+
+        values = ["anteriore", "posteriore", "contemporaneo", "porperties_ant", "properties_post"]
+        numRows = self.tableWidget_relationship.rowCount()
+        print(f"Row count: {numRows}")
+
+        for row_position in range(numRows):
+            self.combo_box = QComboBox()
+            self.combo_box.addItems(values)
+            self.tableWidget_relationship.setCellWidget(row_position, 0, self.combo_box)
+            print(f"Combo box added to row {row_position}.")
+
     def import_json(self):
         file, _ = QFileDialog.getOpenFileName(self, "Select a JSON file", "", "JSON Files (*.json)")
         if file:
@@ -2554,6 +2575,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             self.data_table.removeRow(row_index)
     def on_pushButton_addtab_pressed(self):
         self.insert_new_row('self.tableWidget_relationship')
+        self.tablewidget_change_value()
 
     def on_pushButton_removetab_pressed(self):
         self.remove_row('self.tableWidget_relationship')
