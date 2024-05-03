@@ -2603,6 +2603,7 @@ class PandasModel(QAbstractTableModel):
     def __init__(self, data):
         QAbstractTableModel.__init__(self)
         self._data = data
+        print(self._data)
 
     def rowCount(self, parent=None):
         return self._data.shape[0]
