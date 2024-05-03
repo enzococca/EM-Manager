@@ -804,7 +804,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.actionexport_json.triggered.connect(self.export_json)
         def handle_check_relations_action():
             """
-            This function handles the action of checking relations in a data table and printing any errors to a QTextEdit.
+            Questa funzione gestisce l'azione di controllo delle relazioni in una tabella dati e di stampa di eventuali errori su QTextEdit.
 
             Returns:
                 None
@@ -871,11 +871,9 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.combobox_epo.addItems([''])
         self.unit.addItems([''])
         for index, row in typeunit_df.iterrows():
-            self.unit.addItem(str(row[1]))  # change '0' to column name
-        # For epoch
-
+            self.unit.addItem(str(row[1]))
         for index, row in epoch_df.iterrows():
-            combined_item = str(row[1]) + ' - ' + str(row[2])  # merge second and third column
+            combined_item = str(row[1]) + ' - ' + str(row[2])  # unisci la seconda e la terza colonna
             self.combobox_epo.addItem(combined_item)
         for row_position in range(numRows):
 
