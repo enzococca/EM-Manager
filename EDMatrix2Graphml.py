@@ -724,6 +724,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         dock_widget.show()
 
     def import_graphml(self):
+
         load_graphml(self.dir_path, self.base_name)
         # Costruisci il percorso al file CSV
         csv_path = os.path.join(self.dir_path, self.base_name)

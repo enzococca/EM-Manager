@@ -61,8 +61,8 @@ class DataExtractor:
                                 'descrizione': node['data'].get('description', ''),
                                 'epoca': epoch,
                                 'epoca index': epoch_index_map[epoch],
-                                'anteriore': ','.join(properties_post[name]) if properties_post.get(name) else '',
-                                'posteriore': ','.join(properties_ant[name]) if properties_ant.get(name) else '',
+                                'anteriore': ','.join([str(i) for i in properties_post[name]]) if properties_ant.get(name) else '',
+                                'posteriore': ','.join([str(i) for i in properties_ant[name]]) if properties_ant.get(name) else '',
                                 'contemporaneo': '',
                                 'properties_ant': '',
                                 'properties_post': ''
