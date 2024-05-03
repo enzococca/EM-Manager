@@ -368,6 +368,17 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.data_table.setItem(row_position, 5, QTableWidgetItem(txt_epochindex))
         self.data_table.setItem(row_position, 11, QTableWidgetItem(txt_relationship))
 
+    def parse_text(self,text):
+        text = text.replace("] [", "], [")
+        text = "[" + text + "]"
+        try:
+            print(text)
+            print(ast.literal_eval(text))
+            return ast.literal_eval(text)
+        except ValueError as er:
+            print(f"Could not parse {text}: {str(er)}")
+            return []
+
     def update_ui_widgets(self):
         current_row = self.data_table.currentRow()
         current_item_nameus = self.data_table.item(current_row, 0)  # The column index depends on where the nameus is.
@@ -409,18 +420,17 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         if current_item_relationships is not None:
             self.tableWidget_relationship.setRowCount(0)
             self.tableWidget_relationship.setColumnCount(6)  # Since each relationship has 6 elements
-            text = current_item_relationships.text()
-            try:
-                relationships = ast.literal_eval(text)
-            except ValueError:
-                print(f"Unable to parse text {text!r} as a python literal.")
-            else:
-                for relationship in relationships:
-                    row_position = self.tableWidget_relationship.rowCount()
-                    self.tableWidget_relationship.insertRow(row_position)
-                    for i, item in enumerate(relationship):
-                        self.tableWidget_relationship.setItem(row_position, i, QTableWidgetItem(str(item)))
-    # Method to move to the next record
+            raw_text = current_item_relationships.text()
+            # Parse raw_text to a list of lists
+            relationships = self.parse_text(raw_text)
+
+            # Proceed as before
+            for relationship in relationships:
+                row_position = self.tableWidget_relationship.rowCount()
+                self.tableWidget_relationship.insertRow(row_position)
+                for i, item in enumerate(relationship):
+                    print(f"Adding {item} to row {row_position}, column {i}")
+                    self.tableWidget_relationship.setItem(row_position, i, QTableWidgetItem(str(item)))
     def next_record(self):
         row_position = self.data_table.currentRow()  # Get currently selected row
         if row_position != -1 and row_position < self.data_table.rowCount() - 1:
@@ -436,19 +446,26 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
     # Method to load selected row's data into the fields
     def load_data_into_fields(self):
-        fields = [self.lineEdit_nameus, self.comboBox_typeunit, self.lineEdit_descriptionunit, self.textEdit_description,
+        fields = [self.lineEdit_nameus, self.comboBox_typeunit, self.lineEdit_descriptionunit,
+                  self.textEdit_description,
                   self.comboBox_epoch, self.lineEdit_epochindex]
         row_position = self.data_table.currentRow()
 
         indices = list(range(5)) + [11]  # Includes the first 5 and the 12th (which is indexed as 11)
 
         for i in indices:  # Now i will iterate over the first five and the last position
+            if i >= len(fields):
+                continue
             if self.data_table.item(row_position, i):
                 item_text = self.data_table.item(row_position, i).text()
+                if item_text.strip().lower() == 'nan':
+                    item_text = None  # Or some default value
+
                 if isinstance(fields[i], QComboBox):
                     fields[i].setCurrentText(item_text)
                 else:
                     fields[i].setText(item_text)
+
     def show_message(self, message: str) -> None:
         print(message)
     def yed_path(self):
@@ -2535,6 +2552,30 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
             # Rimuovi la riga corrispondente
             self.data_table.removeRow(row_index)
+    def on_pushButton_addtab_pressed(self):
+        self.insert_new_row('self.tableWidget_relationship')
+
+    def on_pushButton_removetab_pressed(self):
+        self.remove_row('self.tableWidget_relationship')
+
+    def insert_new_row(self, table_name):
+        """insert new row into a table based on table_name"""
+        cmd = table_name + ".insertRow(0)"
+        eval(cmd)
+
+    def remove_row(self, table_name):
+        """insert new row into a table based on table_name"""
+        table_row_count_cmd = ("%s.rowCount()") % (table_name)
+        table_row_count = eval(table_row_count_cmd)
+        rowSelected_cmd = ("%s.selectedIndexes()") % (table_name)
+        rowSelected = eval(rowSelected_cmd)
+
+        # Check if the selection is not empty
+        if rowSelected:
+            rowIndex = (rowSelected[0].row())
+            cmd = ("%s.removeRow(%d)") % (table_name, rowIndex)
+            eval(cmd)
+
 
 class PandasModel(QAbstractTableModel):
     def __init__(self, data):
