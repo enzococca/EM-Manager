@@ -1,6 +1,7 @@
 import ast
 import shutil
 import sys
+from functools import partial
 
 sys.path.insert(0, "ui")
 
@@ -42,13 +43,14 @@ from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl
 
 from modules.config import config
+from modules.delegateCombobox import ComboBoxDelegate
 import sys
 
 
 MAIN_DIALOG_CLASS, _ = loadUiType(
     os.path.join(os.path.dirname(__file__), 'ui', 'edm2grapml.ui'))
 
-
+QApplication.setStyle('Fusion')
 
 from PyQt5.QtGui import QIcon
 
@@ -256,10 +258,14 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         super(CSVMapper, self).__init__(parent=parent)
         #csv_mapper = CSVMapper()
         #obj_proxy = OBJPROXY(CSVMapper,None)
+        self.csv_path = None
         self.obj_proxy = None
         self.df = None
         self.data_fields = None
+        self.original_df = None
+        self.relationship_data = None
         self.setupUi(self)
+        print(QStyleFactory.keys())
         self.resize(1000, 1000)
         self.custumize_gui()
 
@@ -327,47 +333,163 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         # Connect the QLineEdit's textChanged or returnPressed signal
         #self.lineEdit_nameus.textChanged.connect(self.add_text_to_table)
         # or
-        self.lineEdit_nameus.returnPressed.connect(self.add_text_to_table)
+
         self.pushButton_next_rec.clicked.connect(self.next_record)
         self.pushButton_prev_rec.clicked.connect(self.prev_record)
         # Connect the signal to the slot.
         self.data_table.itemSelectionChanged.connect(self.update_ui_widgets)
         self.tablewidget_change_value()
-    
+        # Durante la configurazione dei segnali e degli slot
+        self.pushButton_new_rec.clicked.connect(self.clear_line_edits)
+        #self.lineEdit_nameus.returnPressed.connect(self.add_text_to_table)
+
+    # Il metodo per cancellare le QLineEdit
+    def clear_line_edits(self):
+        self.lineEdit_nameus.clear()
+        self.lineEdit_descriptionunit.clear()
+        self.lineEdit_epochindex.clear()
+        self.comboBox_typeunit.setEditText("")
+        self.comboBox_epoch.setEditText("")
+        self.textEdit_description.clear()
+        self.tableWidget_relationship.clearContents()
+
     def add_text_to_table(self):
+        # Capture user inputs
         txt_nameus = self.lineEdit_nameus.text()
         txt_typeunit = self.comboBox_typeunit.currentText()
-        txt_descunit = self.lineEdit_descriptionunit.text()
+        #txt_descunit = self.lineEdit_descriptionunit.text()
         txt_epoch = self.comboBox_epoch.currentText()
         txt_epochindex = self.lineEdit_epochindex.text()
         txt_desc = self.textEdit_description.toPlainText()
-        row_position =None
-        # Get all data from the QTableWidget
-        txt_relationship = ""
+
+        # Retrieve all data from QTableWidget
+        all_rows = self.get_all_rows()
+
+        # Check if txt_nameus already exists in data_table
+        exists = any(self.data_table.item(i, 0) and self.data_table.item(i, 0).text() == txt_nameus
+                     for i in range(self.data_table.rowCount()))
+
+        # Create a new row if txt_nameus doesn't exist in data_table
+        if not exists:
+            self.create_new_row(txt_nameus, txt_typeunit, txt_desc, txt_epoch, txt_epochindex)
+        else:
+            self.update_row(txt_nameus, txt_typeunit, txt_desc, txt_epoch, txt_epochindex)
+        # go through each relationship and update the data_table
+        for relationship in all_rows:
+            if len(relationship) == 6:
+                self.update_relationship(relationship, txt_nameus, txt_typeunit)
+
+    def update_row(self, nameus, typeunit, desc, epoch, epochindex):
+        # Find the existing row
+        for i in range(self.data_table.rowCount()):
+            if self.data_table.item(i, 0) and self.data_table.item(i, 0).text() == nameus:
+                # Update the values
+                self.data_table.setItem(i, 0, QTableWidgetItem(nameus))
+                self.data_table.setItem(i, 1, QTableWidgetItem(typeunit))
+                self.data_table.setItem(i, 3, QTableWidgetItem(desc))
+                self.data_table.setItem(i, 4, QTableWidgetItem(epoch))
+                self.data_table.setItem(i, 5, QTableWidgetItem(epochindex))
+                break
+
+    def get_all_rows(self):
+        # Retrieves all data from each row of tableWidget_relationship
+        all_rows = []
         for i in range(self.tableWidget_relationship.rowCount()):
+            row_data = []
             for j in range(self.tableWidget_relationship.columnCount()):
                 item = self.tableWidget_relationship.item(i, j)
-                if item is not None:
-                    txt_relationship += item.text() + " "
+                row_data.append(item.text() if item else "")
+            all_rows.append(row_data)
+        return all_rows
 
-        # Check if the current nameus already exists in the table
-        exists = False
+    def create_new_row(self, nameus, typeunit,  desc, epoch, epochindex):
+        # Creates a new row with the provided data and inserts it into data_table
+        row_position = self.data_table.rowCount()
+        self.data_table.insertRow(row_position)
+        self.data_table.setItem(row_position, 0, QTableWidgetItem(nameus))
+        self.data_table.setItem(row_position, 1, QTableWidgetItem(typeunit))
+
+        self.data_table.setItem(row_position, 3, QTableWidgetItem(desc))
+        self.data_table.setItem(row_position, 4, QTableWidgetItem(epoch))
+        self.data_table.setItem(row_position, 5, QTableWidgetItem(epochindex))
+
+    def update_relationship(self, relationship, nameus, typeunit):
+        # Mapping of English terms back to Italian
+        english_to_italian = {
+            "anterior": "anteriore",
+            "posterior": "posteriore",
+            "contemporary": "contemporaneo",
+            "properties_ant": "properties_ant",
+            "properties_post": "properties_post"
+        }
+        # Updates relationship in the data_table
+        relation_type, related_nameus, related_typeunit, related_desc, related_epoch, related_epochindex = relationship
+        # Translate the relation_type if it's in English
+        relation_type = english_to_italian.get(relation_type, relation_type)
+
+        print(
+            f"Updating relationship: {relation_type}, {related_nameus}, {related_typeunit}, {related_desc}, {related_epoch}, {related_epochindex}")
+
+        # Find or create a row for the related 'name us'
+        related_row_position = self.find_or_create_row(related_nameus)
+
+        # Set the data for the related row
+        self.data_table.setItem(related_row_position, 0, QTableWidgetItem(related_nameus))
+        self.data_table.setItem(related_row_position, 1, QTableWidgetItem(related_typeunit))
+
+        self.data_table.setItem(related_row_position, 3, QTableWidgetItem(related_desc))
+        self.data_table.setItem(related_row_position, 4, QTableWidgetItem(related_epoch))
+        self.data_table.setItem(related_row_position, 5, QTableWidgetItem(related_epochindex))
+
+        # Find or create a row for the main 'name us'
+        main_row_position = self.find_or_create_row(nameus)
+
+        # Set the main type
+        self.data_table.setItem(main_row_position, 1, QTableWidgetItem(typeunit))
+
+        # For the corresponding original 'name us', we update the opposite relation column
+        if relation_type == "anteriore":
+            correspondent_relation = "posteriore"
+        elif relation_type == "posteriore":
+            correspondent_relation = "anteriore"
+        elif relation_type == "properties_ant":
+            correspondent_relation = "properties_post"
+        elif relation_type == "properties_post":
+            correspondent_relation = "properties_ant"
+        else:
+            correspondent_relation = relation_type  # for 'contemporaneo'
+
+        # Update the relationship columns for the original and related 'name us'
+        self.update_relation_item(main_row_position, relation_type, related_nameus)
+        self.update_relation_item(related_row_position, correspondent_relation, nameus)
+
+    def update_relation_item(self, row_position, relation_type, nameus):
+        # Updates the relationship item in the data_table
+        relation_item = self.data_table.item(row_position, self.get_column_index(relation_type))
+        current_value = relation_item.text() if relation_item else ''
+        new_value = ",".join([current_value, nameus]).lstrip(",")
+        self.data_table.setItem(row_position, self.get_column_index(relation_type), QTableWidgetItem(new_value))
+
+    def find_or_create_row(self, nameus):
+        # Find an existing row or create a new one for the given 'name us'
         for i in range(self.data_table.rowCount()):
-            if self.data_table.item(i, 0) and self.data_table.item(i, 0).text() == txt_nameus:
-                row_position = i
-                exists = True
-                break
-        if not exists:
-            row_position = self.data_table.rowCount()
-            self.data_table.insertRow(row_position)
-        self.data_table.setItem(row_position, 0, QTableWidgetItem(txt_nameus))
-        self.data_table.setItem(row_position, 1, QTableWidgetItem(txt_typeunit))
-        self.data_table.setItem(row_position, 2, QTableWidgetItem(txt_descunit))
-        self.data_table.setItem(row_position, 3, QTableWidgetItem(txt_desc))
-        self.data_table.setItem(row_position, 4, QTableWidgetItem(txt_epoch))
-        self.data_table.setItem(row_position, 5, QTableWidgetItem(txt_epochindex))
-        self.data_table.setItem(row_position, 11, QTableWidgetItem(txt_relationship))
+            if self.data_table.item(i, 0) and self.data_table.item(i, 0).text() == nameus:
+                return i
+        # If not found, create a new row
+        row_position = self.data_table.rowCount()
+        self.data_table.insertRow(row_position)
+        return row_position
 
+    def get_column_index(self, relation_type):
+        # Map the relation type to the correct column index
+        column_indices = {
+            'anteriore': 6,
+            'posteriore': 7,
+            'contemporaneo': 8,
+            'properties_ant': 9,
+            'properties_post': 10
+        }
+        return column_indices.get(relation_type, -1)
 
     def parse_text(self, text):
         # Questa funzione analizza un testo in un
@@ -393,7 +515,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         current_row = self.data_table.currentRow()
         current_item_nameus = self.data_table.item(current_row, 0)  # L'indice della colonna dipende da dove si trova il nome.
         current_item_typeunit = self.data_table.item(current_row, 1)
-        current_item_descunit = self.data_table.item(current_row, 2)
+        #current_item_descunit = self.data_table.item(current_row, 2)
         current_item_desc = self.data_table.item(current_row, 3)
         current_item_epoch = self.data_table.item(current_row, 4)
         current_item_epochindex = self.data_table.item(current_row, 5)
@@ -409,8 +531,6 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 print("Warning: current_item_typeunit.text() is empty.")
         else:
             print("Warning: current_item_typeunit is None.")
-        if current_item_descunit is not None:
-            self.lineEdit_descriptionunit.setText(current_item_descunit.text())
 
 
         if current_item_epoch is not None:
@@ -441,6 +561,50 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 for i, item in enumerate(relationship):
                     print(f"Adding {item} to row {row_position}, column {i}")
                     self.tableWidget_relationship.setItem(row_position, i, QTableWidgetItem(str(item)))
+
+    def insert_or_update_row(self, row_data):
+        if 'nome us' in row_data:
+            name_us = row_data['nome us']
+            if self.original_df is not None:
+                if name_us in self.original_df['nome us'].values:
+                    self.original_df.loc[self.original_df['nome us'] == name_us] = pd.Series(row_data)
+                else:
+                    self.original_df = self.original_df._append(row_data, ignore_index=True)
+                self.populate_table(self.original_df)
+            else:
+                print("self.original_df is None!")
+        else:
+            print("'nome us' not found in row_data!")
+
+    def delete_row(self, name_us):
+        # Delete row where 'name_us' equals the value specified
+        self.original_df = self.original_df[self.original_df['nome us'] != name_us]
+        self.populate_table(self.original_df)
+
+    def on_pushButton_save_mask_pressed(self):
+        self.add_text_to_table()
+        for row in range(self.data_table.rowCount()):
+            self.row_data = {}
+            for col in range(self.data_table.columnCount()):
+
+                item = self.data_table.item(row, col)
+                if item is not None:
+                    value = item.text()
+                else:
+                    value = 'nan'
+                self.row_data[self.df.columns[col]] = value
+        self.insert_or_update_row(self.row_data)
+        print(f"Row data saved: {self.row_data}")
+        self.save_to_csv(self.csv_path)
+        self.data_table.update()  # aggiorna la tabella
+        print(f"{self.csv_path}: Salvato con successo")
+
+    def save_to_csv(self, csv_filepath):
+        #self.original_df=pd.DataFrame()
+        self.original_df.to_csv(csv_filepath, index=False)
+        self.data_table.update()  # aggiorna la tabella
+        print(csv_filepath, 'salvato con successo')
+
     def next_record(self):
         row_position = self.data_table.currentRow()  # Ottieni la riga attualmente selezionata
         if row_position != -1 and row_position < self.data_table.rowCount() - 1:
@@ -472,6 +636,114 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     fields[i].setCurrentText(item_text)
                 else:
                     fields[i].setText(item_text)
+
+    def tablewidget_change_value(self,row_to_update=None):
+        print("Tablewidget_change_value function called")
+
+        numRows = self.tableWidget_relationship.rowCount()
+        print(f"Row count: {numRows}")
+
+
+        # Determine the range of rows to update
+        if row_to_update is None:
+            start_row = 0
+            end_row = self.tableWidget_relationship.rowCount()
+        else:
+            start_row = row_to_update
+            end_row = row_to_update + 1
+
+        for row_position in range(start_row, end_row):
+            for j in [0, 2, 4]:  # Columns with comboBoxes
+                comboBox = QComboBox()
+                # ... existing code to populate comboBox with values ...
+                comboBox.currentIndexChanged.connect(
+                    lambda index, row=row_position, col=j: self.update_table_value(comboBox, row, col))
+                #self.tableWidget_relationship.setCellWidget(row_position, j, comboBox)
+
+                #currentIndexChanged.connect(
+
+
+
+
+    # Assuming comboBoxes are in columns 0, 2, and 4, and they represent relationship type, typeunit, and epoch respectively
+    def update_table_value(self, comboBox, row, col):
+        # Mapping of English terms back to Italian
+        english_to_italian = {
+            "anterior": "anteriore",
+            "posterior": "posteriore",
+            "contemporary": "contemporaneo",
+            "properties_ant": "properties_ant",
+            "properties_post": "properties_post"
+        }
+        print(f"update_table_value called with row: {row}, col: {col}")
+        selected_text = comboBox.currentText()
+        print(f"Selected text from comboBox: {selected_text}")
+
+        # Translate the selected English value back to Italian only if it's the relationship type column
+        if col == 0:  # Assuming column 0 is the relationship type column
+            translated_text = english_to_italian.get(selected_text, selected_text)
+        else:
+            translated_text = selected_text
+
+        # Retrieve current values for all related fields
+        relation_type = self.get_current_value_for_combobox(row, 0) if col != 0 else translated_text
+        related_nameus = self.get_current_value_for_combobox(row, 1)  # Assuming column 1 is 'name us'
+        related_typeunit = self.get_current_value_for_combobox(row, 2) if col != 2 else translated_text
+        related_desc = self.get_current_value_for_combobox(row, 3)  # Assuming column 3 is 'desc'
+        related_epoch = self.get_current_value_for_combobox(row, 4) if col != 4 else translated_text
+        related_epochindex = self.get_current_value_for_combobox(row, 5)  # Assuming column 5 is 'epochindex'
+
+        # Update the data model
+        self.update_data_model(row, col, translated_text)
+
+        # Call update_relationship with the complete set of data
+        relationship = (
+            relation_type, related_nameus, related_typeunit, related_desc, related_epoch, related_epochindex)
+        self.update_relationship(relationship, related_nameus, related_typeunit)
+
+    def update_data_model(self, row, col, value):
+        print(f"update_data_model called with row: {row}, col: {col}, value: {value}")
+        # check if self.relationship_data is None
+        if self.relationship_data is None:
+            self.relationship_data = []
+        # Assuming self.relationship_data is a list of lists representing the data for each row
+        if row < len(self.relationship_data):
+            # Ensure the row has enough columns
+            while col >= len(self.relationship_data[row]):
+                self.relationship_data[row].append(None)
+            # Update the value in the data model
+            self.relationship_data[row][col] = value
+        else:
+            # If the row does not exist, add new rows until the specified row is reached
+            while row >= len(self.relationship_data):
+                self.relationship_data.append([None] * self.tableWidget_relationship.columnCount())
+            # Now that the row exists, update the value
+            self.relationship_data[row][col] = value
+
+        # Update the QTableWidget to reflect the changes
+        # First, check if a QTableWidgetItem exists at the specified cell
+        item = self.tableWidget_relationship.item(row, col)
+        if item is None:
+            # If the item does not exist, create it and set it in the table
+            item = QTableWidgetItem(value)
+            self.tableWidget_relationship.setItem(row, col, item)
+        else:
+            # If the item exists, simply update its text
+            item.setText(value)
+    def get_current_value_for_combobox(self, row, column):
+        print('funzione get current value for combobox')
+        # Retrieve the current value from the QTableWidget or the data model
+        item = self.tableWidget_relationship.item(row, column)
+        if item:
+            return item.text()
+        else:
+            # If using a QComboBox, get the current text
+            comboBox = self.tableWidget_relationship.cellWidget(row, column)
+            if comboBox:
+                print(f"comboBox.currentText(): {comboBox.currentText()}")
+                return comboBox.currentText()
+            else:
+                return ""  # Return an empty string or a default value if no item or comboBox exists
 
     def show_message(self, message: str) -> None:
         print(message)
@@ -751,11 +1023,11 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         load_graphml(self.dir_path, self.base_name)
         # Costruisci il percorso al file CSV
-        csv_path = os.path.join(self.dir_path, self.base_name)
+        self.csv_path = os.path.join(self.dir_path, self.base_name)
 
-        if os.path.isfile(csv_path):
+        if os.path.isfile(self.csv_path):
             # Open the data CSV file
-            self.data_file = csv_path
+            self.data_file = self.csv_path
 
             try:
                 self.transform_data(self.data_file, self.data_file)
@@ -783,7 +1055,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             for i in range(self.data_table.columnCount()):
                 self.data_table.setColumnWidth(i, 250)
         else:
-            QMessageBox.warning(self, 'Warning', f"The CSV file {csv_path} does not exist")
+            QMessageBox.warning(self, 'Warning', f"The CSV file {self.csv_path} does not exist")
 
     def show_help(self):
         self.help_view.show()
@@ -855,33 +1127,6 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             combined_item = str(row[1]) + ' - ' + str(row[2])  # merge second and third column
             self.comboBox_epoch.addItem(combined_item)
 
-    def tablewidget_change_value(self):
-        print("Tablewidget_change_value function called")
-
-        values = ["anteriore", "posteriore", "contemporaneo", "porperties_ant", "properties_post"]
-        numRows = self.tableWidget_relationship.rowCount()
-        print(f"Row count: {numRows}")
-
-        typeunit_df = pd.read_csv(os.path.join('template', 'unita_tipo.csv'))
-        epoch_df = pd.read_csv(os.path.join('template', 'epoche_storiche.csv'))
-        self.combo_box = QComboBox()
-        self.combobox_epo=QComboBox()
-        self.unit=QComboBox()
-        self.combo_box.addItems([''])
-        self.combobox_epo.addItems([''])
-        self.unit.addItems([''])
-        for index, row in typeunit_df.iterrows():
-            self.unit.addItem(str(row[1]))
-        for index, row in epoch_df.iterrows():
-            combined_item = str(row[1]) + ' - ' + str(row[2])  # unisci la seconda e la terza colonna
-            self.combobox_epo.addItem(combined_item)
-        for row_position in range(numRows):
-
-            self.combo_box.addItems(values)
-            self.tableWidget_relationship.setCellWidget(row_position, 0, self.combo_box)
-            print(f"Combo box added to row {row_position}.")
-            self.tableWidget_relationship.setCellWidget(row_position, 2, self.combobox_epo)
-            self.tableWidget_relationship.setCellWidget(row_position, 4, self.unit)
 
     def import_json(self):
         file, _ = QFileDialog.getOpenFileName(self, "Select a JSON file", "", "JSON Files (*.json)")
@@ -963,10 +1208,10 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             base_name_no_ext = os.path.splitext(base_name)[0]  # Rimuovi l'estensione del file
 
             # Costruisco il percorso al file CSV
-            csv_path = os.path.join(os.path.dirname(project), f"{base_name_no_ext}.csv")
+            self.csv_path = os.path.join(os.path.dirname(project), f"{base_name_no_ext}.csv")
 
-            if os.path.isfile(csv_path):
-                self.data_file = csv_path
+            if os.path.isfile(self.csv_path):
+                self.data_file = self.csv_path
 
                 try:
                     # Handle exceptions while transforming data and reading CSV
@@ -999,7 +1244,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     self.data_table.setColumnWidth(i, 250)
                 self.data_table.selectRow(0)
             else:
-                QMessageBox.warning(self,'Warning',f"The CSV file {csv_path} does not exist")
+                QMessageBox.warning(self,'Warning',f"The CSV file {self.csv_path} does not exist")
 
     def open_recent_project(self):
         """
@@ -1052,11 +1297,11 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 base_name_no_ext = os.path.splitext(base_name)[0]  # Rimuovi l'estensione del file
 
                 # Costruisci il percorso al file CSV
-                csv_path = os.path.join(project, f"{base_name_no_ext}.csv")
+                self.csv_path = os.path.join(project, f"{base_name_no_ext}.csv")
 
-                if os.path.isfile(csv_path):
+                if os.path.isfile(self.csv_path):
                     # Open the data CSV file
-                    self.data_file = csv_path
+                    self.data_file = self.csv_path
 
                     try:
                         self.transform_data(self.data_file, self.data_file)
@@ -1085,7 +1330,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                         self.data_table.setColumnWidth(i, 250)
                     self.data_table.selectRow(0)
                 else:
-                    QMessageBox.warning(self,'Warning',f"The CSV file {csv_path} does not exist")
+                    QMessageBox.warning(self,'Warning',f"The CSV file {self.csv_path} does not exist")
 
 
     def save_project_to_json(self, project_dir):
@@ -1138,6 +1383,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         # Aggiungi l'estensione .csv se l'utente non l'ha già fatto
         if not fname.endswith(".csv"):
             fname += ".csv"
+
         if fname:
             # Crea le directory in modo sicuro
             self.dir_path = os.path.dirname(fname)
@@ -1161,9 +1407,9 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 if file_name.endswith('.png'):
                     shutil.move(os.path.join(src_dir, file_name), dst_dir)
             # Crea il file CSV in modo sicuro
-            csv_path = os.path.join(self.dir_path, self.base_name)
+            self.csv_path = os.path.join(self.dir_path, self.base_name)
             try:
-                with open(csv_path, 'w', newline='') as file:
+                with open(self.csv_path, 'w', newline='') as file:
                     writer = csv.writer(file)
                     writer.writerow(['nome us', 'tipo', 'tipo di nodo', 'descrizione', 'epoca', 'epoca index',
                                      'anteriore', 'posteriore', 'contemporaneo',
@@ -1176,7 +1422,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             self.save_project_to_json(self.dir_path)
 
             # Open the data CSV file
-            self.data_file = csv_path
+            self.data_file = self.csv_path
 
             try:
                 self.transform_data(self.data_file, self.data_file)
@@ -1828,7 +2074,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         # Read data from QTableWidget and add to new DataFrame
         for row in range(self.data_table.rowCount()):
-            row_data = {}
+            self.row_data = {}
             for col in range(self.data_table.columnCount()):
 
                 item = self.data_table.item(row, col)
@@ -1836,9 +2082,9 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     value = item.text()
                 else:
                     value = 'nan'
-                row_data[self.df.columns[col]] = value
+                self.row_data[self.df.columns[col]] = value
             # print(type(new_df))
-            new_df = new_df._append(row_data, ignore_index=True)
+            new_df = new_df._append(self.row_data, ignore_index=True)
 
         # Save the new DataFrame in the CSV file
         new_df.to_csv(self.data_file, index=False)
@@ -1881,15 +2127,15 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         # Leggere i dati dalla QTableWidget e aggiungerli al nuovo DataFrame
         for row in range(self.data_table.rowCount()):
-            row_data = {}
+            self.row_data = {}
             for col in range(self.data_table.columnCount()):
                 item = self.data_table.item(row, col)
                 if item is not None:
                     value = item.text()
                 else:
                     value = 'nan'
-                row_data[self.df.columns[col]] = value
-            new_df = new_df.append(row_data, ignore_index=True)
+                self.row_data[self.df.columns[col]] = value
+            new_df = new_df.append(self.row_data, ignore_index=True)
 
         # Carica le credenziali
         creds = Credentials.from_authorized_user_file('credentials.json')
@@ -1964,12 +2210,12 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         data = []
 
         for row in range(rows):
-            row_data = []
+            self.row_data = []
             for col in range(cols):
                 item = self.data_table.item(row, col)
                 cell_data = item.text() if item is not None else ''
-                row_data.append(cell_data)
-            data.append(row_data)
+                self.row_data.append(cell_data)
+            data.append(self.row_data)
 
         # Check if columns in data matches with self.df
         if len(data[0]) == len(self.df.columns):
@@ -2588,17 +2834,68 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
             # Rimuovi la riga corrispondente
             self.data_table.removeRow(row_index)
+
     def on_pushButton_addtab_pressed(self):
-        self.insert_new_row('self.tableWidget_relationship')
-        self.tablewidget_change_value()
+        new_row_index = self.insert_new_row('tableWidget_relationship')
+        self.tablewidget_change_value(new_row_index)  # Update only the new row
 
     def on_pushButton_removetab_pressed(self):
         self.remove_row('self.tableWidget_relationship')
 
-    def insert_new_row(self, table_name):
-        """insert new row into a table based on table_name"""
-        cmd = table_name + ".insertRow(0)"
-        eval(cmd)
+    def insert_new_row(self, table_widget_name):
+        # create new comboBoxes
+
+        # Mapping of Italian terms to English
+        italian_to_english = {
+            "anteriore": "anterior",
+            "posteriore": "posterior",
+            "contemporaneo": "contemporary",
+            "properties_ant": "properties_ant",
+            "properties_post": "properties_post"
+        }
+
+        # Original Italian values
+        valuesRS = ["anteriore", "posteriore", "contemporaneo", "properties_ant", "properties_post"]
+
+        # Translate Italian values to English using the mapping
+        valuesRS_english = [italian_to_english[item] for item in valuesRS]
+
+        # Set up the ComboBoxDelegate with English values
+        self.delegateRS = ComboBoxDelegate()
+        self.delegateRS.def_values(valuesRS_english)
+        self.delegateRS.def_editable('False')
+        self.tableWidget_relationship.setItemDelegateForColumn(0, self.delegateRS)
+
+        # Read values from CSV files
+        typeunit_df = pd.read_csv(os.path.join('template', 'unita_tipo.csv'))
+        epoch_df = pd.read_csv(os.path.join('template', 'epoche_storiche.csv'))
+
+        # Extract values for the QComboBoxes
+        value2 = typeunit_df['TIPO'].tolist()
+        value3 = [f"{row['Periodo']} - {row['Evento']}" for _, row in epoch_df.iterrows()]
+
+        # Set up delegates with the values from CSV
+        self.delegateRS2 = ComboBoxDelegate()
+        self.delegateRS2.def_values(value2)
+        self.delegateRS2.def_editable('True')
+        self.tableWidget_relationship.setItemDelegateForColumn(2, self.delegateRS2)
+
+        self.delegateRS3 = ComboBoxDelegate()
+        self.delegateRS3.def_values(value3)
+        self.delegateRS3.def_editable('True')
+        self.tableWidget_relationship.setItemDelegateForColumn(4, self.delegateRS3)
+
+        table_widget = getattr(self, table_widget_name)
+        row_position = table_widget.rowCount()
+
+        table_widget.insertRow(row_position)
+
+
+
+        #table_widget.setCellWidget(row_position, 0, comboxBox1)
+        #table_widget.setCellWidget(row_position, 2, comboxBox2)
+        #table_widget.setCellWidget(row_position, 4, comboxBox3)
+        return row_position
 
     def remove_row(self, table_name):
         """insert new row into a table based on table_name"""
@@ -2675,6 +2972,7 @@ class PandasModel(QAbstractTableModel):
 
 if __name__ == '__main__':
     app = QApplication([])
+
     app.setStyle('Fusion')
     mapper = CSVMapper()
     mapper.show()

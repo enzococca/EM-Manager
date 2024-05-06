@@ -1,1 +1,6 @@
-No consistency errors found in the CSV.
+Errors found:
+Error: ' not found in the CSV.
+Error: ' not found in the CSV.
+Error: ' not found in the CSV.
+Error: ' not found in the CSV.
+Error: ' not found in the CSV.

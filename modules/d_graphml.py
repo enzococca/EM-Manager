@@ -467,6 +467,8 @@ class GraphWindow(QtWidgets.QMainWindow):
         event.accept()
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
+    app.setApplicationName("Graph Viewer")
+    app.setStyle('Fusion')
     window = GraphWindow()
     window.show()
     app.exec_()

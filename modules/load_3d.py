@@ -197,7 +197,7 @@ class OBJPROXY(QtWidgets.QMainWindow):
 
 def main():
     app = QtWidgets.QApplication([])
-    #app.setStyle('Fusion')
+    app.setStyle('Fusion')
     window = OBJPROXY()
     window.show()
     app.exec_()
