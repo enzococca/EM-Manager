@@ -253,6 +253,7 @@ class UnitDialog(QDialog):
 class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
     GRAPHML_PATH = None
 
+
     def __init__(self, parent=None,data_file=None, spreadsheet=None):
 
         super(CSVMapper, self).__init__(parent=parent)
@@ -341,7 +342,33 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.tablewidget_change_value()
         # Durante la configurazione dei segnali e degli slot
         self.pushButton_new_rec.clicked.connect(self.clear_line_edits)
-        #self.lineEdit_nameus.returnPressed.connect(self.add_text_to_table)
+        self.update_status_labels()#self.lineEdit_nameus.returnPressed.connect(self.add_text_to_table)
+
+    def update_status_labels(self):
+        # Update the status label to "current"
+        self.label_status.setText("current")
+        self.label_sort.setText("Not sorted")
+        # Check if a filter is applied and update the sort label accordingly
+        #if self.is_filter_applied:  # You need to track whether a filter is applied
+           # self.label_sort.setText("Sorted")
+        #else:
+           # self.label_sort.setText("Not sorted")
+
+        # Update the current record label with the current record index
+        current_record_index = self.get_current_record_index()  # Implement this method
+        self.label_rec_corrente.setText(str(current_record_index))
+
+        # Update the total records label with the total number of records
+        total_records = self.get_total_records()  # Implement this method
+        self.label_rec_tot.setText(str(total_records))
+
+    def get_current_record_index(self):
+        # Return the index of the currently selected record in the data table
+        return self.data_table.currentRow() + 1  # +1 because rows are 0-indexed
+
+    def get_total_records(self):
+        # Return the total number of records in the data table
+        return self.data_table.rowCount()
 
     # Il metodo per cancellare le QLineEdit
     def clear_line_edits(self):
@@ -378,6 +405,19 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         for relationship in all_rows:
             if len(relationship) == 6:
                 self.update_relationship(relationship, txt_nameus, txt_typeunit)
+
+
+    def remove_or_update_data_table(self, nameus):
+        # Implement logic to find and remove/update the related data in self.data_table
+        for i in range(self.data_table.rowCount()):
+            if self.data_table.item(i, 0) and self.data_table.item(i, 0).text() == nameus:
+                # Found the related row, now remove or update it
+                self.data_table.removeRow(i)
+                break
+
+    def refresh_data_table(self):
+        # Implement logic to refresh the data_table UI if necessary
+        self.data_table.viewport().update()
 
     def update_row(self, nameus, typeunit, desc, epoch, epochindex):
         # Find the existing row
@@ -580,8 +620,15 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         # Delete row where 'name_us' equals the value specified
         self.original_df = self.original_df[self.original_df['nome us'] != name_us]
         self.populate_table(self.original_df)
+        self.update_status_labels()
 
     def on_pushButton_save_mask_pressed(self):
+        # Check if the CSV has been loaded
+        if self.df is None:
+            # Display a message to the user
+            QMessageBox.information(self, "No CSV loaded", "Please load a CSV file before saving.")
+
+
         self.add_text_to_table()
         for row in range(self.data_table.rowCount()):
             self.row_data = {}
@@ -598,7 +645,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.save_to_csv(self.csv_path)
         self.data_table.update()  # aggiorna la tabella
         print(f"{self.csv_path}: Salvato con successo")
-
+        self.remove_selected_relationship_row()
+        self.update_status_labels()
     def save_to_csv(self, csv_filepath):
         #self.original_df=pd.DataFrame()
         self.original_df.to_csv(csv_filepath, index=False)
@@ -609,17 +657,17 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         row_position = self.data_table.currentRow()  # Ottieni la riga attualmente selezionata
         if row_position != -1 and row_position < self.data_table.rowCount() - 1:
             self.data_table.selectRow(row_position + 1)  # Sposta la selezione alla riga successiva
-            self.load_data_into_fields()  # Carica i dati della riga appena selezionata nei campi
-    # Metodo per passare al record precedente
+            self.load_data_into_fields()
+            self.update_status_labels()
     def prev_record(self):
         row_position = self.data_table.currentRow()  # Ottieni la riga attualmente selezionata
         if row_position != -1 and row_position > 0:
             self.data_table.selectRow(row_position - 1)  # Sposta la selezione alla riga precedente
             self.load_data_into_fields()  # Carica i dati della riga appena selezionata nei campi
-
+            self.update_status_labels()
     # Metodo per caricare i dati della riga selezionata nei campi
     def load_data_into_fields(self):
-        fields = [self.lineEdit_nameus, self.comboBox_typeunit, self.lineEdit_descriptionunit,
+        fields = [self.lineEdit_nameus, self.comboBox_typeunit,
                   self.textEdit_description,
                   self.comboBox_epoch, self.lineEdit_epochindex]
         row_position = self.data_table.currentRow()
@@ -1243,6 +1291,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 for i in range(self.data_table.columnCount()):
                     self.data_table.setColumnWidth(i, 250)
                 self.data_table.selectRow(0)
+                self.update_status_labels()
             else:
                 QMessageBox.warning(self,'Warning',f"The CSV file {self.csv_path} does not exist")
 
@@ -1329,6 +1378,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     for i in range(self.data_table.columnCount()):
                         self.data_table.setColumnWidth(i, 250)
                     self.data_table.selectRow(0)
+                    self.update_status_labels()
                 else:
                     QMessageBox.warning(self,'Warning',f"The CSV file {self.csv_path} does not exist")
 
@@ -2359,6 +2409,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         for i in range(self.data_table.columnCount()):
             self.data_table.setColumnWidth(i, 250)
+        self.update_status_labels()
 
     def transform_data(self, file_path, output):
         try:
@@ -2840,8 +2891,30 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.tablewidget_change_value(new_row_index)  # Update only the new row
 
     def on_pushButton_removetab_pressed(self):
-        self.remove_row('self.tableWidget_relationship')
+        # Get the currently selected row in tableWidget_relationship
+        selected_row = self.tableWidget_relationship.currentRow()
+        if selected_row == -1:
+            print("No row selected.")
+            return
 
+        # Assuming the first column of tableWidget_relationship contains 'nameus'
+        nameus_item = self.tableWidget_relationship.item(selected_row, 1)
+        if not nameus_item:
+            print("No 'nameus' found for the selected row.")
+            return
+        nameus = nameus_item.text()
+
+        # Remove the corresponding row from self.data_table
+        self.remove_or_update_data_table(nameus)
+
+        # Remove the selected row from tableWidget_relationship
+        self.tableWidget_relationship.removeRow(selected_row)
+
+        # Refresh the data_table UI
+        self.refresh_data_table()
+        self.update_status_labels()
+        print(f"Removed tab with 'nameus': {nameus}")
+        self.remove_row('tableWidget_relationship')
     def insert_new_row(self, table_widget_name):
         # create new comboBoxes
 
