@@ -47,7 +47,7 @@ splash.setLayout(vbox)
 splash.show()
 
 # Aggiungi righe al log
-base_text = "Caricamento"
+base_text = "Loading"
 log_lines.setText(base_text)
 
 

@@ -10,8 +10,8 @@ import chardet
 import mimetypes
 from typing import Optional
 import re
-from PyQt5.QtCore import (QAbstractTableModel, QVariant)
-from PyQt5.QtGui import QDesktopServices, QPixmap
+from PyQt5.QtCore import (QAbstractTableModel, QVariant, pyqtSignal,Qt)
+from PyQt5.QtGui import QDesktopServices, QPixmap, QPalette
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUiType
 
@@ -41,7 +41,7 @@ from modules.check_yed_path import YEdSetup
 
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl
-
+from modules.customlistwidget import CustomListWidget
 from modules.config import config
 from modules.delegateCombobox import ComboBoxDelegate
 import sys
@@ -250,6 +250,9 @@ class UnitDialog(QDialog):
             selected_unit = selected_units.split('-')[0].strip()
             return selected_unit
         return None
+
+
+
 class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
     GRAPHML_PATH = None
 
@@ -266,6 +269,17 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.original_df = None
         self.relationship_data = None
         self.setupUi(self)
+        # Create an instance of CustomListWidget
+        self.custom_list_widget = CustomListWidget(self)
+        self.custom_list_widget.setStyleSheet("background-color: white;")
+        self.custom_list_widget.setGeometry(9, 9, 260, 624)
+        self.tabWidget.insertTab(0, self.custom_list_widget, "Media List")  # Use the appropriate tab label
+        # Set an icon for the custom_list_widget tab
+        icon = QIcon('icon/photo2.png')  # Replace with the path to your icon file
+        self.tabWidget.setTabIcon(0, icon)
+        self.tabWidget.setCurrentIndex(0)
+        # Collega segnali e slot per custom_list_widget
+        self.custom_list_widget.itemRemoved.connect(self.on_item_removed)
         print(QStyleFactory.keys())
         self.resize(1000, 1000)
         self.custumize_gui()
@@ -343,7 +357,46 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         # Durante la configurazione dei segnali e degli slot
         self.pushButton_new_rec.clicked.connect(self.clear_line_edits)
         self.update_status_labels()#self.lineEdit_nameus.returnPressed.connect(self.add_text_to_table)
+        self.mime_to_icon = {
+            "application/pdf": "icons/pdf_icon.png",
+            "application/msword": "icons/doc_icon.png",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "icons/doc_icon.png",
+            "application/vnd.ms-excel": "icons/xls_icon.png",
+            "text/csv": "icons/xls_icon.png",
+            "text/plain": "icons/doc_icon.png",
+            "video/mp4": "icons/video_icon.png",
+            "video/x-msvideo": "icons/video_icon.png"
+            # ...
+        }
+        self.data_table.itemSelectionChanged.connect(self.load_attached_documents)
 
+    def load_attached_documents(self):
+        self.custom_list_widget.clear()  # Clear the existing items
+
+        selected_row = self.data_table.currentRow()
+        if selected_row == -1:
+            return  # No row is selected
+
+        nameus_item = self.data_table.item(selected_row, 0)
+        if not nameus_item:
+            return  # The 'nameus' cell is empty
+        nameus = nameus_item.text()
+
+        dosco_folder = os.path.join(os.path.dirname(self.data_file), "DosCo")
+        if os.path.exists(dosco_folder):
+            for file_name in os.listdir(dosco_folder):
+                if file_name.startswith(nameus):  # Check if the file corresponds to 'nameus'
+                    file_path = os.path.join(dosco_folder, file_name)
+                    mime_type, _ = mimetypes.guess_type(file_path)
+                    icon_path = self.mime_to_icon.get(mime_type, "icons/default_icon.png")
+                    item = QListWidgetItem(QIcon(icon_path), file_name)
+                    self.custom_list_widget.addItem(item)
+
+    def on_item_removed(self, item):
+        # Handle the removal of the item
+        file_path = os.path.join("DosCo", item.text())
+        if os.path.exists(file_path):
+            os.remove(file_path)
     def update_status_labels(self):
         # Update the status label to "current"
         self.label_status.setText("current")
@@ -854,7 +907,33 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         if self.obj_proxy is None:
             print("obj_proxy non è stato inizializzato.")
             return
+        self.listWidget_list_media.clear()
+
+        # Get the selected row index
         selected_row = self.data_table.currentRow()
+        if selected_row == -1:
+            return  # No row is selected
+
+        # Get the 'nameus' value from the first column of the selected row
+        nameus_item = self.data_table.item(selected_row, 0)
+        if not nameus_item:
+            return  # The 'nameus' cell is empty
+        nameus = nameus_item.text()
+
+        # Construct the path to the "DosCo" folder relative to the project's CSV file path
+        dosco_folder = os.path.join(os.path.dirname(self.data_file), "DosCo")
+
+        # Check if there are documents for the selected 'nameus'
+        for file_name in os.listdir(dosco_folder):
+            if file_name.startswith(nameus):
+                # Determine the MIME type and select the appropriate icon
+                mime_type, _ = mimetypes.guess_type(file_name)
+                icon_path = self.mime_to_icon.get(mime_type,
+                                                  "icons/default_icon.png")  # Use a default icon if MIME type is not found
+
+                # Create a QListWidgetItem for the file and add it to listWidget_list_media
+                item = QListWidgetItem(QIcon(icon_path), file_name)
+                self.listWidget_list_media.addItem(item)
 
         # trova il nome dell'oggetto 3d che corrisponde alla riga selezionata
         # supponendo che il nome dell'oggetto 3d sia il contenuto della terza colonna
@@ -886,6 +965,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         descrizione = self.data_table.item(selected_row,
                                            3).text()  # Assumendo che la descrizione sia nella quarta colonna
         self.lineEdit_desc_label.setText(descrizione)
+
 
     def get_related_nodes(self, mesh_name):
         # Trova la riga nel DataFrame che corrisponde a mesh_name
@@ -1292,6 +1372,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     self.data_table.setColumnWidth(i, 250)
                 self.data_table.selectRow(0)
                 self.update_status_labels()
+                self.load_attached_documents()
             else:
                 QMessageBox.warning(self,'Warning',f"The CSV file {self.csv_path} does not exist")
 
@@ -1394,6 +1475,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                         self.data_table.setColumnWidth(i, 250)
                     self.data_table.selectRow(0)
                     self.update_status_labels()
+                    self.load_attached_documents()
                 else:
                     QMessageBox.warning(self,'Warning',f"The CSV file {self.csv_path} does not exist")
 
@@ -2435,7 +2517,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         for i in range(self.data_table.columnCount()):
             self.data_table.setColumnWidth(i, 250)
         self.update_status_labels()
-
+        self.load_attached_documents()
     def transform_data(self, file_path, output):
         try:
             # Open and read the file
@@ -2513,7 +2595,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 row += [new_col]
                 rows.append(row)
 
-            # Open and write to the output file
+            #Apri e scrivi nel file di output
             with open(output, 'w', newline='') as f:
                 writer = csv.writer(f)
                 writer.writerow(new_header)
@@ -2530,7 +2612,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         except Exception as e:
             self.show_error(f"Unknown error:{e}")
     def transform_data_google(self,file_buffer, output_buffer):
-        # Read the lines from the StringIO buffer
+        # Leggi le righe dal buffer StringIO
         lines = file_buffer.readlines()
         reader = csv.reader(lines)
         header = next(reader)
@@ -2595,9 +2677,6 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         writer.writerow(new_header)
         for row in rows:
             writer.writerow(row[:-1] + [' '.join([str(e) for e in row[-1]])])
-
-        #self.check_consistency_google()
-        #self.show_errors_in_dock_widget_google()
 
     def on_convert_data_pressed(self):
         try:
