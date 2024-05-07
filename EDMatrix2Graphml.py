@@ -1356,7 +1356,22 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                         self.transform_data(self.data_file, self.data_file)
                     except AssertionError:
                         pass
-                    self.df = pd.read_csv(self.data_file, dtype=str)
+                    # Use chardet to detect the encoding of the CSV file
+                    with open(self.data_file, 'rb') as f:
+                        rawdata = f.read()
+                    result = chardet.detect(rawdata)
+                    charenc = result['encoding']
+
+                    # If chardet is unable to detect the encoding, default to 'ISO-8859-1'
+                    if charenc is None:
+                        charenc = 'ISO-8859-1'
+
+                    try:
+                        self.df = pd.read_csv(self.data_file, dtype=str, encoding=charenc)
+                    except UnicodeDecodeError:
+                        # If a UnicodeDecodeError occurs, try reading the file with 'ISO-8859-1' encoding
+                        self.df = pd.read_csv(self.data_file, dtype=str, encoding='ISO-8859-1')
+
                     self.data_fields = self.df.columns.tolist()
 
                     self.data_table.setDragEnabled(True)
@@ -2136,20 +2151,26 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             # print(type(new_df))
             new_df = new_df._append(self.row_data, ignore_index=True)
 
-        # Save the new DataFrame in the CSV file
-        new_df.to_csv(self.data_file, index=False)
+        # Salva il nuovo DataFrame nel file CSV
+        new_df.to_csv(self.data_file, index=False, encoding='utf-8')
 
         try:
             self.transform_data(self.data_file, self.data_file)
         except AssertionError:
             pass
 
-        # Use chardet to find out the encoding
+        # Usa chardet per scoprire la codifica
         rawdata = open(self.data_file, 'rb').read()
         result = chardet.detect(rawdata)
         charenc = result['encoding']
 
-        self.df2 = pd.read_csv(self.data_file, dtype=str, encoding=charenc)
+        # Read the CSV file back into self.df2 using the detected encoding
+        try:
+            self.df2 = pd.read_csv(self.data_file, dtype=str, encoding=charenc)
+        except UnicodeDecodeError:
+            # If a UnicodeDecodeError occurs, try reading the file with 'ISO-8859-1' or 'latin1' encoding
+            self.df2 = pd.read_csv(self.data_file, dtype=str, encoding='utf-8')
+
         self.data_fields2 = self.df2.columns.tolist()
 
         self.data_table.setDragEnabled(True)
@@ -2363,13 +2384,22 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             self.show_error('No file selected.')
             return
 
+        # Use chardet to detect the encoding of the CSV file
+        with open(self.data_file, 'rb') as f:
+            rawdata = f.read()
+        result = chardet.detect(rawdata)
+        charenc = result['encoding']
+
+        # If chardet is unable to detect the encoding, default to 'ISO-8859-1'
+        if charenc is None:
+            charenc = 'utf-8'
+
         # Read data and handle possible errors
         try:
-            self.original_df = pd.read_csv(self.data_file)
+            self.original_df = pd.read_csv(self.data_file, dtype=str, encoding=charenc)
         except Exception as e:
             self.show_error(f"Error reading file: {e}")
             return
-
         # Verify if the data is empty
         if self.original_df.empty:
             self.show_error('The selected file is empty.')
@@ -2382,13 +2412,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             self.show_error(f"Error during data transformation: {e}")
             return
 
-        # Read data again with dtype=str and handle possible errors
-        try:
-            self.df = pd.read_csv(self.data_file, dtype=str)
-        except Exception as e:
-            self.show_error(f"Error reading file: {e}")
-            return
-
+        # Set the DataFrame to the original DataFrame after transformation
+        self.df = self.original_df
         self.data_fields = self.df.columns.tolist()
 
         self.data_table.setDragEnabled(True)
@@ -2414,7 +2439,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
     def transform_data(self, file_path, output):
         try:
             # Open and read the file
-            with open(file_path, 'r') as f:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 reader = csv.reader(f)
                 header = next(reader)
 
@@ -2916,9 +2941,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         print(f"Removed tab with 'nameus': {nameus}")
         self.remove_row('tableWidget_relationship')
     def insert_new_row(self, table_widget_name):
-        # create new comboBoxes
 
-        # Mapping of Italian terms to English
+        # Mappatura dei termini italiani in inglese
         italian_to_english = {
             "anteriore": "anterior",
             "posteriore": "posterior",
@@ -2927,27 +2951,27 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             "properties_post": "properties_post"
         }
 
-        # Original Italian values
+        # Valori italiani originali
         valuesRS = ["anteriore", "posteriore", "contemporaneo", "properties_ant", "properties_post"]
 
         # Translate Italian values to English using the mapping
         valuesRS_english = [italian_to_english[item] for item in valuesRS]
 
-        # Set up the ComboBoxDelegate with English values
+        # Configura ComboBoxDelegate con valori inglesi
         self.delegateRS = ComboBoxDelegate()
         self.delegateRS.def_values(valuesRS_english)
         self.delegateRS.def_editable('False')
         self.tableWidget_relationship.setItemDelegateForColumn(0, self.delegateRS)
 
-        # Read values from CSV files
+        # Leggere valori da file CSV
         typeunit_df = pd.read_csv(os.path.join('template', 'unita_tipo.csv'))
         epoch_df = pd.read_csv(os.path.join('template', 'epoche_storiche.csv'))
 
-        # Extract values for the QComboBoxes
+        # Estrai i valori per i QComboBox
         value2 = typeunit_df['TIPO'].tolist()
         value3 = [f"{row['Periodo']} - {row['Evento']}" for _, row in epoch_df.iterrows()]
 
-        # Set up delegates with the values from CSV
+        # Configura i delegati con i valori di CSV
         self.delegateRS2 = ComboBoxDelegate()
         self.delegateRS2.def_values(value2)
         self.delegateRS2.def_editable('True')
@@ -2963,21 +2987,16 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         table_widget.insertRow(row_position)
 
-
-
-        #table_widget.setCellWidget(row_position, 0, comboxBox1)
-        #table_widget.setCellWidget(row_position, 2, comboxBox2)
-        #table_widget.setCellWidget(row_position, 4, comboxBox3)
         return row_position
 
     def remove_row(self, table_name):
-        """insert new row into a table based on table_name"""
+        """inserisce una nuova riga in una tabella in base a table_name"""
         table_row_count_cmd = ("%s.rowCount()") % (table_name)
         table_row_count = eval(table_row_count_cmd)
         rowSelected_cmd = ("%s.selectedIndexes()") % (table_name)
         rowSelected = eval(rowSelected_cmd)
 
-        # Check if the selection is not empty
+        # Controlla se la selezione non è vuota
         if rowSelected:
             rowIndex = (rowSelected[0].row())
             cmd = ("%s.removeRow(%d)") % (table_name, rowIndex)
