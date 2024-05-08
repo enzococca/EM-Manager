@@ -273,11 +273,12 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.custom_list_widget = CustomListWidget(self)
         self.custom_list_widget.setStyleSheet("background-color: white;")
         self.custom_list_widget.setGeometry(9, 9, 260, 624)
-        self.tabWidget.insertTab(0, self.custom_list_widget, "Media List")  # Use the appropriate tab label
+        self.custom_list_widget.setHidden(True)
+        #self.tabWidget.insertTab(0, self.custom_list_widget, "Media List")  # Use the appropriate tab label
         # Set an icon for the custom_list_widget tab
-        icon = QIcon('icon/photo2.png')  # Replace with the path to your icon file
-        self.tabWidget.setTabIcon(0, icon)
-        self.tabWidget.setCurrentIndex(0)
+        #icon = QIcon('icon/photo2.png')  # Replace with the path to your icon file
+        #self.tabWidget.setTabIcon(0, icon)
+        #self.tabWidget.setCurrentIndex(0)
         # Collega segnali e slot per custom_list_widget
         self.custom_list_widget.itemRemoved.connect(self.on_item_removed)
         print(QStyleFactory.keys())
@@ -369,7 +370,41 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             # ...
         }
         self.data_table.itemSelectionChanged.connect(self.load_attached_documents)
+        # Connect the selection changed signal of the data table to the slot
+        self.data_table.itemSelectionChanged.connect(self.handle_row_selection)
 
+
+    def handle_row_selection(self):
+        selected_row = self.data_table.currentRow()
+        if selected_row == -1:
+            # No row is selected, remove the media list tab if it exists
+            self.remove_media_list_tab()
+            return
+
+        # Get the value from the second column of the selected row
+        type_item = self.data_table.item(selected_row, 1)
+        if type_item and type_item.text().lower() in ['property', 'document', 'combiner', 'extractor']:
+            # The selected type is one of the specified types, add the media list tab if it's not already there
+            self.add_media_list_tab()
+        else:
+            # The selected type is not one of the specified types, remove the media list tab if it exists
+            self.remove_media_list_tab()
+
+    def add_media_list_tab(self):
+        # Check if the custom_list_widget is already added to the tab widget
+        if self.tabWidget.indexOf(self.custom_list_widget) == -1:
+            # Add the custom_list_widget to the tab widget
+            self.tabWidget.addTab(self.custom_list_widget, "Media List")
+            icon = QIcon('icon/photo2.png')  # Replace with the path to your icon file
+            self.tabWidget.setTabIcon(self.tabWidget.indexOf(self.custom_list_widget), icon)
+
+
+    def remove_media_list_tab(self):
+        # Find the index of the custom_list_widget in the tab widget
+        index = self.tabWidget.indexOf(self.custom_list_widget)
+        if index != -1:
+            # Remove the custom_list_widget tab
+            self.tabWidget.removeTab(index)
     def load_attached_documents(self):
         self.custom_list_widget.clear()  # Clear the existing items
 
