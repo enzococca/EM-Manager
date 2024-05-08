@@ -1,57 +1,57 @@
 Indice,Periodo,Evento,Anno/Secolo
-1,Età Contemporanea,XXI secolo,2001-2100
-2,Età Contemporanea,XX secolo,1901-2000
-3,Età Moderna,XIX secolo,1801-1900
-4,Età Moderna,XVIII secolo,1701-1800
-5,Età Moderna,XVII secolo,1601-1700
-6,Età Moderna,XVI secolo,1501-1600
-7,Età Medievale,XV secolo,1401-1500
-8,Età Medievale,XIV secolo,1301-1400
-9,Età Medievale,XIII secolo,1201-1300
-10,Età Medievale,XII secolo,1101-1200
-11,Età Medievale,XI secolo,1001-1100
-12,Età Medievale,X secolo,901-1000
-13,Età Medievale,IX secolo,801-900
-14,Età Medievale,VIII secolo,701-800
-15,Età Antica,VII secolo,601-700
-16,Età Antica,VI secolo,501-600
-17,Età Antica,V secolo,401-500
-18,Età Antica,IV secolo,301-400
-19,Età Antica,III secolo,201-300
-20,Età Antica,II secolo,101-200
-21,Età Antica,I secolo,1-100
-22,Età Antica,Periodo Giulio-Claudio,27 a.C.-68 d.C.
-23,Età Antica,Periodo Flavio,69-96 d.C.
-24,Età Antica,Periodo dei 'buoni imperatori',96-180 d.C.
-25,Età Antica,Crisi del III secolo,235-284 d.C.
-26,Età Antica,Tetrarchia e Dinastia Costantiniana,284-364 d.C.
-27,Impero romano,Crisi del III secolo,235-284 d.C.
-28,Impero romano,Dominato,284-305 d.C.
-29,Impero romano,Tetrarchia,293-313 d.C.
-30,Impero romano,Costantino I,306-337 d.C.
-31,Impero romano,Dinastia costantiniana,337-363 d.C.
-32,Impero romano,Dinastia valentiniana,364-392 d.C.
-33,Impero romano,Dinastia teodosiana,379-455 d.C.
-34,Impero romano d'Occidente,Caduta dell'Impero romano d'Occidente,476 d.C.
-35,Impero romano d'Oriente (Bizantino),Età giustinianea,527-565 d.C.
-36,Impero romano d'Oriente (Bizantino),Età della guerra civile,602-610 d.C.
-37,Impero romano d'Oriente (Bizantino),Età d'oro bizantina,610-641 d.C.
-38,Impero romano d'Oriente (Bizantino),Età dell'iconoclastia,730-843 d.C.
-39,Impero romano d'Oriente (Bizantino),Rinascimento macedone,867-1056 d.C.
-40,Impero romano d'Oriente (Bizantino),Comneni e Angeli,1056-1204 d.C.
-41,Impero romano d'Oriente (Bizantino),Impero di Nicea,1204-1261 d.C.
-42,Impero romano d'Oriente (Bizantino),Dinastia dei Paleologi,1261-1453 d.C.
-43,Impero romano d'Oriente (Bizantino),Caduta di Costantinopoli,1453 d.C.
-44,Grecia classica,Età arcaica,800-480 a.C.
-45,Grecia classica,Età classica,480-323 a.C.
-46,Grecia classica,Età ellenistica,323-146 a.C.
-47,Roma repubblicana,Età regia,753-509 a.C.
-48,Roma repubblicana,Età repubblicana,509-27 a.C.
-49,Preistoria,Mesolitico,10000-7000 a.C.
-50,Preistoria,Neolitico,7000-3000 a.C.
-51,Preistoria,Età del bronzo,3000-1200 a.C.
-52,Preistoria,Età del ferro,1200-800 a.C.
-53,Preistoria,Paleolitico,"2,6 milioni di anni fa - 10000 a.C."
-54,Paleolitico,Paleolitico superiore,50000-10000 a.C.
-55,Paleolitico,Paleolitico medio,300000-50000 a.C.
-56,Paleolitico,Paleolitico inferiore,2600000-100000 a.C.
+1, Contemporary Age, 21st century, 2001-2100
+2, Contemporary Age, 20th century, 1901-2000
+3, Modern Age, 19th century, 1801-1900
+4, Modern Age, 18th century, 1701-1800
+5, Modern Age, 17th century, 1601-1700
+6, Modern Age, 16th century, 1501-1600
+7, Medieval Age, 15th century, 1401-1500
+8, Medieval Age, 14th century, 1301-1400
+9, Medieval Age, 13th century, 1201-1300
+10, Medieval Age, 12th century, 1101-1200
+11, Medieval Age, 11th century, 1001-1100
+12, Medieval Age, 10th century, 901-1000
+13, Medieval Age, 9th century, 801-900
+14, Medieval Age, 8th century, 701-800
+15, Ancient Age, 7th century, 601-700
+16, Ancient Age, 6th century, 501-600
+17, Ancient Age, 5th century, 401-500
+18, Ancient Age, 4th century, 301-400
+19, Ancient Age, 3rd century, 201-300
+20, Ancient Age, 2nd century, 101-200
+21, Ancient Age, 1st century, 1-100
+22, Ancient Age, Julio-Claudian Period, 27 BC-68 AD
+23, Ancient Age, Flavian Period, 69-96 AD
+24, Ancient Age, Period of the 'Five Good Emperors', 96-180 AD
+25, Ancient Age, Crisis of the Third Century, 235-284 AD
+26, Ancient Age, Tetrarchy and Constantinian Dynasty, 284-364 AD
+27, Roman Empire, Crisis of the Third Century, 235-284 AD
+28, Roman Empire, Dominate, 284-305 AD
+29, Roman Empire, Tetrarchy, 293-313 AD
+30, Roman Empire, Constantine I, 306-337 AD
+31, Roman Empire, Constantinian Dynasty, 337-363 AD
+32, Roman Empire, Valentinian Dynasty, 364-392 AD
+33, Roman Empire, Theodosian Dynasty, 379-455 AD
+34, Western Roman Empire, Fall of the Western Roman Empire, 476 AD
+35, Eastern Roman Empire (Byzantine), Justinian Era, 527-565 AD
+36, Eastern Roman Empire (Byzantine), Age of Civil War, 602-610 AD
+37, Eastern Roman Empire (Byzantine), Byzantine Golden Age, 610-641 AD
+38, Eastern Roman Empire (Byzantine), Iconoclastic Period, 730-843 AD
+39, Eastern Roman Empire (Byzantine), Macedonian Renaissance, 867-1056 AD
+40, Eastern Roman Empire (Byzantine), Comnenus and Angelus Dynasties, 1056-1204 AD
+41, Eastern Roman Empire (Byzantine), Empire of Nicaea, 1204-1261 AD
+42, Eastern Roman Empire (Byzantine), Palaiologan Dynasty, 1261-1453 AD
+43, Eastern Roman Empire (Byzantine), Fall of Constantinople, 1453 AD
+44, Classical Greece, Archaic Period, 800-480 BC
+45, Classical Greece, Classical Period, 480-323 BC
+46, Classical Greece, Hellenistic Period, 323-146 BC
+47, Roman Republic, Regal Period, 753-509 BC
+48, Roman Republic, Republican Period, 509-27 BC
+49, Prehistory, Mesolithic, 10000-7000 BC
+50, Prehistory, Neolithic, 7000-3000 BC
+51, Prehistory, Bronze Age, 3000-1200 BC
+52, Prehistory, Iron Age, 1200-800 BC
+53, Prehistory, Paleolithic, "2.6 million years ago - 10000 BC"
+54, Paleolithic, Upper Paleolithic, 50000-10000 BC
+55, Paleolithic, Middle Paleolithic, 300000-50000 BC
+56, Paleolithic, Lower Paleolithic, 2600000-100000 BC

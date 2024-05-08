@@ -302,6 +302,9 @@ color: rgb(0, 0, 0);</string>
             </item>
             <item row="1" column="9">
              <widget class="QPushButton" name="pushButton_new_search">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="font">
                <font>
                 <family>Noto Sans Hebrew</family>
@@ -325,6 +328,9 @@ color: rgb(0, 0, 0);</string>
             </item>
             <item row="2" column="9">
              <widget class="QPushButton" name="pushButton_search_go">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="font">
                <font>
                 <family>Noto Sans Hebrew</family>
@@ -372,7 +378,7 @@ color: rgb(0, 0, 0);</string>
             <item row="2" column="7">
              <widget class="QPushButton" name="pushButton_delete">
               <property name="enabled">
-               <bool>true</bool>
+               <bool>false</bool>
               </property>
               <property name="font">
                <font>
@@ -397,6 +403,9 @@ color: rgb(0, 0, 0);</string>
             </item>
             <item row="1" column="10">
              <widget class="QPushButton" name="pushButton_view_all_2">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="font">
                <font>
                 <family>Noto Sans Hebrew</family>
@@ -420,6 +429,9 @@ color: rgb(0, 0, 0);</string>
             </item>
             <item row="2" column="10">
              <widget class="QPushButton" name="pushButton_sort">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="font">
                <font>
                 <family>Noto Sans Hebrew</family>
@@ -1508,7 +1520,16 @@ color: rgb(0, 0, 0);</string>
                  <color alpha="255">
                   <red>0</red>
                   <green>0</green>
-                  <blue>0</blue>
+                  <blue>255</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>193</red>
+                  <green>193</green>
+                  <blue>188</blue>
                  </color>
                 </brush>
                </colorrole>
@@ -1517,7 +1538,7 @@ color: rgb(0, 0, 0);</string>
                  <color alpha="255">
                   <red>0</red>
                   <green>0</green>
-                  <blue>0</blue>
+                  <blue>255</blue>
                  </color>
                 </brush>
                </colorrole>
@@ -1526,7 +1547,34 @@ color: rgb(0, 0, 0);</string>
                  <color alpha="255">
                   <red>0</red>
                   <green>0</green>
-                  <blue>0</blue>
+                  <blue>255</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Base">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>193</red>
+                  <green>193</green>
+                  <blue>188</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Window">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>193</red>
+                  <green>193</green>
+                  <blue>188</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="PlaceholderText">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="128">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>255</blue>
                  </color>
                 </brush>
                </colorrole>
@@ -1537,7 +1585,16 @@ color: rgb(0, 0, 0);</string>
                  <color alpha="255">
                   <red>0</red>
                   <green>0</green>
-                  <blue>0</blue>
+                  <blue>255</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>193</red>
+                  <green>193</green>
+                  <blue>188</blue>
                  </color>
                 </brush>
                </colorrole>
@@ -1546,7 +1603,7 @@ color: rgb(0, 0, 0);</string>
                  <color alpha="255">
                   <red>0</red>
                   <green>0</green>
-                  <blue>0</blue>
+                  <blue>255</blue>
                  </color>
                 </brush>
                </colorrole>
@@ -1555,7 +1612,34 @@ color: rgb(0, 0, 0);</string>
                  <color alpha="255">
                   <red>0</red>
                   <green>0</green>
-                  <blue>0</blue>
+                  <blue>255</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Base">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>193</red>
+                  <green>193</green>
+                  <blue>188</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Window">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>193</red>
+                  <green>193</green>
+                  <blue>188</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="PlaceholderText">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="128">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>255</blue>
                  </color>
                 </brush>
                </colorrole>
@@ -1570,6 +1654,15 @@ color: rgb(0, 0, 0);</string>
                  </color>
                 </brush>
                </colorrole>
+               <colorrole role="Button">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>193</red>
+                  <green>193</green>
+                  <blue>188</blue>
+                 </color>
+                </brush>
+               </colorrole>
                <colorrole role="Text">
                 <brush brushstyle="SolidPattern">
                  <color alpha="255">
@@ -1582,6 +1675,33 @@ color: rgb(0, 0, 0);</string>
                <colorrole role="ButtonText">
                 <brush brushstyle="SolidPattern">
                  <color alpha="255">
+                  <red>0</red>
+                  <green>0</green>
+                  <blue>255</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Base">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>193</red>
+                  <green>193</green>
+                  <blue>188</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="Window">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="255">
+                  <red>193</red>
+                  <green>193</green>
+                  <blue>188</blue>
+                 </color>
+                </brush>
+               </colorrole>
+               <colorrole role="PlaceholderText">
+                <brush brushstyle="SolidPattern">
+                 <color alpha="128">
                   <red>0</red>
                   <green>0</green>
                   <blue>255</blue>
