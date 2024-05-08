@@ -48,30 +48,33 @@ class CustomListWidget(QListWidget):
             print("No row selected.")
             return
 
-        # Get the value from the first column of the selected row
+        # Ottieni il valore dalla prima colonna della riga selezionata
         nameus_item = self.main_window.data_table.item(selected_row, 0)
         if not nameus_item:
             print("No 'nameus' found for the selected row.")
             return
         nameus = nameus_item.text()
 
-        # Check the value of the second column
+        # Controlla il valore della seconda colonna
         type_item = self.main_window.data_table.item(selected_row, 1)
         if type_item and type_item.text().lower() in ['property', 'document', 'combiner', 'extractor']:
             for url in event.mimeData().urls():
                 file_path = str(url.toLocalFile())
-                new_file_name = f"{nameus}{os.path.splitext(file_path)[1]}"  # Keep the original extension
+                original_file_name = os.path.basename(file_path)
+                file_extension = os.path.splitext(original_file_name)[1]  # Estrai l'estensione del file
+                new_file_name = f"{nameus}_{original_file_name}"  # Costruisci il nuovo nome del file con nameus e il
+                # nome del file originale
 
-                # Construct the path to the "DosCo" folder relative to the project's CSV file path
+                # Costruisci il percorso della cartella "DosCo" relativo al percorso del file CSV del progetto
                 dosco_folder = os.path.join(os.path.dirname(self.main_window.data_file), "DosCo")
                 if not os.path.exists(dosco_folder):
                     os.makedirs(dosco_folder)
                 new_file_path = os.path.join(dosco_folder, new_file_name)
 
-                # Copy and rename the file to the "DosCo" folder
+                # Copia e rinomina il file nella cartella "DosCo".
                 shutil.copy(file_path, new_file_path)
 
-                # Add the new file name (not path) to the QListWidget
+                # Aggiungi il nuovo nome file (non il percorso) al QListWidget
                 self.addItem(new_file_name)
         else:
             print("The selected row's type is not allowed for media association.")

@@ -393,34 +393,36 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     self.custom_list_widget.addItem(item)
 
     def on_item_removed(self, item):
-        # Handle the removal of the item
-        file_path = os.path.join("DosCo", item.text())
+        # Costruisci il percorso completo del file nella cartella "DosCo".
+        dosco_folder = os.path.join(os.path.dirname(self.data_file), "DosCo")
+        file_path = os.path.join(dosco_folder, item.text())
+
+        # Rimuovere il file se esiste
         if os.path.exists(file_path):
             os.remove(file_path)
+            print(f"Removed file: {file_path}")
+        else:
+            print(f"File not found: {file_path}")
     def update_status_labels(self):
-        # Update the status label to "current"
+        # Aggiorna l'etichetta di stato su "corrente"
         self.label_status.setText("current")
         self.label_sort.setText("Not sorted")
-        # Check if a filter is applied and update the sort label accordingly
-        #if self.is_filter_applied:  # You need to track whether a filter is applied
-           # self.label_sort.setText("Sorted")
-        #else:
-           # self.label_sort.setText("Not sorted")
 
-        # Update the current record label with the current record index
-        current_record_index = self.get_current_record_index()  # Implement this method
+
+        # Aggiorna l'etichetta discografica corrente con l'indice record corrente
+        current_record_index = self.get_current_record_index()  # Implementa questo metodo
         self.label_rec_corrente.setText(str(current_record_index))
 
-        # Update the total records label with the total number of records
-        total_records = self.get_total_records()  # Implement this method
+        #Aggiorna l'etichetta dei record totali con il numero totale di record
+        total_records = self.get_total_records()  # Implementa questo metodo
         self.label_rec_tot.setText(str(total_records))
 
     def get_current_record_index(self):
-        # Return the index of the currently selected record in the data table
-        return self.data_table.currentRow() + 1  # +1 because rows are 0-indexed
+        # Restituisce l'indice del record attualmente selezionato nella tabella dati
+        return self.data_table.currentRow() + 1  # +1 perché le righe sono indicizzate a 0
 
     def get_total_records(self):
-        # Return the total number of records in the data table
+        # Restituisce il numero totale di record nella tabella dati
         return self.data_table.rowCount()
 
     # Il metodo per cancellare le QLineEdit
@@ -434,7 +436,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.tableWidget_relationship.clearContents()
 
     def add_text_to_table(self):
-        # Capture user inputs
+        # Cattura gli input dell'utente
         txt_nameus = self.lineEdit_nameus.text()
         txt_typeunit = self.comboBox_typeunit.currentText()
         #txt_descunit = self.lineEdit_descriptionunit.text()
@@ -442,41 +444,41 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         txt_epochindex = self.lineEdit_epochindex.text()
         txt_desc = self.textEdit_description.toPlainText()
 
-        # Retrieve all data from QTableWidget
+        # Recupera tutti i dati da QTableWidget
         all_rows = self.get_all_rows()
 
-        # Check if txt_nameus already exists in data_table
+        # Controlla se txt_nameus esiste già in data_table
         exists = any(self.data_table.item(i, 0) and self.data_table.item(i, 0).text() == txt_nameus
                      for i in range(self.data_table.rowCount()))
 
-        # Create a new row if txt_nameus doesn't exist in data_table
+        # Crea una nuova riga se txt_nameus non esiste in data_table
         if not exists:
             self.create_new_row(txt_nameus, txt_typeunit, txt_desc, txt_epoch, txt_epochindex)
         else:
             self.update_row(txt_nameus, txt_typeunit, txt_desc, txt_epoch, txt_epochindex)
-        # go through each relationship and update the data_table
+        # esaminare ogni relazione e aggiornare data_table
         for relationship in all_rows:
             if len(relationship) == 6:
                 self.update_relationship(relationship, txt_nameus, txt_typeunit)
 
 
     def remove_or_update_data_table(self, nameus):
-        # Implement logic to find and remove/update the related data in self.data_table
+        # Implementare la logica per trovare e rimuovere/aggiornare i dati correlati in self.data_table
         for i in range(self.data_table.rowCount()):
             if self.data_table.item(i, 0) and self.data_table.item(i, 0).text() == nameus:
-                # Found the related row, now remove or update it
+                # Trovata la riga correlata, ora rimuovila o aggiornala
                 self.data_table.removeRow(i)
                 break
 
     def refresh_data_table(self):
-        # Implement logic to refresh the data_table UI if necessary
+        # Implementare la logica per aggiornare l'interfaccia utente data_table, se necessario
         self.data_table.viewport().update()
 
     def update_row(self, nameus, typeunit, desc, epoch, epochindex):
-        # Find the existing row
+        # Trova la riga esistente
         for i in range(self.data_table.rowCount()):
             if self.data_table.item(i, 0) and self.data_table.item(i, 0).text() == nameus:
-                # Update the values
+                # Aggiorna i valori
                 self.data_table.setItem(i, 0, QTableWidgetItem(nameus))
                 self.data_table.setItem(i, 1, QTableWidgetItem(typeunit))
                 self.data_table.setItem(i, 3, QTableWidgetItem(desc))
@@ -485,7 +487,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 break
 
     def get_all_rows(self):
-        # Retrieves all data from each row of tableWidget_relationship
+        # Recupera tutti i dati da ogni riga di tableWidget_relationship
         all_rows = []
         for i in range(self.tableWidget_relationship.rowCount()):
             row_data = []
@@ -496,7 +498,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         return all_rows
 
     def create_new_row(self, nameus, typeunit,  desc, epoch, epochindex):
-        # Creates a new row with the provided data and inserts it into data_table
+        # Crea una nuova riga con i dati forniti e la inserisce in data_table
         row_position = self.data_table.rowCount()
         self.data_table.insertRow(row_position)
         self.data_table.setItem(row_position, 0, QTableWidgetItem(nameus))
@@ -507,7 +509,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.data_table.setItem(row_position, 5, QTableWidgetItem(epochindex))
 
     def update_relationship(self, relationship, nameus, typeunit):
-        # Mapping of English terms back to Italian
+        # Mappatura dei termini inglesi in italiano
         english_to_italian = {
             "anterior": "anteriore",
             "posterior": "posteriore",
@@ -515,18 +517,18 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             "properties_ant": "properties_ant",
             "properties_post": "properties_post"
         }
-        # Updates relationship in the data_table
+        # Aggiorna la relazione in data_table
         relation_type, related_nameus, related_typeunit, related_desc, related_epoch, related_epochindex = relationship
-        # Translate the relation_type if it's in English
+        # Traduci il relationship_type se è in inglese
         relation_type = english_to_italian.get(relation_type, relation_type)
 
         print(
             f"Updating relationship: {relation_type}, {related_nameus}, {related_typeunit}, {related_desc}, {related_epoch}, {related_epochindex}")
 
-        # Find or create a row for the related 'name us'
+        # Trova o crea una riga per il relativo "nominaci"
         related_row_position = self.find_or_create_row(related_nameus)
 
-        # Set the data for the related row
+        # Imposta i dati per la riga correlata
         self.data_table.setItem(related_row_position, 0, QTableWidgetItem(related_nameus))
         self.data_table.setItem(related_row_position, 1, QTableWidgetItem(related_typeunit))
 
@@ -534,13 +536,13 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         self.data_table.setItem(related_row_position, 4, QTableWidgetItem(related_epoch))
         self.data_table.setItem(related_row_position, 5, QTableWidgetItem(related_epochindex))
 
-        # Find or create a row for the main 'name us'
+        # Trova o crea una riga per il "nominaci" principale
         main_row_position = self.find_or_create_row(nameus)
 
-        # Set the main type
+        # Imposta il tipo principale
         self.data_table.setItem(main_row_position, 1, QTableWidgetItem(typeunit))
 
-        # For the corresponding original 'name us', we update the opposite relation column
+        # Per il corrispondente originale 'nominaci', aggiorniamo la colonna della relazione opposta
         if relation_type == "anteriore":
             correspondent_relation = "posteriore"
         elif relation_type == "posteriore":
@@ -550,31 +552,31 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
         elif relation_type == "properties_post":
             correspondent_relation = "properties_ant"
         else:
-            correspondent_relation = relation_type  # for 'contemporaneo'
+            correspondent_relation = relation_type
 
-        # Update the relationship columns for the original and related 'name us'
+        # Aggiorna le colonne di relazione per il "nominaci" originale e correlato
         self.update_relation_item(main_row_position, relation_type, related_nameus)
         self.update_relation_item(related_row_position, correspondent_relation, nameus)
 
     def update_relation_item(self, row_position, relation_type, nameus):
-        # Updates the relationship item in the data_table
+        # Aggiorna l'elemento della relazione in data_table
         relation_item = self.data_table.item(row_position, self.get_column_index(relation_type))
         current_value = relation_item.text() if relation_item else ''
         new_value = ",".join([current_value, nameus]).lstrip(",")
         self.data_table.setItem(row_position, self.get_column_index(relation_type), QTableWidgetItem(new_value))
 
     def find_or_create_row(self, nameus):
-        # Find an existing row or create a new one for the given 'name us'
+        # Trova una riga esistente o creane una nuova per il dato "nominaci"
         for i in range(self.data_table.rowCount()):
             if self.data_table.item(i, 0) and self.data_table.item(i, 0).text() == nameus:
                 return i
-        # If not found, create a new row
+        # Se non lo trovi, crea una nuova riga
         row_position = self.data_table.rowCount()
         self.data_table.insertRow(row_position)
         return row_position
 
     def get_column_index(self, relation_type):
-        # Map the relation type to the correct column index
+        # Mappare il tipo di relazione sull'indice di colonna corretto
         column_indices = {
             'anteriore': 6,
             'posteriore': 7,
