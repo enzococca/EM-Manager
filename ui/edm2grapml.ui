@@ -2787,7 +2787,7 @@ font: 9pt &quot;Noto Sans Hebrew&quot;;</string>
         <enum>QTabWidget::Triangular</enum>
        </property>
        <property name="currentIndex">
-        <number>1</number>
+        <number>0</number>
        </property>
        <property name="elideMode">
         <enum>Qt::ElideLeft</enum>
