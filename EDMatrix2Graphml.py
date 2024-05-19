@@ -23,7 +23,6 @@ import csv
 import pandas as pd
 import gspread
 import os
-import sys
 import subprocess
 import time
 from gspread_dataframe import set_with_dataframe
@@ -38,7 +37,7 @@ from modules.check_graphviz_path import check_graphviz
 from modules.json2cvs import DataExtractor, DataImporter
 from modules.autoswimlane import YEdAutomation
 from modules.check_yed_path import YEdSetup
-
+from modules.askgpt import GPT
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtCore import QUrl
 from modules.customlistwidget import CustomListWidget
@@ -1241,6 +1240,10 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             self.actionVisualizzatore_3D.triggered.connect(self.d_graph)
             self.actionimport_json.triggered.connect(self.import_json)
             self.actionexport_json.triggered.connect(self.export_json)
+            self.actionReport_AI.triggered.connect(self.reportai)
+            self.actionAsk_gpt.triggered.connect(self.askgpt_ai)
+            self.actionImport_scketch_in_AI.triggered.connect(self.scketchgpt
+                                                              )
             def handle_check_relations_action():
                 """
                 Questa funzione gestisce l'azione di controllo delle relazioni in una tabella dati e di stampa di eventuali errori su QTextEdit.
@@ -1293,6 +1296,114 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             for index, row in epoch_df.iterrows():
                 combined_item = str(row[1]) + ' - ' + str(row[2])  # merge second and third column
                 self.comboBox_epoch.addItem(combined_item)
+
+        def apikey_gpt(self):
+            # HOME = os.environ['PYARCHINIT_HOME']
+            #BIN = '{}{}{}'.format(self.HOME, os.sep, "bin")
+            api_key = ""
+            # Verifica se il file gpt_api_key.txt esiste
+            path_key = os.path.join('modules', 'gpt_api_key.txt')
+            print(path_key)
+            if os.path.exists(path_key):
+
+                # Leggi l'API Key dal file
+                with open(path_key, 'r') as f:
+                    api_key = f.read().strip()
+                    try:
+
+                        return api_key
+
+                    except:
+                        reply = QMessageBox.question(None, 'Warning', 'Apikey non valida' + '\n'
+                                                     + 'Clicca ok per inserire la chiave',
+                                                     QMessageBox.Ok | QMessageBox.Cancel)
+                        if reply == QMessageBox.Ok:
+
+                            api_key, ok = QInputDialog.getText(None, 'Apikey gpt', 'Inserisci apikey valida:')
+                            if ok:
+                                # Salva la nuova API Key nel file
+                                with open(path_key, 'w') as f:
+                                    f.write(api_key)
+                                    f.close()
+                                with open(path_key, 'r') as f:
+                                    api_key = f.read().strip()
+                        else:
+                            return api_key
+
+
+            else:
+                # Chiedi all'utente di inserire una nuova API Key
+                api_key, ok = QInputDialog.getText(None, 'Apikey gpt', 'Inserisci apikey:')
+                if ok:
+                    # Salva la nuova API Key nel file
+                    with open(path_key, 'w') as f:
+                        f.write(api_key)
+                        f.close()
+                    with open(path_key, 'r') as f:
+                        api_key = f.read().strip()
+
+            return api_key
+        def reportai(self):
+
+            models = ["gpt-3.5-turbo-16k", "gpt-4"]  # Replace with actual model names
+            combo = QComboBox()
+            combo.addItems(models)
+            selected_model, ok = QInputDialog.getItem(self, "Select Model", "Choose a model for GPT:", models, 0,
+                                                      False)
+
+            if ok and selected_model:
+                gpt_response = GPT.ask_gpt(self, f"spiegami l'errore", self.apikey_gpt(),
+                                             selected_model)
+                combined_message = f"Error: \nGPT Response: {gpt_response}"
+                self.listWidget_ai.addItem(combined_message)
+            elif not ok:
+                self.listWidget_ai.addItem("Model selection was canceled.")
+
+
+
+        def askgpt_ai(self):
+            models = ["gpt-4"]  # Replace with actual model names
+            combo = QComboBox()
+            combo.addItems(models)
+            selected_model, ok = QInputDialog.getItem(self, "Select Model", "Choose a model for GPT:", models, 0,
+                                                      False)
+
+            if ok and selected_model:
+                table_data = []
+                table = self.data_table  # This is your QTableWidget object
+
+                for i in range(table.rowCount()):
+                    row_data = []
+                    for j in range(table.columnCount()):
+                        item = table.item(i, j)
+                        # Make sure the item is not None and then get its text
+                        if item is not None:
+                            row_data.append(item.text())
+                    table_data.append(row_data)
+                    print(table_data)
+                gpt_response = GPT.ask_gpt(self, f"fammi un riassunto di questa tabella {table_data}", self.apikey_gpt(),
+                                           selected_model)
+                combined_message = f"GPT Response: {gpt_response}"
+                self.listWidget_ai.addItem(combined_message)
+            elif not ok:
+                self.listWidget_ai.addItem("Model selection was canceled.")
+
+        def scketchgpt(self):
+            models = ["gpt-4-vision-preview"]  # Replace with actual model names
+            combo = QComboBox()
+            combo.addItems(models)
+            selected_model, ok = QInputDialog.getItem(self, "Select Model", "Choose a model for GPT:", models, 0,
+                                                      False)
+
+            if ok and selected_model:
+                gpt_response = GPT.ask_gpt(self, f"spiegami questa tabella {self.data_table}", self.apikey_gpt(),selected_model)
+                combined_message = f"Error: \nGPT Response: {gpt_response}"
+                self.listWidget_ai.addItem(combined_message)
+            elif not ok:
+                self.listWidget_ai.addItem("Model selection was canceled.")
+
+
+
 
 
         def import_json(self):

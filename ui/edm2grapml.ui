@@ -7,8 +7,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1319</width>
-    <height>799</height>
+    <width>1209</width>
+    <height>842</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -2714,7 +2714,7 @@ color: rgb(0, 0, 0);</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1319</width>
+     <width>1209</width>
      <height>24</height>
     </rect>
    </property>
@@ -2746,7 +2746,16 @@ color: rgb(0, 0, 0);</string>
      <string>Help</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuAi">
+    <property name="title">
+     <string>AI Manager</string>
+    </property>
+    <addaction name="actionReport_AI"/>
+    <addaction name="actionAsk_gpt"/>
+    <addaction name="actionImport_scketch_in_AI"/>
+   </widget>
    <addaction name="menu_help"/>
+   <addaction name="menuAi"/>
    <addaction name="menu_help_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -2787,7 +2796,7 @@ font: 9pt &quot;Noto Sans Hebrew&quot;;</string>
         <enum>QTabWidget::Triangular</enum>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>2</number>
        </property>
        <property name="elideMode">
         <enum>Qt::ElideLeft</enum>
@@ -2830,6 +2839,20 @@ color: rgb(0, 0, 0);</string>
             <url>
              <string>https://www.yworks.com/yed-live/</string>
             </url>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_3">
+        <attribute name="title">
+         <string>AI Manager</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_6">
+         <item row="0" column="0">
+          <widget class="QListWidget" name="listWidget_ai">
+           <property name="resizeMode">
+            <enum>QListView::Adjust</enum>
            </property>
           </widget>
          </item>
@@ -2923,6 +2946,21 @@ color: rgb(0, 0, 0);</string>
     <string>Export json to EM tools</string>
    </property>
   </action>
+  <action name="actionReport_AI">
+   <property name="text">
+    <string>Report AI</string>
+   </property>
+  </action>
+  <action name="actionAsk_gpt">
+   <property name="text">
+    <string>Ask gpt</string>
+   </property>
+  </action>
+  <action name="actionImport_scketch_in_AI">
+   <property name="text">
+    <string>Import scketch in AI</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="9"/>
  <customwidgets>
@@ -2947,8 +2985,8 @@ color: rgb(0, 0, 0);</string>
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>247</x>
-     <y>756</y>
+     <x>172</x>
+     <y>766</y>
     </hint>
    </hints>
   </connection>
@@ -2959,12 +2997,12 @@ color: rgb(0, 0, 0);</string>
    <slot>hide()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>519</x>
-     <y>88</y>
+     <x>465</x>
+     <y>59</y>
     </hint>
     <hint type="destinationlabel">
-     <x>166</x>
-     <y>756</y>
+     <x>91</x>
+     <y>766</y>
     </hint>
    </hints>
   </connection>
@@ -2979,8 +3017,8 @@ color: rgb(0, 0, 0);</string>
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>166</x>
-     <y>756</y>
+     <x>91</x>
+     <y>766</y>
     </hint>
    </hints>
   </connection>
@@ -2991,12 +3029,12 @@ color: rgb(0, 0, 0);</string>
    <slot>show()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>519</x>
-     <y>88</y>
+     <x>465</x>
+     <y>59</y>
     </hint>
     <hint type="destinationlabel">
-     <x>247</x>
-     <y>756</y>
+     <x>172</x>
+     <y>766</y>
     </hint>
    </hints>
   </connection>
@@ -3011,8 +3049,8 @@ color: rgb(0, 0, 0);</string>
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>247</x>
-     <y>756</y>
+     <x>172</x>
+     <y>766</y>
     </hint>
    </hints>
   </connection>
@@ -3027,8 +3065,8 @@ color: rgb(0, 0, 0);</string>
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>247</x>
-     <y>756</y>
+     <x>172</x>
+     <y>766</y>
     </hint>
    </hints>
   </connection>
@@ -3043,8 +3081,8 @@ color: rgb(0, 0, 0);</string>
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>247</x>
-     <y>756</y>
+     <x>172</x>
+     <y>766</y>
     </hint>
    </hints>
   </connection>
@@ -3059,8 +3097,8 @@ color: rgb(0, 0, 0);</string>
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>247</x>
-     <y>756</y>
+     <x>172</x>
+     <y>766</y>
     </hint>
    </hints>
   </connection>
@@ -3071,8 +3109,8 @@ color: rgb(0, 0, 0);</string>
    <slot>setHidden(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>51</x>
-     <y>77</y>
+     <x>815</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
      <x>32</x>
@@ -3087,8 +3125,8 @@ color: rgb(0, 0, 0);</string>
    <slot>setHidden(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>74</x>
-     <y>77</y>
+     <x>838</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
      <x>61</x>
@@ -3103,12 +3141,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setHidden(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>27</x>
-     <y>77</y>
+     <x>791</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>210</x>
-     <y>390</y>
+     <x>278</x>
+     <y>353</y>
     </hint>
    </hints>
   </connection>
@@ -3119,12 +3157,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>71</x>
-     <y>74</y>
+     <x>835</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>156</x>
-     <y>414</y>
+     <x>224</x>
+     <y>377</y>
     </hint>
    </hints>
   </connection>
@@ -3135,12 +3173,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>83</x>
-     <y>84</y>
+     <x>838</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>181</x>
-     <y>443</y>
+     <x>249</x>
+     <y>406</y>
     </hint>
    </hints>
   </connection>
@@ -3151,12 +3189,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>63</x>
-     <y>76</y>
+     <x>827</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>298</x>
-     <y>442</y>
+     <x>773</x>
+     <y>405</y>
     </hint>
    </hints>
   </connection>
@@ -3167,12 +3205,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>71</x>
-     <y>71</y>
+     <x>835</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>298</x>
-     <y>414</y>
+     <x>474</x>
+     <y>377</y>
     </hint>
    </hints>
   </connection>
@@ -3183,12 +3221,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>83</x>
-     <y>84</y>
+     <x>838</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>181</x>
-     <y>467</y>
+     <x>249</x>
+     <y>430</y>
     </hint>
    </hints>
   </connection>
@@ -3199,12 +3237,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>30</x>
-     <y>72</y>
+     <x>794</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>272</x>
-     <y>495</y>
+     <x>340</x>
+     <y>458</y>
     </hint>
    </hints>
   </connection>
@@ -3215,12 +3253,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>29</x>
-     <y>69</y>
+     <x>793</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>607</x>
-     <y>467</y>
+     <x>835</x>
+     <y>430</y>
     </hint>
    </hints>
   </connection>
@@ -3231,12 +3269,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>23</x>
-     <y>74</y>
+     <x>787</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>607</x>
-     <y>496</y>
+     <x>835</x>
+     <y>459</y>
     </hint>
    </hints>
   </connection>
@@ -3247,12 +3285,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>15</x>
-     <y>75</y>
+     <x>779</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>121</x>
-     <y>525</y>
+     <x>189</x>
+     <y>483</y>
     </hint>
    </hints>
   </connection>
@@ -3263,12 +3301,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>46</x>
-     <y>79</y>
+     <x>810</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>261</x>
-     <y>723</y>
+     <x>329</x>
+     <y>549</y>
     </hint>
    </hints>
   </connection>
@@ -3279,12 +3317,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>67</x>
-     <y>71</y>
+     <x>831</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>392</x>
-     <y>525</y>
+     <x>416</x>
+     <y>578</y>
     </hint>
    </hints>
   </connection>
@@ -3295,8 +3333,8 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>47</x>
-     <y>68</y>
+     <x>811</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
      <x>607</x>
@@ -3311,12 +3349,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setHidden(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>48</x>
-     <y>71</y>
+     <x>812</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>134</x>
-     <y>49</y>
+     <x>149</x>
+     <y>88</y>
     </hint>
    </hints>
   </connection>
@@ -3327,12 +3365,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>44</x>
-     <y>74</y>
+     <x>808</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>273</x>
-     <y>190</y>
+     <x>311</x>
+     <y>182</y>
     </hint>
    </hints>
   </connection>
@@ -3343,12 +3381,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>41</x>
-     <y>75</y>
+     <x>805</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>69</x>
-     <y>190</y>
+     <x>82</x>
+     <y>141</y>
     </hint>
    </hints>
   </connection>
@@ -3359,12 +3397,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>37</x>
-     <y>75</y>
+     <x>801</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>239</x>
-     <y>190</y>
+     <x>108</x>
+     <y>223</y>
     </hint>
    </hints>
   </connection>
@@ -3375,12 +3413,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>18</x>
-     <y>70</y>
+     <x>782</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>103</x>
-     <y>190</y>
+     <x>210</x>
+     <y>141</y>
     </hint>
    </hints>
   </connection>
@@ -3391,12 +3429,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>83</x>
-     <y>87</y>
+     <x>838</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>137</x>
-     <y>190</y>
+     <x>311</x>
+     <y>141</y>
     </hint>
    </hints>
   </connection>
@@ -3407,12 +3445,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>69</y>
+     <x>821</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>171</x>
-     <y>190</y>
+     <x>413</x>
+     <y>141</y>
     </hint>
    </hints>
   </connection>
@@ -3423,12 +3461,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>83</x>
-     <y>87</y>
+     <x>838</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>205</x>
-     <y>190</y>
+     <x>108</x>
+     <y>182</y>
     </hint>
    </hints>
   </connection>
@@ -3439,12 +3477,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>40</x>
-     <y>73</y>
+     <x>804</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>307</x>
-     <y>190</y>
+     <x>311</x>
+     <y>223</y>
     </hint>
    </hints>
   </connection>
@@ -3455,12 +3493,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>83</x>
-     <y>87</y>
+     <x>838</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>341</x>
-     <y>190</y>
+     <x>413</x>
+     <y>223</y>
     </hint>
    </hints>
   </connection>
@@ -3471,12 +3509,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>56</x>
-     <y>70</y>
+     <x>820</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>375</x>
-     <y>190</y>
+     <x>413</x>
+     <y>182</y>
     </hint>
    </hints>
   </connection>
@@ -3487,12 +3525,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>27</x>
-     <y>72</y>
+     <x>791</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>386</x>
-     <y>151</y>
+     <x>424</x>
+     <y>237</y>
     </hint>
    </hints>
   </connection>
@@ -3503,12 +3541,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>55</x>
-     <y>72</y>
+     <x>819</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>413</x>
-     <y>112</y>
+     <x>833</x>
+     <y>124</y>
     </hint>
    </hints>
   </connection>
@@ -3519,12 +3557,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>72</y>
+     <x>823</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>409</x>
-     <y>138</y>
+     <x>629</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>
@@ -3535,12 +3573,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>29</x>
-     <y>67</y>
+     <x>793</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>513</x>
-     <y>138</y>
+     <x>832</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>
@@ -3551,12 +3589,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>18</x>
-     <y>74</y>
+     <x>782</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>412</x>
-     <y>157</y>
+     <x>629</x>
+     <y>177</y>
     </hint>
    </hints>
   </connection>
@@ -3567,12 +3605,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>38</x>
-     <y>70</y>
+     <x>802</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>524</x>
-     <y>162</y>
+     <x>832</x>
+     <y>177</y>
     </hint>
    </hints>
   </connection>
@@ -3583,12 +3621,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>41</x>
-     <y>66</y>
+     <x>805</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>436</x>
-     <y>191</y>
+     <x>629</x>
+     <y>207</y>
     </hint>
    </hints>
   </connection>
@@ -3599,12 +3637,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>53</x>
-     <y>71</y>
+     <x>817</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>527</x>
-     <y>184</y>
+     <x>832</x>
+     <y>207</y>
     </hint>
    </hints>
   </connection>
@@ -3615,12 +3653,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>74</y>
+     <x>821</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>424</x>
-     <y>221</y>
+     <x>629</x>
+     <y>235</y>
     </hint>
    </hints>
   </connection>
@@ -3631,12 +3669,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>70</x>
-     <y>64</y>
+     <x>834</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>526</x>
-     <y>224</y>
+     <x>832</x>
+     <y>235</y>
     </hint>
    </hints>
   </connection>
@@ -3647,12 +3685,12 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>70</y>
+     <x>823</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>409</x>
-     <y>521</y>
+     <x>32</x>
+     <y>578</y>
     </hint>
    </hints>
   </connection>
@@ -3663,12 +3701,28 @@ color: rgb(0, 0, 0);</string>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>42</x>
-     <y>66</y>
+     <x>806</x>
+     <y>766</y>
     </hint>
     <hint type="destinationlabel">
-     <x>436</x>
-     <y>515</y>
+     <x>61</x>
+     <y>578</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>menubar</sender>
+   <signal>triggered(QAction*)</signal>
+   <receiver>listWidget_ai</receiver>
+   <slot>show()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>87</x>
+     <y>8</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>1242</x>
+     <y>143</y>
     </hint>
    </hints>
   </connection>

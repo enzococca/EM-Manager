@@ -4,6 +4,7 @@
 # Descrizione: Script per convertire un file GraphML in Excel e CSV,
 #              con elaborazione specifica per nodi e archi.
 # ---------------------------------------------------------
+import csv
 import os
 import xml.etree.ElementTree as ET
 from datetime import datetime
@@ -14,16 +15,40 @@ import re
 from PyQt5.QtWidgets import QFileDialog
 
 
+
+
+# Function to read keywords from CSV and convert to lowercase
+def load_keywords_from_csv(file_path):
+    keywords = []
+    with open(file_path, mode='r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            keywords.extend([keyword.lower() for keyword in row])
+    return keywords
+# Load keywords from template/epoche_storiche.csv
+# Function to read indices and keywords from a CSV and convert to lowercase
+def load_keywords_epoch(file_path):
+    keywords = {}
+    with open(file_path, mode='r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            if row:  # Ensure the row is not empty
+                index = row[0].strip()
+                keyword = row[1].strip().lower()
+                keywords[keyword] = index
+                print(f"Loaded keyword: {keyword} with index: {index}")  # Debugging line
+    return keywords
+
+
+period_keywords = load_keywords_epoch('template/epoche_storiche.csv')
+print(f"Period Keywords: {period_keywords}")
 def is_period_label(label_text):
-    # Definisci una lista di parole chiave o pattern che identificano un periodo
-    period_keywords = ['secolo', 'età', 'dinastia', 'impero', 'regno', 'periodo', 'epoca', 'I', 'II', 'III', 'IV', 'V',
-                       'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV', 'XVI', 'XVII', 'XVIII',
-                      'XIX', 'XX', 'XXI', 'a.C.', 'd.C.', 'a.e.v.', 'd.e.v.', 'a.e.c.', 'd.e.c.', 'a.C.n.', 'd.C.n.']
-
     # Controlla se il label_text contiene una delle parole chiave
-    return any(keyword in label_text for keyword in period_keywords)
+    result = any(keyword in label_text.lower() for keyword in period_keywords)
+    print(f"Checking label: {label_text}, Result: {result}")  # Debugging line
+    return result
 
-
+# Load keywords from property.csv
 def load_graphml(project_directorys, csv_name):
     graphml_path, _ = QFileDialog.getOpenFileName(None, 'Seleziona il file GraphML', '', '*.graphml')
 
@@ -50,10 +75,12 @@ def load_graphml(project_directorys, csv_name):
             # Ad esempio, potresti controllare se il testo contiene certe parole chiave,
             # numeri romani, date o altri indicatori che usi per identificare i periodi.
             if label_text and is_period_label(label_text):  # is_period_label è una funzione da definire
+                print(f"Periodo trovato: {label_text}")
                 # Estrai la posizione (x, y) dall'elemento NodeLabel se disponibile
                 x = float(node_label.attrib.get('x', 0))
                 y = float(node_label.attrib.get('y', 0))
                 periods[label_text] = {'x': x, 'y': y}
+                print(f"Periodo trovato: {label_text} - Posizione: ({x}, {y})")
 
     # Ora ho un dizionario dei periodi con le loro posizioni
     print(periods)
@@ -132,8 +159,8 @@ def load_graphml(project_directorys, csv_name):
             elif len(parts) > 2:
                 tipo = 'extractor'
                 nome_us = label
-        elif any(keyword in label for keyword in ['material', 'type', 'length', 'width',
-                                                  'height', 'position','proportion','heigth']):
+        elif any(keyword in label for keyword in load_keywords_from_csv('template/property.csv')):
+
             nome_us = label
             tipo = 'property'
         else:
@@ -155,6 +182,8 @@ def load_graphml(project_directorys, csv_name):
 
         # Aggiorno i dati del nodo US con il periodo associato
         data['epoca'] = closest_period_label
+        # Aggiungi l'indice dell'epoca
+        data['epoca index'] = period_keywords.get(closest_period_label.lower(), '')
         # se stampo G,node_data vedrò aggiugnto l'attributo epoca con il periodo associato per ogni nodo
         # Popolo il dizionario processed_nodes
         if nome_us:
@@ -164,7 +193,7 @@ def load_graphml(project_directorys, csv_name):
                 'tipo di nodo': data.get('shape_type', ''),
                 'descrizione': description,
                 'epoca': data.get('epoca', ''),  # Segnaposto per l'associazione del periodo
-                'epoca index': '',
+                'epoca index': data.get('epoca index', ''),
                 'anteriore': '',
                 'posteriore': '',
                 'contemporaneo': '',
