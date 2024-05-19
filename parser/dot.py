@@ -674,7 +674,7 @@ class Node:
             label.setAttribute('xml:space','preserve')
             label.setAttribute('y','5.6494140625')
             
-        elif 'SFF' in a:
+        elif 'SF' in a:
             fill.setAttribute('color','#FFFFFF')
             fill.setAttribute('transparent','false')
             border.setAttribute('color','#d8bd30')
@@ -910,7 +910,7 @@ class Node:
             svg_content.setAttribute('refid','3')
             svg_model.appendChild(svg_content)
             snode.appendChild(svg_model)
-        elif 'SFF' in a:
+        elif 'SF' in a:
             
             shape.setAttribute('type','octagon')
             snode.appendChild(shape)
@@ -1021,6 +1021,18 @@ class Node:
             data1.setAttribute('key', 'd5')
             data1.setAttribute('xml:space','preserve') 
         
+        elif 'SF' in a:
+            data1.setAttribute('key', 'd5')
+            data1.setAttribute('xml:space','preserve')
+
+        elif 'VSF' in a:
+            data1.setAttribute('key', 'd5')
+            data1.setAttribute('xml:space','preserve')
+
+        elif 'UTR' in a:
+            data1.setAttribute('key', 'd5')
+            data1.setAttribute('xml:space','preserve')
+
         elif 'continuity' in a:
             data1.setAttribute('key', 'd5')
             data1.setAttribute('xml:space','preserve') 

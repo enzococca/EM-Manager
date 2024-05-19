@@ -76,6 +76,31 @@ def reverse():
             return 0
     except KeyError as e:
         print(str(e))
+# def group_nodes_by_attribute(nodes, attribute):
+#     grouped_nodes = {}
+#     for node_id, node_data in nodes.items():
+#         key_value = getattr(node_data, attribute, 'Unknown')
+#         if key_value not in grouped_nodes:
+#             grouped_nodes[key_value] = []
+#         grouped_nodes[key_value].append(node_data)
+#     print(grouped_nodes)
+#     return grouped_nodes
+# def create_grouped_graph(doc, grouped_nodes):
+#     graph = doc.createElement('graph')
+#     graph.setAttribute('edgedefault', 'directed')
+#     for group, nodes in grouped_nodes.items():
+#         group_node = doc.createElement('node')
+#         group_node.setAttribute('id', f'group_{group}')
+#         group_node.setAttribute('yfiles.foldertype', 'group')
+#         for node_data in nodes:
+#             node_element = doc.createElement('node')
+#             # Assicurati che l'ID del nodo sia una stringa
+#             node_element.setAttribute('id', str(node_data.id))
+#             # Aggiungi ulteriori dati e configurazioni al nodo
+#             group_node.appendChild(node_element)
+#         graph.appendChild(group_node)
+#     print(graph)
+#     return graph
 
 def exportGraphml(o, nodes, edges, options,ff=0):
     tf=reverse()
@@ -163,18 +188,22 @@ def exportGraphml(o, nodes, edges, options,ff=0):
     key.setAttribute('id','d10')    
     key.setAttribute('yfiles.type','edgegraphics')    
     root.appendChild(key)
-    
-    
-    
-    
+
+
+
+    # Creazione e aggiunta dei nodi e gruppi raggruppati
+    #grouped_nodes = group_nodes_by_attribute(nodes, 'epoch')  # Assumendo 'epoch' come attributo di raggruppamento
+    #grouped_graph = create_grouped_graph(doc, grouped_nodes)
+
     graph = doc.createElement('graph')
     graph.setAttribute('edgedefault','directed')    
-    graph.setAttribute('id','G') 
+    graph.setAttribute('id','G')
+
     data01 = doc.createElement('data')
     data01.setAttribute('key', 'd0')
-    data01.setAttribute('xml:space','preserve')    
+    data01.setAttribute('xml:space','preserve')
     graph.appendChild(data01)
-
+    #graph.appendChild(grouped_graph)
 
     node1 = doc.createElement('node')
     node1.setAttribute('id','n0')
@@ -238,79 +267,14 @@ def exportGraphml(o, nodes, edges, options,ff=0):
     x=700
     w=200
 
-    # # Crea un dizionario per raggruppare i nodi per epoca e area
-    # nodes_by_epoch_and_area = {}
-    #
-    # for k, nod in nodes.items():
-    #     # Supponendo che l'epoca e l'area siano sempre le ultime due parti del nome del nodo quando suddiviso da '_'
-    #     parts = k.split('_')
-    #     if len(parts) >= 3:
-    #         *_, epoch, area = parts
-    #     else:
-    #         continue
-    #     print(epoch, area)
-    #     # Assicurati che l'epoca esista nel dizionario
-    #     if epoch not in nodes_by_epoch_and_area:
-    #         nodes_by_epoch_and_area[epoch] = {}
-    #
-    #     # Assicurati che l'area esista nel dizionario dell'epoca
-    #     if area not in nodes_by_epoch_and_area[epoch]:
-    #         nodes_by_epoch_and_area[epoch][area] = []
-    #
-    #     # Aggiungi il nodo alla lista corretta
-    #     nodes_by_epoch_and_area[epoch][area].append(k)
-    #
-    # # Crea un dizionario per raggruppare i nodi per epoca e area
-    # nodes_by_epoch_and_area = {}
-    #
-    # for k, nod in nodes.items():
-    #     # Supponendo che l'epoca e l'area siano sempre le ultime due parti del nome del nodo quando suddiviso da '_'
-    #     parts = k.split('_')
-    #     if len(parts) >= 3:
-    #         *_, epoch, area = parts
-    #     else:
-    #         continue  # o forse assegnare valori predefiniti a epoch e area?
-    #
-    #     # Assicurati che l'epoca esista nel dizionario
-    #     if epoch not in nodes_by_epoch_and_area:
-    #         nodes_by_epoch_and_area[epoch] = {}
-    #
-    #     # Assicurati che l'area esista nel dizionario dell'epoca
-    #     if area not in nodes_by_epoch_and_area[epoch]:
-    #         nodes_by_epoch_and_area[epoch][area] = []
-    #
-    #     # Aggiungi il nodo alla lista corretta
-    #     nodes_by_epoch_and_area[epoch][area].append(nod)
-    #
-    # # Ora, quando aggiungi i nodi al tuo grafo, puoi farlo in base all'epoca e all'area
-    # for epoch, areas in nodes_by_epoch_and_area.items():
-    #     for area, nodes_in_area in areas.items():
-    #         # Creazione di un nodo per l'area
-    #         area_node = doc.createElement('node')
-    #         area_node.setAttribute('id',
-    #                                f'n{epoch}_{area}')  # supponendo che tu voglia l'ID del nodo come 'n' seguito da epoca e area
-    #         area_node.setAttribute('yfiles.foldertype', 'group')
-    #         for node in nodes_in_area:
-    #             # Creazione di un elemento 'node' per ciascuno dei nodi in questa area
-    #             node_element = doc.createElement('node')
-    #             node_element.setAttribute('id', 'a')
-    #
-    #
-    #         # # Imposta gli attributi del nodo XML in base all'oggetto `Node` del tuo codice
-    #         # for attr_name, attr_value in node.attr.items():
-    #         #     node_element.setAttribute(attr_name, str(attr_value))
-    #
-    #         area_node.appendChild(node_element)
-    #
-    #         # Aggiungi il nodo dell'area al grafo
-    #         #graph.appendChild(area_node)
+
 
     epoch=[]
     epoch_sigla = []
     for i in sorted(nodes):
         if i.startswith('Epoc') or i.startswith('epoc'):
             epoch.append(i)
-        elif i.startswith('US') or i.startswith('SU') or i.startswith('WSU'):
+        elif i.startswith('US') or i.startswith('SU') or i.startswith('WSU') or i.startswith('VSF') or i.startswith('SF') or i.startswith('UTR') or i.startswith('D') or i.startswith('C'):
             descrizione_us, singola_epoca = i.rsplit('_',1)
             #print(singola_epoca)
             nome_us, descrizione_us= descrizione_us.split('_',1)
@@ -320,7 +284,7 @@ def exportGraphml(o, nodes, edges, options,ff=0):
                 #print(epoch_sigla)
 
     #print(epoch_sigla)
-    
+
     for i in sorted(epoch, reverse=tf):
         color = "#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
         s=i.split(' : ')
@@ -606,8 +570,7 @@ def exportGraphml(o, nodes, edges, options,ff=0):
         el.exportGraphml(doc, graph, nodes, options)
     
     root.appendChild(graph)
-    
-    
+
     #######creo i simboli  svg per gli estrattori, i combinar e le continuity########
     data = doc.createElement('data')
     data.setAttribute('key','d7')    

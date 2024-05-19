@@ -126,18 +126,18 @@ def load_graphml(project_directorys, csv_name):
         # nella tabella nel campo tipo
 
         # Controllo se la label contiene i prefissi 'US', 'USM', 'VSF e le altre sigle'
-        elif 'US' in label or 'USM' in label or 'VSF' in label or 'UTR' in label or 'USD' in label or 'US/s' in label or 'USM/s' in label:
+        elif 'US' in label or 'USM' in label or 'VSF' in label or 'UTR' in label or 'USD' in label or 'US/s' in label or 'USM/s' in label or 'SF' in label:
             match = re.match(r'([a-zA-Z]+)(\d+)', label)
             if match:
                 prefix = match.group(1)
-                if prefix in ['US', 'USM', 'VSF','UTR','USD','US/s','USM/s']:
+                if prefix in ['US', 'USM', 'VSF','UTR','USD','US/s','USM/s','SF']:
                     tipo = prefix
                 nome_us = match.group(2)
-        elif 'SF' in label:
-            tipo = 'SFF'
-            # Cambia SF in SFF non so perchè non mi riconosce SF ma SFF sì (in tipo sarà scritto
-            # SF ma nell 'esportazione del graphml sarà SF)
-            nome_us = label[2:]  # Rimuovi il prefisso SF
+        # elif 'SF' in label:
+        #     tipo = 'SFF'
+        #     # Cambia SF in SFF non so perchè non mi riconosce SF ma SFF sì (in tipo sarà scritto
+        #     # SF ma nell 'esportazione del graphml sarà SF)
+        #     nome_us = label[2:]  # Rimuovi il prefisso SF
         elif '_continuity' in description:
             tipo = 'continuity'
             nome_us = label
