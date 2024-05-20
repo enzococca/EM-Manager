@@ -2851,8 +2851,17 @@ color: rgb(0, 0, 0);</string>
         <layout class="QGridLayout" name="gridLayout_6">
          <item row="0" column="0">
           <widget class="QListWidget" name="listWidget_ai">
+           <property name="isWrapping" stdset="0">
+            <bool>true</bool>
+           </property>
            <property name="resizeMode">
             <enum>QListView::Adjust</enum>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="selectionRectVisible">
+            <bool>true</bool>
            </property>
           </widget>
          </item>

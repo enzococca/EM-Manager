@@ -1,4 +1,7 @@
 # imports statements
+import base64
+
+import requests
 from PyQt5.QtWidgets import *
 import os
 import subprocess
@@ -64,26 +67,57 @@ class GPT(QWidget):
             return None
 
 
-    def ask_sketch (self, apikey,url):
+    def ask_sketch (self, prompt,apikey,url):
+        def encode_image(image_path):
+            with open(image_path, "rb") as image_file:
+                return base64.b64encode(image_file.read()).decode('utf-8')
         openai.api_key = apikey
-        response = openai.chat.completions.create(
-            model="gpt-4-vision-preview",
-            messages=[
+        base64_image = encode_image(url)
+        # Set headers for the API request
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {openai.api_key}"
+        }
+
+        # Payload for the API request
+        payload = {
+            "model": "gpt-4-vision-preview",
+            "messages": [
                 {
                     "role": "user",
                     "content": [
-                        {"type": "text", "text": "Describe the image in detail"},
+                        {"type": "text", "text": prompt},
                         {
                             "type": "image_url",
                             "image_url": {
-                                "url": url,
-                            },
-                        },
-                    ],
+                                "url": f"data:image/jpeg;base64,{base64_image}"
+                            }
+                        }
+                    ]
                 }
             ],
-            max_tokens=128000,  # default max tokens is low so set higher
-        )
+            "max_tokens": 4096
+        }
+
+        # Send the request to the OpenAI API
+        response = requests.post("https://api.openai.com/v1/chat/completions", headers=headers, json=payload)
+
+        # Check for HTTP errors
+        if response.status_code != 200:
+            print(f"Error: HTTP {response.status_code} - {response.text}")
+            return
+
+        # Try to parse the JSON response
+        try:
+            response_json = response.json()
+            content = ""
+            for choice in response_json['choices']:
+                content += choice['message']['content']
+            return content
+        except requests.exceptions.JSONDecodeError as e:
+            print("Error decoding JSON response:", e)
+            print("Response text:", response.text)
+            return None
     def is_connected(self):
         try:
             # Try to connect to one of the DNS servers

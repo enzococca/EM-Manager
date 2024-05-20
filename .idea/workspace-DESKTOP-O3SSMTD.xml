@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="05e25eb5-87f4-4b05-ab62-3ed2e68e4e4c" name="Changes" comment="Removed unnecessary files and updated documentation language configuration&#10;&#10;This commit removes unnecessary documentation files 'api.rst' and 'index2.rst' under the 'source' directory. It also updates the 'conf.py' file to change the root document to 'index' and the language to 'en' (English). Corresponding updates were also made in the built HTML files under the 'build/html' directory. In addition, the commit includes some modifications in JavaScript files under the '_static' directory in 'build/html'.">
+      <change beforePath="$PROJECT_DIR$/EDMatrix2Graphml.py" beforeDir="false" afterPath="$PROJECT_DIR$/EDMatrix2Graphml.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2NaWp3jZmzm3uaG4lXtNNtx7bYt" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
+    &quot;Python.EDMatrix2Graphml.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Shell Script.make.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Utente/OneDrive/ED2Graphml_2&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;stardust.markdown.MarkdownSplitEditorSuppressor:keyList&quot;: [
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Utente\OneDrive\ED2Graphml_2" />
+      <recent name="C:\Users\Utente\OneDrive\ED2Graphml_2\.github\workflows" />
+      <recent name="C:\Users\Utente\OneDrive\ED2Graphml_2\help" />
+      <recent name="C:\Users\Utente\OneDrive\ED2Graphml_2\source" />
+      <recent name="C:\Users\Utente\OneDrive\ED2Graphml_2\DosCo" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Utente\OneDrive\ED2Graphml_2" />
+      <recent name="C:\Users\Utente\OneDrive\ED2Graphml_2\Language files" />
+      <recent name="C:\Users\Utente\OneDrive\ED2Graphml_2\test" />
+      <recent name="C:\Users\Utente\OneDrive\ED2Graphml_2\log" />
+      <recent name="C:\Users\Utente\OneDrive\ED2Graphml_2\bin" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Shell Script.make">
+    <configuration name="activate" type="BatchConfigurationType" factoryName="Batch" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="WORKING_DIRECTORY" value="./ENV/Scripts" />
+      <option name="PARENT_ENVS" value="true" />
+      <module name="" />
+      <option name="SCRIPT_NAME" value="activate.bat" />
+      <option name="PARAMETERS" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="EDMatrix2Graphml" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="EDmapper2pyArchInit" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Python310\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/EDMatrix2Graphml.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Ed2graphml.sh" type="ShConfigurationType" temporary="true">
+      <option name="SCRIPT_TEXT" value="" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/Ed2graphml.sh" />
+      <option name="SCRIPT_OPTIONS" value="" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="true" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="make" type="ShConfigurationType">
+      <option name="SCRIPT_TEXT" value="" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="false" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/make.bat" />
+      <option name="SCRIPT_OPTIONS" value="html" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="powershell.exe" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="true" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Batch.activate" />
+      <item itemvalue="Python.EDMatrix2Graphml" />
+      <item itemvalue="Shell Script.Ed2graphml.sh" />
+      <item itemvalue="Shell Script.make" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Shell Script.Ed2graphml.sh" />
+        <item itemvalue="Batch.activate" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-d68999036c7f-b11f5e8da5ad-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.14475.56" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration>C:\Users\Utente\AppData\Roaming\Subversion</configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="05e25eb5-87f4-4b05-ab62-3ed2e68e4e4c" name="Changes" comment="" />
+      <created>1679902852665</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1679902852665</updated>
+      <workItem from="1702296574003" duration="2246000" />
+      <workItem from="1702355297270" duration="1041000" />
+      <workItem from="1708336845776" duration="8992000" />
+      <workItem from="1708415779251" duration="74000" />
+      <workItem from="1708415879406" duration="24000" />
+      <workItem from="1708426161827" duration="7000" />
+      <workItem from="1708506077793" duration="2803000" />
+      <workItem from="1708588319469" duration="309000" />
+      <workItem from="1708588668210" duration="481000" />
+      <workItem from="1708672648261" duration="596000" />
+      <workItem from="1708680686655" duration="605000" />
+      <workItem from="1708890020965" duration="72000" />
+      <workItem from="1709288230008" duration="1948000" />
+      <workItem from="1710843015729" duration="599000" />
+    </task>
+    <task id="LOCAL-00023" summary="#1">
+      <created>1684415365494</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1684415365494</updated>
+    </task>
+    <task id="LOCAL-00024" summary="-aggiunti in file menu apri progettoo e crea nuovo progetto">
+      <created>1684437737030</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1684437737030</updated>
+    </task>
+    <task id="LOCAL-00025" summary="-creazione script di configurazione per le path&#10;-aggiornamento alle path globali per l'esportazione del graphml">
+      <created>1684481436884</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1684481436884</updated>
+    </task>
+    <task id="LOCAL-00026" summary="-apri progetto specifico">
+      <created>1684482120331</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1684482120331</updated>
+    </task>
+    <task id="LOCAL-00027" summary="-apri progetto specifico">
+      <created>1684482475835</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1684482475835</updated>
+    </task>
+    <task id="LOCAL-00028" summary="-apri progetto specifico">
+      <created>1684482541032</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1684482541032</updated>
+    </task>
+    <task id="LOCAL-00029" summary="-apri progetto specifico">
+      <created>1684483597197</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1684483597197</updated>
+    </task>
+    <task id="LOCAL-00030" summary="-messaggio quando si carica un graphml non valido">
+      <created>1684483623448</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1684483623448</updated>
+    </task>
+    <task id="LOCAL-00031" summary="-aggiunti alcuni warning">
+      <created>1684484032932</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1684484032932</updated>
+    </task>
+    <task id="LOCAL-00032" summary="-modifica del comportamento spalshscreen. inserito dentro Graphml e tolta dal file bat">
+      <created>1684493907320</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1684493907320</updated>
+    </task>
+    <task id="LOCAL-00033" summary="#3">
+      <created>1684499428839</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1684499428839</updated>
+    </task>
+    <task id="LOCAL-00034" summary="fix minor bug">
+      <created>1684508223862</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1684508223862</updated>
+    </task>
+    <task id="LOCAL-00035" summary="--script to convert graphml to csv">
+      <created>1684508248583</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1684508248583</updated>
+    </task>
+    <task id="LOCAL-00036" summary="riordinazione della struttura dei moduli in cartelle">
+      <created>1684560302786</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1684560302786</updated>
+    </task>
+    <task id="LOCAL-00037" summary="riordinazione della struttura dei moduli in cartelle">
+      <created>1684560317554</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1684560317554</updated>
+    </task>
+    <task id="LOCAL-00038" summary="riordinazione della struttura dei moduli in cartelle">
+      <created>1684560361512</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1684560361512</updated>
+    </task>
+    <task id="LOCAL-00039" summary="riordinazione della struttura dei moduli in cartelle">
+      <created>1684563594762</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1684563594762</updated>
+    </task>
+    <task id="LOCAL-00040" summary="riordinazione della struttura dei moduli in cartelle">
+      <created>1684563628051</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1684563628051</updated>
+    </task>
+    <task id="LOCAL-00041" summary="riordinazione della struttura dei moduli in cartelle">
+      <created>1684694242908</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1684694242908</updated>
+    </task>
+    <task id="LOCAL-00042" summary="riordinazione della struttura dei moduli in cartelle">
+      <created>1684695223270</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1684695223270</updated>
+    </task>
+    <task id="LOCAL-00043" summary="update ed2graphml.sh">
+      <created>1684695268461</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1684695268461</updated>
+    </task>
+    <task id="LOCAL-00044" summary="update">
+      <created>1684695489480</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1684695489480</updated>
+    </task>
+    <task id="LOCAL-00045" summary="update">
+      <created>1684695697678</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1684695697679</updated>
+    </task>
+    <task id="LOCAL-00046" summary="update">
+      <created>1684695885202</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1684695885202</updated>
+    </task>
+    <task id="LOCAL-00047" summary="update path">
+      <created>1684733497588</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1684733497588</updated>
+    </task>
+    <task id="LOCAL-00048" summary="update pip install for platform darwin">
+      <created>1684733815879</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1684733815879</updated>
+    </task>
+    <task id="LOCAL-00049" summary="update readme">
+      <created>1684735464507</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1684735464507</updated>
+    </task>
+    <task id="LOCAL-00050" summary="update readme">
+      <created>1685173763297</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1685173763297</updated>
+    </task>
+    <task id="LOCAL-00051" summary="update readme">
+      <created>1685202831483</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1685202831483</updated>
+    </task>
+    <task id="LOCAL-00052" summary="update settings">
+      <created>1685262192017</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1685262192018</updated>
+    </task>
+    <task id="LOCAL-00053" summary="add dist">
+      <created>1685288265522</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1685288265522</updated>
+    </task>
+    <task id="LOCAL-00054" summary="add pyinstasller into the requirements">
+      <created>1685288850134</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1685288850134</updated>
+    </task>
+    <task id="LOCAL-00055" summary="update">
+      <created>1685290027723</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1685290027723</updated>
+    </task>
+    <task id="LOCAL-00056" summary="update">
+      <created>1685290073276</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1685290073276</updated>
+    </task>
+    <task id="LOCAL-00057" summary="update">
+      <created>1685290344240</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1685290344240</updated>
+    </task>
+    <task id="LOCAL-00058" summary="update">
+      <created>1685290366877</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1685290366877</updated>
+    </task>
+    <task id="LOCAL-00059" summary="update">
+      <created>1685291748824</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1685291748824</updated>
+    </task>
+    <task id="LOCAL-00060" summary="update">
+      <created>1685294138145</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1685294138145</updated>
+    </task>
+    <task id="LOCAL-00061" summary="update">
+      <created>1685294384373</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1685294384373</updated>
+    </task>
+    <task id="LOCAL-00062" summary="update mac">
+      <created>1685298370488</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1685298370488</updated>
+    </task>
+    <task id="LOCAL-00063" summary="update mac">
+      <created>1685298973382</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1685298973382</updated>
+    </task>
+    <task id="LOCAL-00064" summary="update mac">
+      <created>1685299438480</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1685299438480</updated>
+    </task>
+    <task id="LOCAL-00065" summary="update mac">
+      <created>1685300220847</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1685300220848</updated>
+    </task>
+    <task id="LOCAL-00066" summary="fix bug">
+      <created>1685357224304</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1685357224305</updated>
+    </task>
+    <task id="LOCAL-00067" summary="add exception">
+      <created>1685368876207</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1685368876207</updated>
+    </task>
+    <task id="LOCAL-00068" summary="update v1.1">
+      <created>1685435090691</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1685435090692</updated>
+    </task>
+    <task id="LOCAL-00069" summary="update v1.2">
+      <created>1685541344068</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1685541344069</updated>
+    </task>
+    <task id="LOCAL-00070" summary="update v1.2">
+      <created>1685598283847</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1685598283847</updated>
+    </task>
+    <task id="LOCAL-00071" summary="update v1.2">
+      <created>1685598469838</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1685598469838</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic," />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant information" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant information or" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant information or context" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant information or context," />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant information or context, and" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant information or context, and I" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant information or context, and I'll" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant information or context, and I'll be" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant information or context, and I'll be happy" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant information or context, and I'll be happy to" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant information or context, and I'll be happy to help" />
+    <MESSAGE value="I'm sorry, but your input doesn't seem to be related to the Python code previously provided. It looks like a list of new and modified files, possibly from a version control system diff output. If you need assistance regarding the Python code or any other programming-related topic, please provide the relevant information or context, and I'll be happy to help!" />
+    <MESSAGE value="Added new JS files and updated CSV editor configuration &#10;&#10;This commit introduces two JavaScript files, doctools.js and jquery.js under the build directory for Sphinx HTML documentation utilities. Further, modifications are made to the CSV editor configuration in .idea directory to add a new entry for 'test_banca_dati2.csv' file. The commit also comprises the addition of a Makefile to assist with Sphinx documentation." />
+    <MESSAGE value="Removed unnecessary files and updated documentation language configuration&#10;&#10;This commit removes unnecessary documentation files 'api.rst' and 'index2.rst' under the 'source' directory. It also updates the 'conf.py' file to change the root document to 'index' and the language to 'en' (English). Corresponding updates were also made in the built HTML files under the 'build/html' directory. In addition, the commit includes some modifications in JavaScript files under the '_static' directory in 'build/html'." />
+    <option name="LAST_COMMIT_MESSAGE" value="Removed unnecessary files and updated documentation language configuration&#10;&#10;This commit removes unnecessary documentation files 'api.rst' and 'index2.rst' under the 'source' directory. It also updates the 'conf.py' file to change the root document to 'index' and the language to 'en' (English). Corresponding updates were also made in the built HTML files under the 'build/html' directory. In addition, the commit includes some modifications in JavaScript files under the '_static' directory in 'build/html'." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint type="python-exception">
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

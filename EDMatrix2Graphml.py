@@ -1,7 +1,10 @@
 import ast
+import base64
 import shutil
 import sys
 from functools import partial
+
+from PIL import Image
 
 sys.path.insert(0, "ui")
 
@@ -1345,66 +1348,194 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             return api_key
         def reportai(self):
 
-            models = ["gpt-3.5-turbo-16k", "gpt-4"]  # Replace with actual model names
+            models = ["gpt-4o"]  # Replace with actual model names
             combo = QComboBox()
             combo.addItems(models)
             selected_model, ok = QInputDialog.getItem(self, "Select Model", "Choose a model for GPT:", models, 0,
                                                       False)
 
             if ok and selected_model:
-                gpt_response = GPT.ask_gpt(self, f"spiegami l'errore", self.apikey_gpt(),
-                                             selected_model)
-                combined_message = f"Error: \nGPT Response: {gpt_response}"
-                self.listWidget_ai.addItem(combined_message)
-            elif not ok:
-                self.listWidget_ai.addItem("Model selection was canceled.")
-
-
-
-        def askgpt_ai(self):
-            models = ["gpt-4"]  # Replace with actual model names
-            combo = QComboBox()
-            combo.addItems(models)
-            selected_model, ok = QInputDialog.getItem(self, "Select Model", "Choose a model for GPT:", models, 0,
-                                                      False)
-
-            if ok and selected_model:
-                table_data = []
+                # Extract the description column from self.data_table
                 table = self.data_table  # This is your QTableWidget object
+                description_data = []
 
                 for i in range(table.rowCount()):
-                    row_data = []
-                    for j in range(table.columnCount()):
-                        item = table.item(i, j)
-                        # Make sure the item is not None and then get its text
-                        if item is not None:
-                            row_data.append(item.text())
-                    table_data.append(row_data)
-                    print(table_data)
-                gpt_response = GPT.ask_gpt(self, f"fammi un riassunto di questa tabella {table_data}", self.apikey_gpt(),
+                    item = table.item(i, table.columnCount() - 1)  # Assuming the description is in the last column
+                    if item is not None:
+                        description_data.append(item.text())
+
+                # Join all descriptions into a single string
+                descriptions = " ".join(description_data)
+                print(descriptions)  # Debugging line
+
+                gpt_response = GPT.ask_gpt(self, f"fammi un riassunto di questa tabella {descriptions}",
+                                           self.apikey_gpt(),
                                            selected_model)
                 combined_message = f"GPT Response: {gpt_response}"
                 self.listWidget_ai.addItem(combined_message)
             elif not ok:
                 self.listWidget_ai.addItem("Model selection was canceled.")
 
-        def scketchgpt(self):
-            models = ["gpt-4-vision-preview"]  # Replace with actual model names
+        def askgpt_ai(self):
+            models = ["gpt-4o"]  # Replace with actual model names
             combo = QComboBox()
             combo.addItems(models)
-            selected_model, ok = QInputDialog.getItem(self, "Select Model", "Choose a model for GPT:", models, 0,
-                                                      False)
+            selected_model, ok = QInputDialog.getItem(self, "Select Model", "Choose a model for GPT:", models, 0, False)
 
             if ok and selected_model:
-                gpt_response = GPT.ask_gpt(self, f"spiegami questa tabella {self.data_table}", self.apikey_gpt(),selected_model)
-                combined_message = f"Error: \nGPT Response: {gpt_response}"
-                self.listWidget_ai.addItem(combined_message)
+                # Open a prompt to ask any question
+                question, ok = QInputDialog.getText(self, "Ask GPT", "Enter your question about the table:")
+
+                if ok and question:
+                    # Extract the entire table data
+                    table = self.data_table  # This is your QTableWidget object
+                    table_data = []
+
+                    for i in range(table.rowCount()):
+                        row_data = []
+                        for j in range(table.columnCount()):
+                            item = table.item(i, j)
+                            if item is not None:
+                                row_data.append(item.text())
+                        table_data.append(row_data)
+
+                    # Convert table data to a string format
+                    table_data_str = "\n".join(["\t".join(row) for row in table_data])
+                    print(table_data_str)  # Debugging line
+
+                    # Pass the question and table data to the GPT model
+                    gpt_response = GPT.ask_gpt(self, f"{question}\n\nTable Data:\n{table_data_str}", self.apikey_gpt(),
+                                               selected_model)
+                    combined_message = f"GPT Response: {gpt_response}"
+                    self.listWidget_ai.addItem(combined_message)
+                elif not ok:
+                    self.listWidget_ai.addItem("Question input was canceled.")
             elif not ok:
                 self.listWidget_ai.addItem("Model selection was canceled.")
 
+        def scketchgpt(self):
+            self.listWidget_ai.clear()
+            # Open file dialog to select an image file
+            file_dialog = QFileDialog()
+            file_path, _ = file_dialog.getOpenFileName(self, "Select Image", "", "Images (*.png *.jpg *.jpeg)")
+            print(file_path)
+            if file_path:
+                # Extract the entire table data
+                table = self.data_table  # This is your QTableWidget object
+
+                # Loop through the table and get all items
+                table_data = []
+                for r in range(table.rowCount()):  # iterate over rows
+                    row_data = []
+                    for c in range(table.columnCount()):  # iterate over columns
+                        item = table.item(r, c)  # get item at current row and column
+                        if item:  # make sure item is not None
+                            row_data.append(item.text())
+                    table_data.append(row_data)
+
+                    # Convert the 2D list to string
+                table_data_str = "\n".join([" ".join(row) for row in table_data])
+                print(f"Table data:\n{table_data_str}")
+
+                prompt = (
+                    "Data un'immagine di un diagramma, converti le informazioni contenute nel diagramma in una tabella con la seguente struttura:\n\n"
+                    "Struttura della Tabella:\n\n"
+                    "nome us: Identificatore unico dell'unità stratigrafica (US).\n"
+                    "tipo: Tipo di nodo (ad esempio, US, USV/s, property).\n"
+                    "tipo di nodo: Rappresentazione grafica del nodo (ad esempio, rectangle, parallelogram, com.yworks.bpmn.Artifact.withShadow).\n"
+                    "descrizione: Descrizione dell'unità stratigrafica.\n"
+                    "epoca: Periodo storico associato all'unità stratigrafica.\n"
+                    "epoca index: Indice del periodo storico.\n"
+                    "anteriore: Unità stratigrafiche precedenti collegate.\n"
+                    "posteriore: Unità stratigrafiche successive collegate.\n"
+                    "contemporaneo: Unità stratigrafiche contemporanee collegate.\n"
+                    "properties_ant: Proprietà associate alle unità stratigrafiche precedenti.\n"
+                    "properties_post: Proprietà associate alle unità stratigrafiche successive.\n"
+                    "rapporti: Dettagli sui rapporti stratigrafici con altre unità.\n\n"
+                    "Esempio di Tabella:\n\n"
+                    "nome us\ttipo\ttipo di nodo\tdescrizione\tepoca\tepoca index\tanteriore\tposteriore\tcontemporaneo\tproperties_ant\tproperties_post\trapporti\n"
+                    "01\tUS\trectangle\tFoundation of the colonnade\tContemporary Age - 21st century\t2\tnan\t02, 100, CON1\tnan\tnan\tnan\t"
+                    "['posteriore', '02', 'US', 'Foundation of the staircase', 'Impero romano - Costantino I', '1'] "
+                    "['posteriore', '100', 'USV/s', 'Reconstruction of the foundation of the colonnade', 'Impero romano - Costantino I', '1'] "
+                    "['posteriore', 'CON1', 'continuity', '_continuity', 'Impero romano - Costantino I', '1']\n"
+                    "02\tUS\trectangle\tFoundation of the staircase\tImpero romano - Costantino I\t1\t01\t03, 101\tnan\tnan\tnan\t"
+                    "['anteriore', '01', 'US', 'Foundation of the colonnade', 'Contemporary Age - 21st century', '2'] "
+                    "['posteriore', '03', 'US', 'stilobate', 'Impero romano - Costantino I', '1'] "
+                    "['posteriore', '101', 'USV/s', 'reconstruction of the foundation of the staircase', 'Impero romano - Costantino I', '1']\n"
+                    "03\tUS\trectangle\tstilobate\tImpero romano - Costantino I\t1\t02\t04, 103\tnan\tnan\tnan\t"
+                    "['anteriore', '02', 'US', 'Foundation of the staircase', 'Impero romano - Costantino I', '1'] "
+                    "['posteriore', '04', 'US', 'Base of the column', 'Impero romano - Costantino I', '1'] "
+                    "['posteriore', '103', 'USV/s', 'Reconstruction of the stilobate', 'Impero romano - Costantino I', '1']\n"
+                    "04\tUS\trectangle\tBase of the column\tImpero romano - Costantino I\t1\t03\t105\tnan\tnan\tnan\t"
+                    "['anteriore', '03', 'US', 'stilobate', 'Impero romano - Costantino I', '1'] "
+                    "['posteriore', '105', 'SFF', 'nan', 'Impero romano - Costantino I', '1']\n"
+                    "100\tUSV/s\tparallelogram\tReconstruction of the foundation "
+                    "100\tUSV/s\tparallelogram\tReconstruction of the foundation of the colonnade\tImpero romano - Costantino I\t1\t01\t103\tnan\t"
+                    "100.material, 100.width, 100.type, 100.position, 100.length\tnan\t"
+                    "['anteriore', '01', 'US', 'Foundation of the colonnade', 'Contemporary Age - 21st century', '2'] "
+                    "['posteriore', '103', 'USV/s', 'Reconstruction of the stilobate', 'Impero romano - Costantino I', '1'] "
+                    "['properties_ant', '100.material', 'property', 'sandstone', 'Impero romano - Costantino I', '1'] "
+                    "['properties_ant', '100.width', 'property', 'X m', 'Impero romano - Costantino I', '1'] "
+                    "['properties_ant', '100.type', 'property', 'quadrangular blocks', 'Impero romano - Costantino I', '1'] "
+                    "['properties_ant', '100.position', 'property', 'western part of the context', 'Impero romano - Costantino I', '1'] "
+                    "['properties_ant', '100.length', 'property', 'X m', 'Impero romano - Costantino I', '1']\n"
+                    "100.length\tproperty\tcom.yworks.bpmn.Artifact.withShadow\tX m\tImpero romano - Costantino I\t1\tnan\tnan\tnan\tD.01.08\tnan\t"
+                    "['properties_ant', 'D.01.08', 'extractor', 'X m', 'Impero romano - Costantino I', '1']\n"
+                    "100.material\tproperty\tcom.yworks.bpmn.Artifact.withShadow\tsandstone\tImpero romano - Costantino I\t1\tnan\tnan\tnan\tD.01.01\tnan\t"
+                    "['properties_ant', 'D.01.01', 'extractor', 'sandstone', 'Impero romano - Costantino I', '1']\n"
+                )
+                # Pass the table data to the GPT model
+                gpt_response = GPT.ask_sketch(self, prompt , self.apikey_gpt(), file_path)
+
+                def parse_gpt_response(gpt_response):
+                    # Extract the table data from the GPT response
+                    table_data = []
+                    lines = gpt_response.split('\n')
+                    start_parsing = False
+
+                    for line in lines:
+                        if '| nome us' in line:
+                            start_parsing = True
+                            continue
+                        if start_parsing:
+                            if line.startswith('|'):
+                                row = [cell.strip() for cell in line.split('|')[1:-1]]
+                                table_data.append(row)
+                            elif line.strip() == '':
+                                break
+
+                    return table_data
+
+                def save_table_as_csv(table_data):
+                    headers = [
+                        "nome us", "tipo", "tipo di nodo", "descrizione", "epoca", "epoca index",
+                        "anteriore", "posteriore", "contemporaneo", "properties_ant", "properties_post", "rapporti"
+                    ]
+
+                    # Open a file dialog to select the save location
+                    options = QFileDialog.Options()
+                    file_path, _ = QFileDialog.getSaveFileName(None, "Save CSV", "", "CSV Files (*.csv);;All Files (*)",
+                                                               options=options)
+
+                    if file_path:
+                        with open(file_path, mode='w', newline='', encoding='utf-8') as file:
+                            writer = csv.writer(file, delimiter=',')
+                            writer.writerow(headers)
+                            for row in table_data:
+                                writer.writerow(row)
+
+                # Parse the GPT response to extract table data
+                table_data = parse_gpt_response(gpt_response)
+
+                # Save the extracted table data to a CSV file
+                save_table_as_csv(table_data)
 
 
+                combined_message = f"GPT Response\n: {gpt_response}"
+                self.listWidget_ai.addItem(combined_message)
 
+            else:
+                self.listWidget_ai.addItem("Image selection was canceled.")
 
         def import_json(self):
             file, _ = QFileDialog.getOpenFileName(self, "Select a JSON file", "", "JSON Files (*.json)")
