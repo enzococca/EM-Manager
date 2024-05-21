@@ -1886,7 +1886,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     return
 
                 # Subito dopo, includo la funzione per copiare i file
-                src_dir = 'modules/icons'  # specificare il percorso assoluto se necessario
+                src_dir = 'icons'  # specificare il percorso assoluto se necessario
                 dst_dir = os.path.join(self.dir_path, "3d_obj")
                 file_names = os.listdir(src_dir)
                 for file_name in file_names:
