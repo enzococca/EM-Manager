@@ -1348,27 +1348,27 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             return api_key
         def reportai(self):
 
-            models = ["gpt-4o"]  # Replace with actual model names
+            models = ["gpt-4o"]
             combo = QComboBox()
             combo.addItems(models)
             selected_model, ok = QInputDialog.getItem(self, "Select Model", "Choose a model for GPT:", models, 0,
                                                       False)
 
             if ok and selected_model:
-                # Extract the description column from self.data_table
-                table = self.data_table  # This is your QTableWidget object
-                description_data = []
+                # Estrarre la colonna della descrizione dalla tabella self.data_table
+                tabella = self.data_table  # Questo è il tuo oggetto QTableWidget
+                dati_descrizione = []
 
-                for i in range(table.rowCount()):
-                    item = table.item(i, table.columnCount() - 1)  # Assuming the description is in the last column
-                    if item is not None:
-                        description_data.append(item.text())
+                for i in range(tabella.rowCount()):
+                    elemento = tabella.item(i, tabella.columnCount() - 1)  # Supponendo che la descrizione sia nell'ultima colonna
+                    if elemento is not None:
+                        dati_descrizione.append(elemento.text())
 
-                # Join all descriptions into a single string
-                descriptions = " ".join(description_data)
-                print(descriptions)  # Debugging line
+                # Unire tutte le descrizioni in una singola stringa
+                descriptions = " ".join(dati_descrizione)
+                print(descriptions)  # Linea di debug
 
-                gpt_response = GPT.ask_gpt(self, f"fammi un riassunto di questa tabella {descriptions}",
+                gpt_response = GPT.ask_gpt(self, f"Let me summarize this table for you. {descriptions}",
                                            self.apikey_gpt(),
                                            selected_model)
                 combined_message = f"GPT Response: {gpt_response}"
@@ -1377,18 +1377,18 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 self.listWidget_ai.addItem("Model selection was canceled.")
 
         def askgpt_ai(self):
-            models = ["gpt-4o"]  # Replace with actual model names
+            models = ["gpt-4o"]  # Sostituire con i nomi reali dei modelli
             combo = QComboBox()
             combo.addItems(models)
-            selected_model, ok = QInputDialog.getItem(self, "Select Model", "Choose a model for GPT:", models, 0, False)
+            selected_model, ok = QInputDialog.getItem(self, "Select Model", "Choose a model for GPT", models, 0, False)
 
             if ok and selected_model:
-                # Open a prompt to ask any question
-                question, ok = QInputDialog.getText(self, "Ask GPT", "Enter your question about the table:")
+                # Apri un'interfaccia per fare domande
+                question, ok = QInputDialog.getText(self, "Ask GPT", "Enter your question on the table:")
 
                 if ok and question:
-                    # Extract the entire table data
-                    table = self.data_table  # This is your QTableWidget object
+                    # Estrarre l'intero set di dati della tabella
+                    table = self.data_table  # Questo è il tuo oggetto QTableWidget
                     table_data = []
 
                     for i in range(table.rowCount()):
@@ -1415,25 +1415,25 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         def scketchgpt(self):
             self.listWidget_ai.clear()
-            # Open file dialog to select an image file
+            # Apri la finestra di dialogo per selezionare un file immagine
             file_dialog = QFileDialog()
             file_path, _ = file_dialog.getOpenFileName(self, "Select Image", "", "Images (*.png *.jpg *.jpeg)")
             print(file_path)
             if file_path:
-                # Extract the entire table data
-                table = self.data_table  # This is your QTableWidget object
+                # Estrarre tutti i dati della tabella
+                table = self.data_table  # Questo è il tuo oggetto QTableWidget
 
-                # Loop through the table and get all items
+                # Scorrere la tabella e ottenere tutti gli elementi
                 table_data = []
-                for r in range(table.rowCount()):  # iterate over rows
+                for r in range(table.rowCount()):  # iterare sulle righe
                     row_data = []
-                    for c in range(table.columnCount()):  # iterate over columns
-                        item = table.item(r, c)  # get item at current row and column
-                        if item:  # make sure item is not None
+                    for c in range(table.columnCount()):  # iterare sulle colonne
+                        item = table.item(r, c)  # ottenere l'elemento alla riga e colonna corrente
+                        if item:  # assicurarsi che l'elemento non sia None
                             row_data.append(item.text())
                     table_data.append(row_data)
 
-                    # Convert the 2D list to string
+                    # Converti la lista in stringa.
                 table_data_str = "\n".join([" ".join(row) for row in table_data])
                 print(f"Table data:\n{table_data_str}")
 
@@ -1456,7 +1456,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     "I tipi di nodi combiner, property, document, extractor devono essere inseriti in properties_ant e properties_post.\n"
                     "Gli altri tipi di nodi devono essere inseriti in anteriore, posteriore e contemporaneo.\n"
                     "Se due nodi sono collegati tra loro da un doppio arco, essi sono contemporanei.\n"
-                    "Se il nodo inizia con 'CON', il tipo sarà 'continuity'.\n"
+                    "Se il nodo inizia con 'CON', il tipo sarà '_continuity'.\n"
                     "Inserisci 'nan' quando non ci sono informazioni disponibili.\n\n"
                     "Esempio di Tabella:\n\n"
                     "nome us\ttipo\ttipo di nodo\tdescrizione\tepoca\tepoca index\tanteriore\tposteriore\tcontemporaneo\tproperties_ant\tproperties_post\n"
@@ -1484,11 +1484,11 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
                 )
 
-                # Pass the table data to the GPT model
+                # Passa i dati della tabella al modello GPT.
                 gpt_response = GPT.ask_sketch(self, prompt , self.apikey_gpt(), file_path)
 
                 def parse_gpt_response(gpt_response):
-                    # Extract the table data from the GPT response
+                    # Estrarre i dati della tabella dalla risposta del GPT.
                     table_data = []
                     lines = gpt_response.split('\n')
                     start_parsing = False
@@ -1498,7 +1498,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                             start_parsing = True
                             continue
                         if start_parsing:
-                            if line.startswith('|'):
+                            if line.startswith('|') and not all(c == '-' for c in line.replace('|', '').strip()):
                                 row = [cell.strip() for cell in line.split('|')[1:-1]]
                                 table_data.append(row)
                             elif line.strip() == '':
@@ -1512,7 +1512,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                         "anteriore", "posteriore", "contemporaneo", "properties_ant", "properties_post", "rapporti"
                     ]
 
-                    # Open a file dialog to select the save location
+                    # Apri una finestra di dialogo per selezionare la posizione di salvataggio.
                     options = QFileDialog.Options()
                     file_path, _ = QFileDialog.getSaveFileName(None, "Save CSV", "", "CSV Files (*.csv);;All Files (*)",
                                                                options=options)
@@ -1524,10 +1524,10 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                             for row in table_data:
                                 writer.writerow(row)
 
-                # Parse the GPT response to extract table data
+                # Analizzare la risposta GPT per estrarre i dati della tabella
                 table_data = parse_gpt_response(gpt_response)
 
-                # Save the extracted table data to a CSV file
+                # Salva i dati estratti dalla tabella in un file CSV
                 save_table_as_csv(table_data)
 
 
@@ -1545,25 +1545,25 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 print(f"Extracting data from {js}")
                 extracted_data = js.extract_data()
                 print(f"Extracted data: {extracted_data}")
-                # Here I've added a debug step to check if the extracted_data returned by js.extract_data() is a pandas DataFrame as expected
+                #Qui ho aggiunto un passaggio di debug per verificare se i dati estratti restituiti da js.extract_data() sono effettivamente un DataFrame di pandas come previsto
                 if isinstance(extracted_data, pd.DataFrame):
                     self.df = extracted_data
                     print("Data extraction successful")
                 else:
                     print(f"Data extraction failed, expected pandas DataFrame but got {type(extracted_data)}")
-                    return  # Exit the function because we can't proceed if data extraction failed
+                    return  # Uscire dalla funzione perché non possiamo procedere se l'estrazione dei dati è fallita
 
                 self.data_fields = self.df.columns.tolist()
 
                 self.data_table.setDragEnabled(True)
-                # Set the number of rows and columns in the QTableWidget
+                # Imposta il numero di righe e colonne nel QTableWidget.
                 self.data_table.setRowCount(len(self.df))
                 self.data_table.setColumnCount(len(self.df.columns))
 
-                # Set the horizontal column headers
+                # Imposta gli intestazioni delle colonne orizzontali
                 self.data_table.setHorizontalHeaderLabels(self.df.columns)
 
-                # Populate cells of the QTableWidget with data
+                # Popolare le celle del QTableWidget con i dati
                 for row in range(len(self.df)):
                     for col in range(len(self.df.columns)):
                         item = QTableWidgetItem(str(self.df.iat[row, col]))
@@ -1578,22 +1578,22 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         def export_json(self):
             filename, _ = QFileDialog.getSaveFileName(self, 'Export Data', '', '*.json')
-            if filename:  # check whether user has chosen file or canceled the dialog
+            if filename:  # controllare se l'utente ha scelto un file o annullato il dialogo
                 js = DataImporter(self.get_current_dataframe())
                 data_to_write = js.to_json_structure()
-                with open(filename, "w") as outfile:  # open the file in write mode
+                with open(filename, "w") as outfile:
                     json.dump(data_to_write, outfile)
 
         def open_project(self):
             projects_file = 'projects.json'
 
-            # Fornisco un dialogo di selezione del file
+            # Fornisce un dialogo di selezione del file
             project, _ = QFileDialog.getOpenFileName(self, "Select a project", "", "CSV Files (*.csv)")
 
             if project:  # Se un file è stato selezionato
                 print(f"Opening of the project {project}")
 
-                # Let's add try-except block to handle exceptions while opening JSON
+                # Aggiungiamo un blocco try-except per gestire le eccezioni durante l'apertura di un file JSON.
                 try:
                     if os.path.isfile(projects_file):
                         with open(projects_file, 'r') as file:
@@ -1623,7 +1623,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     self.data_file = self.csv_path
 
                     try:
-                        # Handle exceptions while transforming data and reading CSV
+                        # gestire eccezioni durante la trasformazione dei dati e la lettura di CSV
                         self.transform_data(self.data_file, self.data_file)
                         self.df = pd.read_csv(self.data_file, dtype=str)
                     except Exception as e:
@@ -1659,38 +1659,38 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
         def open_recent_project(self):
             """
-            Opens a recent project selected by the user.
+            Apre un progetto recente selezionato dall'utente.
 
-            Parameters:
-            - self: the current instance of the class.
+            Parametri:
+            - self: l'istanza attuale della classe.
 
-            Returns:
+            Restituisce:
             None
 
-            Raises:
+            Eccezioni:
             None
 
-            Description:
-            - Reads the 'projects.json' file to get a list of recent projects.
-            - Displays a dialog box to allow the user to select a project.
-            - If a project is selected, opens the project and performs the following steps:
-                - Prints a message indicating the project being opened.
-                - Extracts the base name of the project file.
-                - Constructs the path to the corresponding CSV file.
-                - If the CSV file exists, performs the following actions:
-                    - Sets the data file attribute of the class to the CSV file path.
-                    - Transforms the data in the CSV file.
-                    - Reads the CSV file into a pandas DataFrame.
-                    - Sets the data fields attribute of the class to the columns of the DataFrame.
-                    - Sets the number of rows and columns in the data table widget.
-                    - Sets the horizontal header labels of the data table widget.
-                    - Populates the data table widget with the data from the DataFrame.
-                    - Sets the row height and column width of the data table widget.
-                - If the CSV file does not exist, displays a warning message.
+            Descrizione:
+            - Legge il file 'projects.json' per ottenere un elenco di progetti recenti.
+            - Visualizza una finestra di dialogo per consentire all'utente di selezionare un progetto.
+            - Se viene selezionato un progetto, apre il progetto e esegue i seguenti passaggi:
+                - Stampa un messaggio che indica il progetto aperto.
+                - Esegue l'estrazione del nome di base del file del progetto.
+                - Costruisce il percorso al file CSV corrispondente.
+                - Se il file CSV esiste, esegue le azioni seguenti:
+                    - Imposta l'attributo del file dati della classe sul percorso del file CSV.
+                    - Trasforma i dati nel file CSV.
+                    - Legge il file CSV in un DataFrame di pandas.
+                    - Imposta l'attributo dei campi dati della classe sulle colonne del DataFrame.
+                    - Imposta il numero di righe e colonne nel widget della tabella dati.
+                    - Imposta le etichette dell'intestazione orizzontale del widget della tabella dati.
+                    - Popola il widget della tabella dati con i dati del DataFrame.
+                    - Imposta l'altezza delle righe e la larghezza delle colonne del widget della tabella dati.
+                - Se il file CSV non esiste, visualizza un messaggio di avviso.
 
-            Note:
-            - This function assumes the existence of the 'projects.json' file in the current directory.
-            - This function relies on the availability of the QInputDialog, QMessageBox, and QTableWidgetItem classes.
+            Nota:
+            - Questa funzione presuppone l'esistenza del file 'projects.json' nella directory corrente.
+            - Questa funzione si basa sulla disponibilità delle classi QInputDialog, QMessageBox e QTableWidgetItem.
             """
             projects_file = 'projects.json'
 
