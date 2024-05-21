@@ -4,7 +4,10 @@ import shutil
 import sys
 from functools import partial
 
+import openai
+import requests
 from PIL import Image
+from openai import OpenAI
 
 sys.path.insert(0, "ui")
 
@@ -1347,7 +1350,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
             return api_key
         def reportai(self):
-
+            self.listWidget_ai.clear()
             models = ["gpt-4o"]
             combo = QComboBox()
             combo.addItems(models)
@@ -1367,16 +1370,43 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                 # Unire tutte le descrizioni in una singola stringa
                 descriptions = " ".join(dati_descrizione)
                 print(descriptions)  # Linea di debug
+                os.environ["OPENAI_API_KEY"] = self.apikey_gpt()
 
-                gpt_response = GPT.ask_gpt(self, f"Let me summarize this table for you. {descriptions}",
-                                           self.apikey_gpt(),
-                                           selected_model)
-                combined_message = f"GPT Response: {gpt_response}"
+                client = OpenAI()
+
+                response= client.chat.completions.create(
+                    model=selected_model,
+                    messages=[
+                        {"role": "user", "content": f"Let me summarize this table for you. {descriptions}"}
+                    ],
+                    stream=True
+                )
+
+                combined_message = "GPT Response:\n "
                 self.listWidget_ai.addItem(combined_message)
+
+                try:
+                    end=''
+
+                    for chunk in response:
+                        if chunk.choices[0].delta.content is not None:
+                            #print(chunk.choices[0].delta.content, end="")
+                            combined_message += chunk.choices[0].delta.content
+                            combined_message += end
+                            self.listWidget_ai.takeItem(self.listWidget_ai.count() - 1)
+                            self.listWidget_ai.addItem(combined_message)
+                            self.listWidget_ai.scrollToBottom()
+                            QApplication.processEvents()
+                except requests.exceptions.JSONDecodeError as e:
+                    print("Error decoding JSON response:", e)
+
+                    return None
+
             elif not ok:
                 self.listWidget_ai.addItem("Model selection was canceled.")
 
         def askgpt_ai(self):
+            self.listWidget_ai.clear()
             models = ["gpt-4o"]  # Sostituire con i nomi reali dei modelli
             combo = QComboBox()
             combo.addItems(models)
@@ -1403,15 +1433,44 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                     table_data_str = "\n".join(["\t".join(row) for row in table_data])
                     print(table_data_str)  # Debugging line
 
-                    # Pass the question and table data to the GPT model
-                    gpt_response = GPT.ask_gpt(self, f"{question}\n\nTable Data:\n{table_data_str}", self.apikey_gpt(),
-                                               selected_model)
-                    combined_message = f"GPT Response: {gpt_response}"
+                    os.environ["OPENAI_API_KEY"] = self.apikey_gpt()
+
+                    client = OpenAI()
+
+                    response = client.chat.completions.create(
+                        model=selected_model,
+                        messages=[
+                            {"role": "user", "content": f"rispondi alle domande inerenti al contenuto di {table_data_str}"
+                                                        f"e se necessario genera dei link utili per approfondire"}
+                        ],
+                        stream=True
+                    )
+
+                    combined_message = "GPT Response:\n "
                     self.listWidget_ai.addItem(combined_message)
+
+                    try:
+                        end = ''
+
+                        for chunk in response:
+                            if chunk.choices[0].delta.content is not None:
+                                # print(chunk.choices[0].delta.content, end="")
+                                combined_message += chunk.choices[0].delta.content
+                                combined_message += end
+                                # Rendi i link cliccabili
+                                #combined_message = re.sub(r'(https?://\S+)', r'<a href="\1">\1</a>', combined_message)
+
+                                self.listWidget_ai.takeItem(self.listWidget_ai.count() - 1)
+                                self.listWidget_ai.addItem(combined_message)
+                                #self.listWidget_ai.scrollToBottom()
+                                QApplication.processEvents()
+                    except requests.exceptions.JSONDecodeError as e:
+                        print("Error decoding JSON response:", e)
+
+                        return None
+
                 elif not ok:
-                    self.listWidget_ai.addItem("Question input was canceled.")
-            elif not ok:
-                self.listWidget_ai.addItem("Model selection was canceled.")
+                    self.listWidget_ai.addItem("Model selection was canceled.")
 
         def scketchgpt(self):
             self.listWidget_ai.clear()

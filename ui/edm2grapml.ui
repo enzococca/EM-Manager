@@ -2851,17 +2851,56 @@ color: rgb(0, 0, 0);</string>
         <layout class="QGridLayout" name="gridLayout_6">
          <item row="0" column="0">
           <widget class="QListWidget" name="listWidget_ai">
-           <property name="isWrapping" stdset="0">
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAsNeeded</enum>
+           </property>
+           <property name="sizeAdjustPolicy">
+            <enum>QAbstractScrollArea::AdjustToContents</enum>
+           </property>
+           <property name="autoScroll">
             <bool>true</bool>
+           </property>
+           <property name="editTriggers">
+            <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked</set>
+           </property>
+           <property name="dragEnabled">
+            <bool>true</bool>
+           </property>
+           <property name="dragDropMode">
+            <enum>QAbstractItemView::DragOnly</enum>
+           </property>
+           <property name="alternatingRowColors">
+            <bool>true</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="verticalScrollMode">
+            <enum>QAbstractItemView::ScrollPerPixel</enum>
+           </property>
+           <property name="isWrapping" stdset="0">
+            <bool>false</bool>
            </property>
            <property name="resizeMode">
             <enum>QListView::Adjust</enum>
+           </property>
+           <property name="layoutMode">
+            <enum>QListView::Batched</enum>
+           </property>
+           <property name="uniformItemSizes">
+            <bool>true</bool>
            </property>
            <property name="wordWrap">
             <bool>true</bool>
            </property>
            <property name="selectionRectVisible">
             <bool>true</bool>
+           </property>
+           <property name="itemAlignment">
+            <set>Qt::AlignJustify</set>
            </property>
           </widget>
          </item>
@@ -3716,22 +3755,6 @@ color: rgb(0, 0, 0);</string>
     <hint type="destinationlabel">
      <x>61</x>
      <y>578</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>menubar</sender>
-   <signal>triggered(QAction*)</signal>
-   <receiver>listWidget_ai</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>87</x>
-     <y>8</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>1242</x>
-     <y>143</y>
     </hint>
    </hints>
   </connection>

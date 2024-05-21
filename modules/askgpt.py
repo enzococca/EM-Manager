@@ -49,21 +49,21 @@ class GPT(QWidget):
         response= client.chat.completions.create(
             model = model,
             messages = [
-                {"role": "user", "content": prompt}],
+
+                        {"role": "user", "content": prompt}
+            ],
             stream=True
         )
-        # Initialize an empty string to collect the content
-        content = ""
         try:
+            content=''
             for chunk in response:
-                # Assuming 'chunk' is a dictionary with a 'choices' key
-                if 'choices' in chunk and len(chunk['choices']) > 0:
-                    # Assuming 'delta' contains the new content to append
-                    if 'delta' in chunk['choices'][0]:
-                        content += chunk['choices'][0]['delta']['content']
+                if chunk.choices[0].delta.content is not None:
+                    print(chunk.choices[0].delta.content, end="")
+                    content+=chunk.choices[0].delta.content
             return content
-        except Exception as e:
-            print(f"An error occurred: {e}")
+        except requests.exceptions.JSONDecodeError as e:
+            print("Error decoding JSON response:", e)
+
             return None
 
 
