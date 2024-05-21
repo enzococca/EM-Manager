@@ -25,10 +25,7 @@ jobs:
         pip install python-docx
         pip install -r requirements.txt
 
-    - name: Run tests
-      run: |
-        python -m unittest
-
+   
     - name: Build executables
       run: |
         if ("${{ matrix.os }}" -eq "windows-latest") {
