@@ -12,7 +12,7 @@ class YEdAutomation:
     def launch_yed(self):
         # Avvia yEd con il file GraphML
         subprocess.Popen([self.yed_path, self.graphml_path])
-        time.sleep(5)  # Attendi che yEd si apra
+        time.sleep(10)  # Attendi che yEd si apra
 
     def bring_yed_to_foreground(self):
         # Tenta di trovare la finestra yEd e portarla in primo piano
