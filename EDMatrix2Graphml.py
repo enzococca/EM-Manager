@@ -951,7 +951,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             if self.obj_proxy is None:
                 print("obj_proxy non è stato inizializzato.")
                 return
-            self.listWidget_list_media.clear()
+            self.custom_list_widget.clear()
 
             # Get the selected row index
             selected_row = self.data_table.currentRow()
@@ -977,7 +977,7 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
                     # Create a QListWidgetItem for the file and add it to listWidget_list_media
                     item = QListWidgetItem(QIcon(icon_path), file_name)
-                    self.listWidget_list_media.addItem(item)
+                    self.custom_list_widget.addItem(item)
 
             # trova il nome dell'oggetto 3d che corrisponde alla riga selezionata
             # supponendo che il nome dell'oggetto 3d sia il contenuto della terza colonna
