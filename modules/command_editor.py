@@ -93,20 +93,26 @@ def export_proxies(export_path):
         else:
             QMessageBox.warning(self, 'Warning', 'Command name and function code cannot be empty')
 
+    import re
+
     def append_to_client_file(self, command_name, function_code):
         client_file_path = 'client_blender.py'
 
         # Estrae il nome della funzione dal codice della funzione
         function_name = re.findall(r'def (\w+)\(', function_code)[0]
 
+        # Estrae la descrizione della funzione
+        description_match = re.search(r'""".*?\n\s*(.*?)\n.*?"""', function_code, re.DOTALL)
+        description = description_match.group(1).strip() if description_match else "No description provided"
+
         function_code_with_decorator = f"""
 {function_code}
 
-    """
+        """
 
         register_code = f"""
-register_command("{command_name}", {function_name})
-    """
+register_command("{command_name}", {function_name}, "{description}")
+        """
 
         with open(client_file_path, 'r') as file:
             content = file.read()

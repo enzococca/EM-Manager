@@ -2980,6 +2980,7 @@ color: rgb(6, 6, 4);</string>
      <string>Tool</string>
     </property>
     <addaction name="actioncreate_command_blender"/>
+    <addaction name="actioncommand_blender"/>
    </widget>
    <addaction name="menu_help"/>
    <addaction name="menuAi"/>
@@ -3239,12 +3240,17 @@ color: rgb(0, 0, 0);</string>
   </action>
   <action name="actioncreate_command_blender">
    <property name="text">
-    <string>create command blender</string>
+    <string>Create command blender</string>
    </property>
   </action>
   <action name="actionInfo">
    <property name="text">
     <string>Info</string>
+   </property>
+  </action>
+  <action name="actioncommand_blender">
+   <property name="text">
+    <string>Command blender</string>
    </property>
   </action>
  </widget>

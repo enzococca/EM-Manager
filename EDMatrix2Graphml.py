@@ -12,6 +12,7 @@ from openai import OpenAI
 sys.path.insert(0, "ui")
 
 from modules import splash
+from modules.blender_command import BlenderCommandWidget
 import chardet
 import mimetypes
 from typing import Optional
@@ -1252,7 +1253,8 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
                                                               )
             self.actioncreate_command_blender.triggered.connect(self.blender_editor
                                                               )
-
+            self.actioncommand_blender.triggered.connect(self.blender_command
+                                                              )
             def handle_check_relations_action():
                 """
                 Questa funzione gestisce l'azione di controllo delle relazioni in una tabella dati e di stampa di eventuali errori su QTextEdit.
@@ -1312,6 +1314,11 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
 
             script_path = os.path.join(os.path.dirname(__file__), 'modules', 'command_editor.py')
             subprocess.Popen([sys.executable, script_path])
+
+        def blender_command(self):
+
+            self.blender_command_widget = BlenderCommandWidget(self)
+            self.blender_command_widget.show()
         def on_pushButton_blender_connection_pressed(self):
             """
             Questo metodo è chiamato quando il pulsante "Connect to Blender" viene premuto.
