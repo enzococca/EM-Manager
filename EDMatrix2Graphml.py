@@ -1250,6 +1250,9 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             self.actionAsk_gpt.triggered.connect(self.askgpt_ai)
             self.actionImport_scketch_in_AI.triggered.connect(self.scketchgpt
                                                               )
+            self.actioncreate_command_blender.triggered.connect(self.blender_editor
+                                                              )
+
             def handle_check_relations_action():
                 """
                 Questa funzione gestisce l'azione di controllo delle relazioni in una tabella dati e di stampa di eventuali errori su QTextEdit.
@@ -1302,6 +1305,20 @@ class CSVMapper(QMainWindow, MAIN_DIALOG_CLASS):
             for index, row in epoch_df.iterrows():
                 combined_item = str(row[1]) + ' - ' + str(row[2])  # merge second and third column
                 self.comboBox_epoch.addItem(combined_item)
+
+
+
+        def blender_editor(self):
+
+            script_path = os.path.join(os.path.dirname(__file__), 'modules', 'command_editor.py')
+            subprocess.Popen([sys.executable, script_path])
+        def on_pushButton_blender_connection_pressed(self):
+            """
+            Questo metodo è chiamato quando il pulsante "Connect to Blender" viene premuto.
+            """
+            script_path = os.path.join(os.path.dirname(__file__), 'modules', 'client_blender.py')
+            subprocess.Popen([sys.executable, script_path])
+
 
         def apikey_gpt(self):
             # HOME = os.environ['PYARCHINIT_HOME']
