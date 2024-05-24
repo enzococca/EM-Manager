@@ -1,17 +1,12 @@
 import ast
-import base64
 import shutil
 import sys
-from functools import partial
-
-import openai
 import requests
-from PIL import Image
 from openai import OpenAI
 
 sys.path.insert(0, "ui")
 
-from modules import splash
+#from modules import splash
 from modules.blender_command import BlenderCommandWidget
 import chardet
 import mimetypes
